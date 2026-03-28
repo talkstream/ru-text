@@ -1,0 +1,32 @@
+{
+  "name": "ru-text",
+  "version": "1.4.0",
+  "description": "Russian text quality plugin — typography, information style, editorial standards, UX writing, business correspondence",
+  "author": {
+    "name": "Arseniy Kamyshev",
+    "email": "nafigator@gmail.com",
+    "url": "https://t.me/nafigator"
+  },
+  "homepage": "https://ru-text.org",
+  "repository": "https://github.com/talkstream/ru-text",
+  "license": "MIT",
+  "keywords": [
+    "russian",
+    "typography",
+    "editorial",
+    "info-style",
+    "ux-writing",
+    "text-quality",
+    "text-scoring"
+  ],
+  "logo": "./logo-round.png",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ru-text",
+    "shortDescription": "Russian text quality — ~1,040 rules for typography, info-style, editorial, UX writing",
+    "developerName": "Arseniy Kamyshev",
+    "category": "Productivity",
+    "websiteURL": "https://ru-text.org",
+    "privacyPolicyURL": "https://github.com/talkstream/ru-text/blob/main/PRIVACY_POLICY.md"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "ru-text",
+  "metadata": {
+    "description": "Russian text quality plugin for Claude Code and Cowork",
+    "version": "1.4.0"
+  },
+  "owner": {
+    "name": "Arseniy Kamyshev",
+    "email": "nafigator@gmail.com",
+    "url": "https://t.me/nafigator"
+  },
+  "plugins": [
+    {
+      "name": "ru-text",
+      "source": "./",
+      "version": "1.4.0",
+      "description": "Russian text quality — ~1,040 rules for typography, info-style, editorial, UX writing, business correspondence",
+      "category": "productivity",
+      "homepage": "https://github.com/talkstream/ru-text",
+      "tags": [
+        "russian",
+        "typography",
+        "editorial",
+        "ux-writing",
+        "text-quality"
+      ]
+    }
+  ]
+}
