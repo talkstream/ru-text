@@ -1,10 +1,10 @@
 # Privacy Policy
 
-**Last updated:** March 29, 2026
+**Last updated:** March 30, 2026
 
 ## Overview
 
-ru-text is a Claude Code plugin that contains only static Markdown documentation files. It is designed to have zero impact on your privacy.
+ru-text is a text quality plugin for Claude Code, Codex CLI, Gemini CLI, and Cursor that contains only static Markdown files. It is designed to have zero impact on your privacy.
 
 ## What this plugin does NOT do
 
@@ -23,7 +23,7 @@ ru-text is a Claude Code plugin that contains only static Markdown documentation
 
 ## How it works
 
-All plugin functionality runs entirely locally within Claude Code or Claude Cowork. The plugin provides knowledge that Claude reads from local files. No data leaves your machine.
+All plugin functionality runs entirely locally within your AI coding assistant. The plugin provides knowledge that the assistant reads from local files. No data leaves your machine.
 
 ## Contact
 
