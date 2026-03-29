@@ -1,3 +1,4 @@
 content/originals/
 .DS_Store
 .claude/
+*.pen
