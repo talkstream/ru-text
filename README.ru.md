@@ -1,6 +1,6 @@
 # ru-text
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Official_Plugin-blue?logo=anthropic)](https://claude.com/plugins) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
 
 **Языки:** [English](README.md) | Русский
 
@@ -45,8 +45,10 @@ ru-text даёт вашему ИИ-ассистенту глубокое пон�
 ### Claude Code
 
 ```bash
-claude plugins marketplace add talkstream/ru-text && claude plugins install ru-text
+/plugin install ru-text
 ```
+
+Доступен в официальном [маркетплейсе плагинов Anthropic](https://claude.com/plugins). Работает в Claude Code CLI, VS Code, JetBrains, Web и Desktop.
 
 ### Codex CLI
 
