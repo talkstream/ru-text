@@ -9,26 +9,22 @@ context: fork
 
 Score the text provided in $ARGUMENTS (or the most recent Russian text output if no arguments) using the ru-text scoring rubric.
 
-## Setup: locate reference files
-
-1. `Glob("**/ru-text/references/scoring.md", path: "~/.claude/plugins/cache/")`
-2. The parent directory of the result = REFS (if multiple results, use the last one)
-3. All reference files below are at `REFS/<filename>`
-
 ## Procedure
 
-1. **Load rubric** — read `REFS/scoring.md` for the full rubric with anchors.
+Reference files: `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/<filename>`
+
+1. **Load rubric** — read `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/scoring.md` for the full rubric with anchors.
 
 2. **Determine domain** — identify whether the text is UI/interface, business email, article, or general:
-   - UI text → also load `REFS/ux-writing.md` for the Reader Precision dimension
-   - Business email → also load `REFS/business-writing.md` for the Reader Precision dimension
-   - General → use `REFS/info-style.md` only
+   - UI text → also load `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/ux-writing.md` for the Reader Precision dimension
+   - Business email → also load `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/business-writing.md` for the Reader Precision dimension
+   - General → use `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/info-style.md` only
 
 3. **Evaluate each dimension separately** — score in this order:
-   - **T — Типографика** (weight 0.15): quotes, dashes, spaces, special characters per `REFS/typography.md`
-   - **Ч — Чистота языка** (weight 0.25): stop-words, bureaucratic language, clichés, passive voice per `REFS/info-style.md` + `REFS/anti-patterns.md`
-   - **Г — Грамотность** (weight 0.20): punctuation, agreement, tautology per `REFS/editorial-grammar.md` + `REFS/editorial-punctuation.md`
-   - **С — Структура** (weight 0.20): logical flow, paragraphs, transitions, heading use per `REFS/info-style.md` structure section + `REFS/addenda.md`
+   - **T — Типографика** (weight 0.15): quotes, dashes, spaces, special characters per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/typography.md`
+   - **Ч — Чистота языка** (weight 0.25): stop-words, bureaucratic language, clichés, passive voice per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/info-style.md` + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/anti-patterns.md`
+   - **Г — Грамотность** (weight 0.20): punctuation, agreement, tautology per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-grammar.md` + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-punctuation.md`
+   - **С — Структура** (weight 0.20): logical flow, paragraphs, transitions, heading use per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/info-style.md` structure section + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/addenda.md`
    - **Ц — Точность для читателя** (weight 0.20): facts, evidence, reader benefit, actionability per domain rules
 
 4. **For each dimension** — assign a score (0.0–10.0) using the rubric anchors in scoring.md. List 1–3 specific issues, quoting the problematic text fragment.

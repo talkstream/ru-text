@@ -8,12 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.1] - 2026-04-01
 
 ### Fixed
-- Reference files unreachable for marketplace users: Claude could not resolve relative paths in SKILL.md and commands because the Skill tool does not provide a base directory. Added Glob-based path discovery so Claude locates the references directory deterministically
-- Multi-version cache ambiguity: added disambiguation rule for users with multiple cached versions
+- Reference files unreachable for marketplace users: Claude could not resolve relative paths in SKILL.md and commands because the Skill tool does not provide a base directory
+- Used `${CLAUDE_PLUGIN_ROOT}` (official Claude Code variable, substituted inline in skill content) for absolute paths to reference files, with Glob fallback for cross-platform compatibility
 
 ### Changed
-- SKILL.md and commands now use a `REFS/<filename>` pattern with an explicit setup step instead of unresolvable markdown links
-- Trimmed redundant quality checklist items from SKILL.md (covered by reference files); word count 560/600
+- SKILL.md and commands now use `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/<filename>` paths instead of unresolvable relative markdown links
+- Trimmed redundant quality checklist items from SKILL.md (covered by reference files)
 
 ## [1.5.0] - 2026-03-31
 
