@@ -1,7 +1,7 @@
 {
   "name": "ru-text",
   "displayName": "ru-text",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Russian text quality — ~1,040 rules for typography, info-style, editorial, UX writing, business correspondence. Auto-activates on Russian text.",
   "author": {
     "name": "Arseniy Kamyshev",

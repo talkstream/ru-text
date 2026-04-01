@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-04-01
+
+### Fixed
+- Reference files unreachable for marketplace users: Claude could not resolve relative paths in SKILL.md and commands because the Skill tool does not provide a base directory. Added Glob-based path discovery so Claude locates the references directory deterministically
+- Multi-version cache ambiguity: added disambiguation rule for users with multiple cached versions
+
+### Changed
+- SKILL.md and commands now use a `REFS/<filename>` pattern with an explicit setup step instead of unresolvable markdown links
+- Trimmed redundant quality checklist items from SKILL.md (covered by reference files); word count 560/600
+
 ## [1.5.0] - 2026-03-31
 
 ### Added

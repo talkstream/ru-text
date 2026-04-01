@@ -10,7 +10,7 @@ description: >
 
 Independent Russian text quality reference by Arseniy Kamyshev.
 With gratitude to the authors whose work shaped modern Russian text standards.
-Credits and recommended reading: [sources.md](references/sources.md)
+Credits and recommended reading: sources.md (see path resolution below)
 
 **Style priority**: if the user explicitly requests a specific style (casual, academic, SEO, literary, etc.), their prompt overrides these default rules where they conflict. These rules are defaults, not mandates.
 
@@ -33,7 +33,7 @@ Apply these rules to ALL Russian text output without exception.
 | Abbreviations with NBSP | т.д., т.е. | т. д., т. е. |
 | Ruble symbol after number | 1500 руб | 1 500 ₽ |
 
-Full typography reference: [typography.md](references/typography.md)
+Full typography reference: typography.md (see path resolution below)
 
 `/ru-text:ru-score` — text quality score (0–10, 5 dimensions).
 
@@ -52,43 +52,33 @@ Full typography reference: [typography.md](references/typography.md)
 | на сегодняшний день | сегодня |
 | в целях | чтобы |
 
-Full stop-word catalog (97 entries): [info-style.md](references/info-style.md)
+Full stop-word catalog (97 entries): info-style.md
 
 ## When to Load Reference Files
 
-| Task | Load |
+Before reading any reference file, discover the references directory (once per session):
+1. `Glob("**/ru-text/references/scoring.md", path: "~/.claude/plugins/cache/")`
+2. The parent directory of the result is REFS — read files as `REFS/<filename>` (if multiple results, use the last one)
+
+| Task | File |
 |---|---|
-| Writing/editing articles, blog posts, SEO, content | [info-style.md](references/info-style.md) |
-| Interface text, buttons, errors, hints, microcopy | [ux-writing.md](references/ux-writing.md) |
-| Emails, messenger, business correspondence | [business-writing.md](references/business-writing.md) |
-| Punctuation review, comma placement | [editorial-punctuation.md](references/editorial-punctuation.md) |
-| Grammar, capitalization, agreement, pleonasms | [editorial-grammar.md](references/editorial-grammar.md) |
-| Finding and fixing text problems, diagnostics | [anti-patterns.md](references/anti-patterns.md) |
-| Text scoring, quality assessment | [scoring.md](references/scoring.md) |
-| Credits, source attribution | [sources.md](references/sources.md) |
-| Experience-based rules (dash overuse, etc.) | [addenda.md](references/addenda.md) |
+| Writing/editing articles, blog posts, SEO, content | info-style.md |
+| Interface text, buttons, errors, hints, microcopy | ux-writing.md |
+| Emails, messenger, business correspondence | business-writing.md |
+| Punctuation review, comma placement | editorial-punctuation.md |
+| Grammar, capitalization, agreement, pleonasms | editorial-grammar.md |
+| Finding and fixing text problems, diagnostics | anti-patterns.md |
+| Text scoring, quality assessment | scoring.md |
+| Credits, source attribution | sources.md |
+| Experience-based rules (dash overuse, etc.) | addenda.md |
 
 ## Quality Checklist
 
 Before delivering Russian text:
 
-### Typography (mandatory)
 - [ ] Quotes: «» primary, „" nested
 - [ ] Dashes: — in text, – in ranges, - only in compounds; max 1–2 per paragraph
 - [ ] NBSP after в, к, с, о, у, и, а
 - [ ] Ellipsis: … (single char)
 - [ ] Abbreviations: т. д., т. п. (with NBSP)
 - [ ] No double spaces, no space before punctuation
-
-### Writing quality (when creating/editing)
-- [ ] No filler words (является, осуществляет, данный)
-- [ ] Specific claims backed by facts or numbers
-- [ ] Active voice preferred
-- [ ] One idea per paragraph
-- [ ] Reader benefit clear in every section
-
-### Editorial (when proofreading)
-- [ ] No tautology or pleonasm
-- [ ] Lists grammatically homogeneous
-- [ ] Capitalization follows Russian norms (no Title Case)
-- [ ] Comma traps checked (однако, наконец, значит)

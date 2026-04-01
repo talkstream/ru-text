@@ -114,7 +114,7 @@ If you explicitly request a specific style — casual, academic, SEO, literary, 
 ## Technical quality
 
 Built to Anthropic's Claude Code plugin specs:
-- SKILL.md: 600 words, 94 lines (guideline: under 2 000 words, under 500 lines)
+- SKILL.md: 560 words, 84 lines (guideline: under 2 000 words, under 500 lines)
 - 9 reference files load on demand, never at session start
 - ~1 040 rules organized into 7 thematic areas with progressive disclosure
 
