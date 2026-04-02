@@ -18,12 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.0] - 2026-03-31
 
 ### Added
-- Published to official Anthropic plugin marketplace
-- One-command installation: `/plugin install ru-text`
-- Badge: official plugin status in README
+- Published to Anthropic community plugin marketplace
+- Installation via `/plugin marketplace add anthropics/claude-plugins-community` + `/plugin install ru-text`
+- Badge: plugin status in README
 
 ### Changed
-- Claude Code Quick Start simplified from 2-step marketplace-add to 1-step install
+- Claude Code Quick Start updated with marketplace setup step
 
 ## [1.4.0] - 2026-03-30
 
