@@ -4,6 +4,11 @@ description: >
   Use when writing, editing, or reviewing Russian-language text, or when user
   mentions ru-text. Covers typography, info-style, editorial, UX writing, business
   correspondence. Auto-activates on Russian text output.
+metadata:
+  openclaw:
+    always: true
+    emoji: "\U0001F4DD"
+    homepage: "https://ru-text.org"
 ---
 
 # ru-text — Russian Text Quality

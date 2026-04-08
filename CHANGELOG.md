@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-04-09
+
+### Added
+- Notion integration: AI Custom Skill template for in-Notion text quality checks (`notion/ru-text-notion-skill.md`)
+- Notion MCP workflow documentation (Claude Code + Notion MCP server)
+- OpenClaw support: native plugin manifest (`openclaw.plugin.json`)
+- ClawHub marketplace readiness (`metadata.openclaw` in SKILL.md frontmatter)
+- OpenClaw and Notion installation instructions in both READMEs
+- `notion/` directory with self-contained skill template and bilingual setup guide
+
+### Changed
+- Platform support expanded: Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, Notion
+- Consistent digit formatting across all README files (English: `~1,040`; Russian: `~1 040`)
+
 ## [1.5.1] - 2026-04-01
 
 ### Fixed

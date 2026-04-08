@@ -4,9 +4,9 @@
 
 **Languages:** English | [Русский](README.ru.md)
 
-**Russian text quality plugin for Claude Code, Codex CLI, Gemini CLI, and Cursor** — typography, information style, editorial standards, UX writing, and business correspondence.
+**Russian text quality plugin for Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion** — typography, information style, editorial standards, UX writing, and business correspondence.
 
-~1040 independently formulated rules informed by 16 canonical Russian-language sources. All formulations are original — no verbatim quotes, full attribution.
+~1,040 independently formulated rules informed by 16 canonical Russian-language sources. All formulations are original — no verbatim quotes, full attribution.
 
 ## Acknowledgments
 
@@ -17,9 +17,9 @@ This plugin exists because a handful of people decided that Russian text on the 
 
 ru-text gives your AI coding assistant a deep understanding of Russian text quality. It auto-activates when the assistant produces or edits Russian text, applying typography rules instantly and loading domain-specific knowledge on demand.
 
-Works with Claude Code, Codex CLI, Gemini CLI, and Cursor.
+Works with Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion.
 
-- **~1040 rules** across 7 domains, packed into 9 reference files + addenda
+- **~1,040 rules** across 7 domains, packed into 9 reference files + addenda
 - **Auto-activation** — no need to remember to turn it on
 - **Covers everything** — from em dashes and guillemets to UX microcopy and business email tone
 - **Non-dogmatic** — your explicit style request always overrides default rules
@@ -75,6 +75,28 @@ git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text .agents/skills/ru-text
 ```
 
+### OpenClaw
+
+```bash
+openclaw plugins install https://github.com/talkstream/ru-text
+```
+
+Also available on [ClawHub](https://clawhub.ai/skills/ru-text). Works with any LLM provider and messaging channel OpenClaw supports.
+
+### Notion
+
+Two integration paths — see [notion/README.md](notion/README.md) for details:
+
+**Notion AI Custom Skill** (standalone, Business/Enterprise plan):
+1. Copy [the template page](notion/ru-text-notion-skill.md) into a Notion page
+2. Designate the page as an AI skill
+3. Select text and invoke "ru-text" from the AI menu
+
+**Notion via MCP** (with Claude Code, any plan):
+1. Install ru-text in Claude Code
+2. Connect the [Notion MCP server](https://developers.notion.com/guides/mcp/get-started-with-mcp)
+3. Ask Claude Code to read, check, and update your Notion pages
+
 ### Any platform via skills CLI
 
 ```bash
@@ -120,7 +142,7 @@ If you explicitly request a specific style — casual, academic, SEO, literary, 
 Built to Anthropic's Claude Code plugin specs:
 - SKILL.md: 560 words, 84 lines (guideline: under 2 000 words, under 500 lines)
 - 9 reference files load on demand, never at session start
-- ~1 040 rules organized into 7 thematic areas with progressive disclosure
+- ~1,040 rules organized into 7 thematic areas with progressive disclosure
 
 ## Intellectual property notice
 
