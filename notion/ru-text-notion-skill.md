@@ -217,7 +217,7 @@ Common mistakes — wrong → correct.
 
 Before delivering Russian text, verify:
 
-- Quotes: «» primary, „" nested
+- Quotes: «» primary, „“ nested
 - Dashes: — in text, – in ranges, - only in compounds; max 1–2 per paragraph
 - Non-breaking space after в, к, с, о, у, и, а
 - Ellipsis: … (single char)

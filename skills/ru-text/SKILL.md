@@ -80,7 +80,7 @@ If the path is not resolved, search: `Glob("**/ru-text/references/scoring.md")` 
 
 Before delivering Russian text:
 
-- [ ] Quotes: «» primary, „" nested
+- [ ] Quotes: «» primary, „“ nested
 - [ ] Dashes: — in text, – in ranges, - only in compounds; max 1–2 per paragraph
 - [ ] NBSP after в, к, с, о, у, и, а
 - [ ] Ellipsis: … (single char)

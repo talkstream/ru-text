@@ -17,7 +17,7 @@ This plugin exists because a handful of people decided that Russian text on the 
 
 ru-text gives your AI coding assistant a deep understanding of Russian text quality. It auto-activates when the assistant produces or edits Russian text, applying typography rules instantly and loading domain-specific knowledge on demand.
 
-Works with Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion.
+Works with Claude Code, Cowork, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion.
 
 - **~1,040 rules** across 7 domains, packed into 9 reference files + addenda
 - **Auto-activation** — no need to remember to turn it on
@@ -150,7 +150,7 @@ If you explicitly request a specific style — casual, academic, SEO, literary, 
 ## Technical quality
 
 Built to Anthropic's Claude Code plugin specs:
-- SKILL.md: 560 words, 84 lines (guideline: under 2 000 words, under 500 lines)
+- SKILL.md: 539 words, 88 lines (guideline: under 2,000 words, under 500 lines)
 - 9 reference files load on demand, never at session start
 - ~1,040 rules organized into 7 thematic areas with progressive disclosure
 

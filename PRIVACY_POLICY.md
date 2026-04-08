@@ -1,10 +1,10 @@
 # Privacy Policy
 
-**Last updated:** March 30, 2026
+**Last updated:** April 9, 2026
 
 ## Overview
 
-ru-text is a text quality plugin for Claude Code, Codex CLI, Gemini CLI, and Cursor that contains only static Markdown files. It is designed to have zero impact on your privacy.
+ru-text is a text quality plugin for Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion that contains only static Markdown files. It is designed to have zero impact on your privacy.
 
 ## What this plugin does NOT do
 
