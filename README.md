@@ -78,10 +78,10 @@ cp -r ru-text/skills/ru-text .agents/skills/ru-text
 ### OpenClaw
 
 ```bash
-openclaw plugins install https://github.com/talkstream/ru-text
+openclaw plugins install clawhub:ru-text
 ```
 
-Also available on [ClawHub](https://clawhub.ai/skills/ru-text). Works with any LLM provider and messaging channel OpenClaw supports.
+Available on [ClawHub](https://clawhub.ai). Works with any LLM provider and messaging channel OpenClaw supports.
 
 ### Notion
 

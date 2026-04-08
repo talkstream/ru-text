@@ -12,13 +12,13 @@ Turn any Notion page into a Russian text quality assistant. Requires Notion Busi
 2. Copy the entire content
 3. Create a new Notion page in your workspace
 4. Paste the content (Notion converts markdown automatically)
-5. Open page settings (three-dot menu) and select **Use as AI skill**
+5. Open page settings (three-dot menu) → **Use with AI** → **Use as AI skill**
 6. Name the skill «ru-text»
 
 ### Usage
 
 1. Select text in any Notion page
-2. Click **Ask AI** or press `Ctrl+J` / `Cmd+J`
+2. Click **Ask AI** in the selection toolbar
 3. Choose the «ru-text» skill from the menu
 4. Notion AI applies typography rules, flags stop-words, and suggests improvements
 
@@ -77,13 +77,13 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 2. Скопируйте содержимое полностью
 3. Создайте новую страницу Notion в рабочем пространстве
 4. Вставьте содержимое (Notion автоматически конвертирует Markdown)
-5. Откройте настройки страницы (меню с тремя точками) и выберите **Use as AI skill**
+5. Откройте настройки страницы (меню с тремя точками) → **Use with AI** → **Use as AI skill**
 6. Назовите навык «ru-text»
 
 ### Использование
 
 1. Выделите текст на любой странице Notion
-2. Нажмите **Ask AI** или `Ctrl+J` / `Cmd+J`
+2. Нажмите **Ask AI** на панели выделения
 3. Выберите навык «ru-text» в меню
 4. Notion AI применит правила типографики, отметит стоп-слова и предложит улучшения
 

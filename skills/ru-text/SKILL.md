@@ -26,7 +26,7 @@ Apply these rules to ALL Russian text output without exception.
 | Rule | Wrong | Correct |
 |---|---|---|
 | Primary quotes: guillemets | "текст" | «текст» |
-| Nested quotes: lapki | «"вложенные"» | «„вложенные"» |
+| Nested quotes: lapki | «"вложенные"» | «„вложенные“» |
 | Em dash with spaces | слово - слово | слово — слово |
 | En dash for ranges, no spaces | 10-15 дней | 10–15 дней |
 | NBSP after single-letter prepositions | в начале (breakable) | в\u00A0начале |

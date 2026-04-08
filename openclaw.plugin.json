@@ -3,20 +3,13 @@
   "name": "ru-text",
   "version": "1.6.0",
   "description": "Russian text quality plugin — typography, information style, editorial standards, UX writing, business correspondence",
-  "kind": "skill-bundle",
-  "configSchema": {},
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false
+  },
   "skills": [
     "ru-text",
     "ru-check",
     "ru-score"
-  ],
-  "enabledByDefault": true,
-  "author": {
-    "name": "Arseniy Kamyshev",
-    "email": "nafigator@gmail.com",
-    "url": "https://t.me/nafigator"
-  },
-  "homepage": "https://ru-text.org",
-  "repository": "https://github.com/talkstream/ru-text",
-  "license": "MIT"
+  ]
 }
