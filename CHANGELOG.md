@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Platform support expanded: Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, Notion
 - Consistent digit formatting across all README files (English: `~1,040`; Russian: `~1 040`)
 
+### Fixed
+- Claude Code install: added `@claude-community` marketplace suffix
+- Codex CLI: replaced non-existent `codex install` with interactive `/plugins` browser
+- Cursor: added `/add-plugin` as primary install method, manual copy as fallback
+- OpenClaw: corrected install syntax to `clawhub:ru-text` format
+- Notion: fixed keyboard shortcut (removed wrong `Ctrl+J`), corrected menu path
+- Typography: fixed closing lapki quote U+0022 → U+201C in SKILL.md and Notion template
+- OpenClaw manifest: removed undocumented fields (`kind`, `enabledByDefault`)
+
 ## [1.5.1] - 2026-04-01
 
 ### Fixed

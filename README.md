@@ -49,16 +49,20 @@ Works with Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion.
 /plugin marketplace add anthropics/claude-plugins-community
 
 # Install the plugin
-/plugin install ru-text
+/plugin install ru-text@claude-community
 ```
 
 Available in the [Anthropic plugin marketplace](https://claude.com/plugins). Works in Claude Code CLI, VS Code, JetBrains, Web, and Desktop.
 
 ### Codex CLI
 
-```bash
-codex install talkstream/ru-text
+Inside a Codex session, use the interactive plugin browser:
+
 ```
+/plugins
+```
+
+Search for "ru-text" and install. Alternatively, use the universal skills CLI (see below).
 
 ### Gemini CLI
 
@@ -68,7 +72,13 @@ gemini extensions install https://github.com/talkstream/ru-text
 
 ### Cursor
 
-Copy the skill to your project:
+Use the plugin command in Cursor Agent chat:
+
+```
+/add-plugin
+```
+
+Search for "ru-text" and install. If not listed in the marketplace, copy manually:
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
