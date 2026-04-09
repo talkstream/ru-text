@@ -81,8 +81,12 @@ gemini extensions install https://github.com/talkstream/ru-text
 Найдите «ru-text» и установите. Если плагин не найден в маркетплейсе, скопируйте вручную:
 
 ```bash
+Ubuntu
 git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text ~/.cursor/plugins/local/ru-text
+
+Windows:
+Copy-Item -Path ".\ru-text\skills\ru-text\" -Destination "$env:userprofile\.cursor\plugins\local" -Recurse
 ```
 
 ### OpenClaw

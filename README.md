@@ -82,7 +82,12 @@ Search for "ru-text" and install. If not listed in the marketplace, copy manuall
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
+
+Ubuntu:
 cp -r ru-text/skills/ru-text ~/.cursor/plugins/local/ru-text
+
+Windows:
+Copy-Item -Path ".\ru-text\skills\ru-text\" -Destination "$env:userprofile\.cursor\plugins\local" -Recurse
 ```
 
 ### OpenClaw
