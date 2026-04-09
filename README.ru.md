@@ -221,6 +221,12 @@ git clone https://github.com/talkstream/ru-text.git
 - **Типограф Лебедева** ([typograf.artlebedev.ru](https://www.artlebedev.ru/typograf/)) — автоматически исправляет типографику: кавычки, тире, неразрывные пробелы
 - **Орфограммка** ([orfogrammka.ru](https://orfogrammka.ru)) — проверка грамматики, орфографии и пунктуации
 
+## Смотрите также
+
+- [Главред](https://glvrd.ru) — проверяет текст на качество инфостиля, подсвечивает воду, оценивает от 0 до 10
+- [Типограф Лебедева](https://www.artlebedev.ru/typograf/) — автоматически исправляет типографику: кавычки, тире, неразрывные пробелы
+- [Орфограммка](https://orfogrammka.ru) — проверка грамматики, орфографии и пунктуации
+
 ## Автор
 
 **Арсений Камышев** — [nafigator@gmail.com](mailto:nafigator@gmail.com) — [Telegram](https://t.me/nafigator) — [GitHub](https://github.com/talkstream)

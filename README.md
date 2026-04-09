@@ -220,6 +220,12 @@ for informational purposes only.
 - **Lebedev Typograf** ([typograf.artlebedev.ru](https://www.artlebedev.ru/typograf/)) — auto-fixes typography: quotes, dashes, non-breaking spaces
 - **Orfogrammka** ([orfogrammka.ru](https://orfogrammka.ru)) — grammar, spelling, and punctuation checker
 
+## See also
+
+- [Glavred](https://glvrd.ru) — checks text for info-style quality, highlights filler, scores 0–10
+- [Typograf](https://www.artlebedev.ru/typograf/) — auto-fixes typography: quotes, dashes, non-breaking spaces
+- [Orfogrammka](https://orfogrammka.ru) — grammar, spelling, and punctuation checker
+
 ## Author
 
 **Arseniy Kamyshev** — [nafigator@gmail.com](mailto:nafigator@gmail.com) — [Telegram](https://t.me/nafigator) — [GitHub](https://github.com/talkstream)
