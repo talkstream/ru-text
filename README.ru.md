@@ -85,6 +85,13 @@ git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text ~/.cursor/skills/ru-text
 ```
 
+Windows (PowerShell):
+
+```powershell
+git clone https://github.com/talkstream/ru-text.git
+Copy-Item -Recurse ru-text\skills\ru-text "$env:USERPROFILE\.cursor\skills\ru-text"
+```
+
 ### OpenClaw
 
 ```bash

@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Typography: fixed closing lapki quote U+0022 → U+201C in SKILL.md and Notion template
 - OpenClaw manifest: removed undocumented fields (`kind`, `enabledByDefault`)
 - Cursor: corrected manual install path (`.agents/skills/` → `~/.cursor/skills/`)
+- Cursor: added Windows (PowerShell) install path for manual skill setup (thanks @dreik, PR #8)
+- Cursor: documented `~/.cursor/plugins/local/` as full plugin local testing path (cf. cursor/plugin-template#4)
 
 ## [1.5.1] - 2026-04-01
 
