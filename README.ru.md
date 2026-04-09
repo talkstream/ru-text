@@ -82,7 +82,7 @@ gemini extensions install https://github.com/talkstream/ru-text
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text .agents/skills/ru-text
+cp -r ru-text/skills/ru-text ~/.cursor/plugins/local/ru-text
 ```
 
 ### OpenClaw
