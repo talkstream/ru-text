@@ -88,10 +88,10 @@ cp -r ru-text/skills/ru-text .agents/skills/ru-text
 ### OpenClaw
 
 ```bash
-openclaw plugins install clawhub:ru-text
+openclaw skills install ru-text
 ```
 
-Available on [ClawHub](https://clawhub.ai). Works with any LLM provider and messaging channel OpenClaw supports.
+Available on [ClawHub](https://clawhub.ai/talkstream/ru-text). Works with any LLM provider and messaging channel OpenClaw supports.
 
 ### Notion
 
@@ -210,7 +210,7 @@ for informational purposes only.
 ### Online tools
 
 - **Glavred** ([glvrd.ru](https://glvrd.ru)) — checks text for info-style quality, highlights filler, scores 0–10
-- **Lebedev Typograf** ([typograf.artlebedev.ru](https://typograf.artlebedev.ru)) — auto-fixes typography: quotes, dashes, non-breaking spaces
+- **Lebedev Typograf** ([typograf.artlebedev.ru](https://www.artlebedev.ru/typograf/)) — auto-fixes typography: quotes, dashes, non-breaking spaces
 - **Orfogrammka** ([orfogrammka.ru](https://orfogrammka.ru)) — grammar, spelling, and punctuation checker
 
 ## Author
