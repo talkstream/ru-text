@@ -38,7 +38,7 @@ Use the full ru-text plugin with Notion pages through Claude Code and the offici
 
 ### Setup
 
-1. Install ru-text in Claude Code: `/plugin install ru-text`
+1. Install ru-text in Claude Code: `/plugin install ru-text@claude-community`
 2. Connect the Notion MCP server ([setup guide](https://developers.notion.com/guides/mcp/get-started-with-mcp))
 3. Grant Claude Code access to the relevant Notion pages
 
@@ -103,7 +103,7 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 
 ### Настройка
 
-1. Установите ru-text в Claude Code: `/plugin install ru-text`
+1. Установите ru-text в Claude Code: `/plugin install ru-text@claude-community`
 2. Подключите Notion MCP-сервер ([инструкция](https://developers.notion.com/guides/mcp/get-started-with-mcp))
 3. Предоставьте Claude Code доступ к нужным страницам Notion
 

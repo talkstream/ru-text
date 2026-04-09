@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notion: fixed keyboard shortcut (removed wrong `Ctrl+J`), corrected menu path
 - Typography: fixed closing lapki quote U+0022 → U+201C in SKILL.md and Notion template
 - OpenClaw manifest: removed undocumented fields (`kind`, `enabledByDefault`)
+- Cursor: corrected manual install path (`.agents/skills/` → `~/.cursor/skills/`)
 
 ## [1.5.1] - 2026-04-01
 
