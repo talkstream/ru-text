@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-04-14
+
+### Added
+- GitHub Copilot support: install instructions, `.github/skills/` path documentation
+- Windsurf (Codeium) support: install instructions, `.windsurf/skills/` path documentation
+- Cline support: install instructions, `.cline/skills/` path documentation
+- JetBrains Junie support: install instructions, `.junie/skills/` path documentation
+- Continue.dev support: install instructions, `.continue/skills/` path documentation
+- Roadmap section in both READMEs: Telegram Bot, Browser Extension, WordPress Plugin
+
+### Changed
+- Platform support expanded: 7 → 12 platforms (Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains Junie, Continue.dev, Codex CLI, Gemini CLI, OpenClaw, Notion, skills CLI)
+- Quick Start section reorganized for 12-platform listing
+
 ## [1.6.0] - 2026-04-09
 
 ### Added

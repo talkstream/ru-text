@@ -2,7 +2,7 @@
   "name": "ru-text",
   "metadata": {
     "description": "Russian text quality plugin for Claude Code and Cowork",
-    "version": "1.6.0"
+    "version": "1.7.0"
   },
   "owner": {
     "name": "Arseniy Kamyshev",
@@ -13,7 +13,7 @@
     {
       "name": "ru-text",
       "source": "./",
-      "version": "1.6.0",
+      "version": "1.7.0",
       "description": "Russian text quality — ~1,040 rules for typography, info-style, editorial, UX writing, business correspondence",
       "category": "productivity",
       "homepage": "https://github.com/talkstream/ru-text",

@@ -1,7 +1,7 @@
 {
   "id": "ru-text",
   "name": "ru-text",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Russian text quality plugin — typography, information style, editorial standards, UX writing, business correspondence",
   "configSchema": {
     "type": "object",

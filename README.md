@@ -4,7 +4,7 @@
 
 **Languages:** English | [Русский](README.ru.md)
 
-**Russian text quality plugin for Claude Code, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion** — typography, information style, editorial standards, UX writing, and business correspondence.
+**Russian text quality plugin for Claude Code, GitHub Copilot, Windsurf, Cursor, JetBrains, and [6 more platforms](#quick-start)** — typography, information style, editorial standards, UX writing, and business correspondence.
 
 ~1,040 independently formulated rules informed by 16 canonical Russian-language sources. All formulations are original — no verbatim quotes, full attribution.
 
@@ -17,7 +17,7 @@ This plugin exists because a handful of people decided that Russian text on the 
 
 ru-text gives your AI coding assistant a deep understanding of Russian text quality. It auto-activates when the assistant produces or edits Russian text, applying typography rules instantly and loading domain-specific knowledge on demand.
 
-Works with Claude Code, Cowork, Codex CLI, Gemini CLI, Cursor, OpenClaw, and Notion.
+Works with Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, OpenClaw, and Notion.
 
 - **~1,040 rules** across 7 domains, packed into 9 reference files + addenda
 - **Auto-activation** — no need to remember to turn it on
@@ -91,6 +91,87 @@ Windows (PowerShell):
 git clone https://github.com/talkstream/ru-text.git
 Copy-Item -Recurse ru-text\skills\ru-text "$env:USERPROFILE\.cursor\skills\ru-text"
 ```
+
+### GitHub Copilot
+
+If ru-text is already installed for Claude Code in your project, Copilot detects it automatically. Otherwise:
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+Or copy manually:
+
+```bash
+git clone https://github.com/talkstream/ru-text.git
+cp -r ru-text/skills/ru-text .github/skills/ru-text
+```
+
+Works in VS Code, Visual Studio, and JetBrains IDEs with Copilot.
+
+### Windsurf
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+Or copy manually to the Windsurf skills directory:
+
+```bash
+git clone https://github.com/talkstream/ru-text.git
+cp -r ru-text/skills/ru-text .windsurf/skills/ru-text
+```
+
+Invoke with `@ru-text` in Cascade chat. Also available via Cascade panel > Customizations > Skills.
+
+### Cline
+
+If ru-text is already installed for Claude Code in your project, Cline detects it automatically. Otherwise:
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+Or copy manually:
+
+```bash
+git clone https://github.com/talkstream/ru-text.git
+cp -r ru-text/skills/ru-text .cline/skills/ru-text
+```
+
+Enable skills in Cline settings: Features > Enable Skills.
+
+### JetBrains (Junie)
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+Or copy manually:
+
+```bash
+git clone https://github.com/talkstream/ru-text.git
+cp -r ru-text/skills/ru-text .junie/skills/ru-text
+```
+
+Works in IntelliJ IDEA, PyCharm, WebStorm, GoLand, PhpStorm, RubyMine, RustRover, Rider, CLion, and Android Studio.
+
+### Continue
+
+If ru-text is already installed for Claude Code in your project, Continue detects it automatically. Otherwise:
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+Or copy manually:
+
+```bash
+git clone https://github.com/talkstream/ru-text.git
+cp -r ru-text/skills/ru-text .continue/skills/ru-text
+```
+
+Works in both VS Code and JetBrains extensions.
 
 ### OpenClaw
 
@@ -180,6 +261,16 @@ and further study.
 
 Product names mentioned are trademarks of their respective owners, used here
 for informational purposes only.
+
+## Roadmap
+
+Next steps for expanding ru-text to new audiences:
+
+- **Telegram Bot** — text quality checking and /ru-score via Telegram
+- **Browser Extension** — Russian text quality in any web text field (Chrome, Firefox)
+- **WordPress Plugin** — typography and quality scoring in the Gutenberg editor
+
+Contributions and ideas welcome — [open an issue](https://github.com/talkstream/ru-text/issues) or [start a discussion](https://github.com/talkstream/ru-text/discussions).
 
 ## Sources and credits
 
