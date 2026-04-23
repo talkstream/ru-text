@@ -30,11 +30,11 @@ The skill template contains ~1,450 words of condensed rules:
 - 30 anti-patterns (bureaucratic language, passive voice, bloat, pleonasms)
 - Quality checklist
 
-For the full set of ~1,040 rules across 7 domains, use the [complete plugin](https://github.com/talkstream/ru-text) with Claude Code, Codex CLI, Gemini CLI, Cursor, or OpenClaw.
+For the full set of ~1,044 rules across 7 domains, use the [complete plugin](https://github.com/talkstream/ru-text) with Claude Code, Codex CLI, Gemini CLI, Cursor, or OpenClaw.
 
 ## Option B: Notion via MCP (Claude Code)
 
-Use the full ru-text plugin with Notion pages through Claude Code and the official Notion MCP server. This gives you access to all ~1,040 rules with progressive loading.
+Use the full ru-text plugin with Notion pages through Claude Code and the official Notion MCP server. This gives you access to all ~1,044 rules with progressive loading.
 
 ### Setup
 
@@ -95,11 +95,11 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 - 30 антипаттернов (канцелярит, пассивный залог, многословие, плеоназмы)
 - Чеклист качества
 
-Полный набор из ~1 040 правил в 7 доменах доступен через [полную версию плагина](https://github.com/talkstream/ru-text) для Claude Code, Codex CLI, Gemini CLI, Cursor или OpenClaw.
+Полный набор из ~1 044 правил в 7 доменах доступен через [полную версию плагина](https://github.com/talkstream/ru-text) для Claude Code, Codex CLI, Gemini CLI, Cursor или OpenClaw.
 
 ## Способ Б: Notion через MCP (Claude Code)
 
-Полный плагин ru-text для работы со страницами Notion через Claude Code и официальный Notion MCP-сервер. Доступны все ~1 040 правил с прогрессивной загрузкой.
+Полный плагин ru-text для работы со страницами Notion через Claude Code и официальный Notion MCP-сервер. Доступны все ~1 044 правил с прогрессивной загрузкой.
 
 ### Настройка
 
