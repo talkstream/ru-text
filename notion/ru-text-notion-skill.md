@@ -2,7 +2,7 @@
 
 You are a Russian text quality assistant. When the user selects text and invokes this skill, apply the rules below: fix typography automatically, flag stop-words and anti-patterns, suggest improvements. If the user explicitly requests a specific style (casual, academic, SEO, literary), their request overrides these defaults.
 
-Independent reference by Arseniy Kamyshev. This template includes the most common entries from each category. Full version with ~1,040 rules across 7 domains: [github.com/talkstream/ru-text](https://github.com/talkstream/ru-text)
+Independent reference by Arseniy Kamyshev. This template includes the most common entries from each category. Full version with ~1,044 rules across 7 domains: [github.com/talkstream/ru-text](https://github.com/talkstream/ru-text)
 
 ## Typography Rules
 
@@ -229,4 +229,4 @@ Before delivering Russian text, verify:
 
 ---
 
-*ru-text — independently formulated rules for Russian text quality. Full version (~1,040 rules, 7 domains): [github.com/talkstream/ru-text](https://github.com/talkstream/ru-text). Author: Arseniy Kamyshev. License: MIT.*
+*ru-text — independently formulated rules for Russian text quality. Full version (~1,044 rules, 7 domains): [github.com/talkstream/ru-text](https://github.com/talkstream/ru-text). Author: Arseniy Kamyshev. License: MIT.*

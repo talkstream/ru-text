@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-04-24
+
+### Added
+- 4 new anti-patterns in `addenda.md` (AD-2 … AD-5), all marked `Severity: Low` and integrated as secondary signals in the Clarity and Structure dimensions of `scoring.md`:
+  - **AD-2.** Excessive parcellation — staccato rhythm from short sentence fragments. Context-sensitive: wrong in info-style/UX/business, acceptable in publicism, legitimate device in literature (cf. Розенталь, «Справочник», ГЛАВА L).
+  - **AD-3.** Patronizing explanation (разжёвывание очевидного) — redundant over-explaining of what context already conveys. Includes an explicit cross-reference distinguishing it from `info-style.md` A.2 «примитивизация» (which denotes the opposite failure: oversimplification at the cost of meaning).
+  - **AD-4.** Unprovoked rebuttal — constructions like «а это уже…», «но на самом деле…» without an antecedent claim in the text. Diagnostic test: is there actually a prior claim being rebutted?
+  - **AD-5.** Subject-predicate semantic mismatch — antropomorphic predicates implying will or consciousness applied to subjects that lack them. Explicit exception for normative technical/ML terminology: сходимость, стремление к оптимуму, принятие решения машиной, обучение модели (cf. БРЭ, article Антропоморфизм).
+- `scoring.md`: AD-2…AD-5 referenced as secondary signals in Clarity (AD-3, AD-5) and Structure (AD-2, AD-4) dimensions. Dimension weights and non-compensatory caps unchanged.
+
+### Credits
+- Anti-patterns AD-2..AD-5 proposed by @V8-Software in issue #9 (2026-04-16). Original terminology adjusted in three places to prevent terminological collisions and false positives on established technical writing (see issue comment for rationale).
+
 ## [1.7.0] - 2026-04-14
 
 ### Added
