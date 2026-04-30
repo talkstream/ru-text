@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.2] - 2026-04-30
+
+### Fixed
+- **Cross-platform skill rendering.** Replaced Claude-specific `${CLAUDE_PLUGIN_ROOT}` path tokens in both `skills/ru-text/SKILL.md` and the root `SKILL.md` (the latter is consumed by `npx skills add` and similar universal skill-discovery tools) with relative `references/<filename>` paths. Codex Desktop, Cursor, Windsurf, Cline, JetBrains Junie, Continue.dev, Gemini CLI, and GitHub Copilot do not substitute that variable, so users on those platforms previously saw raw `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/...` strings rendered as literal text in the skill description panel. Relative paths match the documented Codex skill convention and continue to work on Claude Code via the existing `Glob("**/ru-text/references/...")` fallback.
+
+### Changed
+- **Quick Start order.** Sections in both READMEs (EN and RU) are now sorted by April 2026 platform popularity among developers using AI assistants: Claude Code (CLI) → Claude Code (Desktop) → Codex CLI → Notion → Cursor → GitHub Copilot → Gemini CLI → Windsurf → Continue.dev → Cline → JetBrains (Junie) → OpenClaw. Claude Code (Desktop) is now a separate sub-section that points to the same install commands. Headline and "Works with…" paragraph reordered to match.
+
 ## [1.7.1] - 2026-04-24
 
 ### Added
