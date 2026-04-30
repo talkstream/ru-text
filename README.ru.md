@@ -1,6 +1,6 @@
 # ru-text
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://claude.com/plugins) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
 
 **Языки:** [English](README.md) | Русский
 
@@ -54,7 +54,7 @@ ru-text даёт вашему ИИ-ассистенту глубокое пон�
 /plugin install ru-text@claude-community
 ```
 
-Доступен в [маркетплейсе плагинов Anthropic](https://claude.com/plugins).
+Опубликован в [community-маркетплейсе Claude Code](https://github.com/anthropics/claude-plugins-community). Размещение в [официальном маркетплейсе Anthropic](https://claude.com/plugins) запланировано.
 
 ### Claude Code (Desktop)
 

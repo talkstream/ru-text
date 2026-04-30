@@ -1,6 +1,6 @@
 # ru-text
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://claude.com/plugins) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
 
 **Languages:** English | [Русский](README.ru.md)
 
@@ -54,7 +54,7 @@ Sections are ordered by April 2026 platform popularity among developers using AI
 /plugin install ru-text@claude-community
 ```
 
-Available in the [Anthropic plugin marketplace](https://claude.com/plugins).
+Listed in the [Claude Code community marketplace](https://github.com/anthropics/claude-plugins-community). A listing in the [official Anthropic marketplace](https://claude.com/plugins) is planned.
 
 ### Claude Code (Desktop)
 
