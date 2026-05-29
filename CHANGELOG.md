@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.3] - 2026-05-29
+
+### Changed
+- **Percent sign now defaults to no space (`100%`).** Rule R37 in `typography.md` previously forced a non-breaking space before the percent sign (`100<nbsp>%`). For general and web text -- ru-text's primary register -- the dominant de facto norm and the traditional Russian hand-typesetting handbooks (М. Шульмейстер; П. Гиленсон) set the percent sign tight to the number (`100%`). The spaced form (`100 %`) is the metrological convention of ГОСТ 8.417 and remains valid for scientific and technical documents, but it is now positioned as a lower-priority, context-specific variant rather than the default. Provenance note: ГОСТ 8.417-2002 was superseded by ГОСТ 8.417-2024 (in force 30 Sep 2024), which keeps the spaced form; this change is a register/precedence decision (editorial norm over metrological standard for general text), not a claim that the standard's rule is obsolete.
+- Added a short "register and precedence" note to section C.4 of `typography.md`: where a metrological standard (ГОСТ 8.417) conflicts with editorial practice for general text, the editorial norm is the default.
+- Removed the obsolete "tight % sign" entry from the typography anti-pattern list in `anti-patterns.md` (it contradicted the new R37 default).
+
 ## [1.7.2] - 2026-04-30
 
 ### Fixed

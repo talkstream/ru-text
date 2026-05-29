@@ -2,7 +2,7 @@
   "name": "ru-text",
   "metadata": {
     "description": "Russian text quality — ~1,044 rules for typography, info-style, editorial, UX writing, business correspondence",
-    "version": "1.7.2"
+    "version": "1.7.3"
   },
   "owner": {
     "name": "Arseniy Kamyshev",
@@ -13,7 +13,7 @@
     {
       "name": "ru-text",
       "source": "./",
-      "version": "1.7.2",
+      "version": "1.7.3",
       "description": "Russian text quality — ~1,044 rules for typography, info-style, editorial, UX writing, business correspondence",
       "category": "productivity",
       "homepage": "https://github.com/talkstream/ru-text",
