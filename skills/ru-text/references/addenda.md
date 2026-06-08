@@ -257,3 +257,55 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 **Severity:** Low. Secondary signal in the **С — Structure** dimension (supporting **Ч — Clarity**). Cannot trigger non-compensatory caps alone.
 
 **Acknowledged:** identified from corpus analysis of AI-generated Russian prose (2026-06); the contrastive-negation antithesis runs at high density in machine drafts and near-zero in human reference corpora.
+
+
+---
+
+## AD-7. Preemptive virtue qualifier (непрошенная оговорка «без воды»)
+
+**Problem:** a trailing manner-flourish that asserts the author's virtue by denying a fault the reader never raised — «без воды», «без виляния», «без лишних слов», «начистоту», «честно говоря», «прямо скажем», «не побоюсь этого слова», «и без всякой магии». The statement reassures the reader against a vice nobody suspected, so the qualifier carries no information and only performs sincerity. It is a cousin of AD-4: where AD-4 rebuts an unvoiced external claim, AD-7 denies an unvoiced fault of the author's own delivery. Virtue is shown by the writing, never announced.
+
+**Sources:**
+- Telling vs. showing, and self-praise as an empty signal: editorial practice, informed by Нора Галь «Слово живое и мёртвое» on needless self-qualification
+- Adjacent to AD-4 (unprovoked rebuttal) and AD-3 (patronizing explanation)
+- Independently formulated from corpus analysis of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- «без воды» / «без виляния» / «без лишних слов» / «без обиняков» — a manner-flourish denying a vice of delivery
+- «честно говоря» / «начистоту» / «прямо скажем» / «не побоюсь этого слова» — announced sincerity
+- «и без всякой магии» / «без всяких фокусов» / «без нервов» appended to a claim about one's own product or method
+- a virtue adverb stacked on a self-statement where deleting it loses no fact
+
+**Rules:**
+
+AD-7.1. Flag a «без [vice]» or «[virtue] говоря» qualifier when it (1) characterises the author's own delivery or method, (2) denies a fault the text never raised, and (3) carries no information — deleting it loses no fact.
+
+AD-7.2. Rewrite by deleting the qualifier and letting the statement stand; the virtue is demonstrated by the writing. «Соберу мысль, без виляния» → «Соберу мысль».
+
+AD-7.3. Allow informative «без»: «кофе без сахара», «работает без интернета», «ноль vi.*-моков, без заглушек», «без регистрации» — here «без» names a real removed ingredient, dependency, or feature, not a manner.
+
+AD-7.4. Allow a genuine epistemic qualifier that carries information: «строго говоря, это аппроксимация», «по сути» when it narrows the claim (cf. AD-6.4). These calibrate meaning; they do not advertise sincerity.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Соберу мысль, без виляния. | Соберу мысль. |
+| Отвечу честно, без воды: дедлайн сорван. | Дедлайн сорван. |
+| Скажу прямо, без обиняков: тест не проходит. | Тест не проходит. |
+| Это работает, и без всякой магии. | Это работает. |
+| Max 20× закрывает запрос начисто, без нервов. | Max 20× закрывает запрос. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Кофе без сахара. | «без» names a real removed ingredient. |
+| Ноль vi.*-моков — без заглушек. | «без» names a real removed thing. |
+| Сервис работает без интернета. | «без» names a real capability. |
+| Строго говоря, это аппроксимация. | Epistemic qualifier carrying real information. |
+
+**Severity:** Low. Secondary signal in the **Ч — Clarity** dimension (supporting **С — Structure**). Cannot trigger non-compensatory caps alone.
+
+**Acknowledged:** identified from corpus analysis of AI-generated Russian prose (2026-06); the «без [vice]» self-virtue flourish recurs in machine drafts and reads as announced rather than demonstrated quality.
