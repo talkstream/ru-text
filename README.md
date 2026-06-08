@@ -2,7 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
 
-**Языки:** [English](README.md) | Русский
+**Языки:** Русский | [English](README.en.md)
+
+> 🌍 **Reading in English?** This page is in Russian on purpose — ru-text is a tool for Russian text quality, so its home page speaks Russian first. You're very welcome here, and the **full English version is one click away → [README in English](README.en.md)**. Everything below is mirrored there.
 
 **Плагин для Claude Code, Codex, Notion, Cursor, GitHub Copilot и [ещё 7 платформ](#быстрый-старт) — качество русского текста** — типографика, информационный стиль, редактура, UX-тексты и деловая переписка.
 
@@ -17,7 +19,7 @@
 
 ru-text даёт вашему ИИ-ассистенту глубокое понимание качества русского текста. Плагин активируется автоматически при создании или редактировании текста на русском: типографика применяется мгновенно, доменные справочники подгружаются по мере необходимости.
 
-Работает с Claude Code (CLI и Desktop), Codex CLI, Notion, Cursor, GitHub Copilot, Gemini CLI, Windsurf, Continue.dev, Cline, JetBrains (Junie) и OpenClaw.
+Работает с Claude Code (CLI и Desktop), Codex CLI, Notion, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains (Junie) и OpenClaw.
 
 - **~1 044 правил** в 7 доменах, упакованных в 9 справочных файлов + дополнения
 - **Автоактивация** — не нужно помнить о включении
@@ -128,6 +130,17 @@ cp -r ru-text/skills/ru-text .github/skills/ru-text
 ```bash
 gemini extensions install https://github.com/talkstream/ru-text
 ```
+
+### Google Antigravity
+
+Antigravity читает формат SKILL.md нативно. Скопируйте навык в глобальную папку навыков — он станет доступен во всех проектах:
+
+```bash
+git clone https://github.com/talkstream/ru-text.git
+cp -r ru-text/skills/ru-text ~/.gemini/antigravity/skills/ru-text
+```
+
+Для конкретного проекта скопируйте навык в `<проект>/.agent/skills/ru-text`. Antigravity молод, и путь к навыкам зависит от версии — актуальный смотрите в [официальном codelab по навыкам Antigravity](https://codelabs.developers.google.com/getting-started-with-antigravity-skills).
 
 ### Windsurf
 

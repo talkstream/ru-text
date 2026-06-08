@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
 
-**Languages:** English | [Русский](README.ru.md)
+**Languages:** [Русский (primary)](README.md) | English
 
 **Russian text quality plugin for Claude Code, Codex, Notion, Cursor, GitHub Copilot, and [7 more platforms](#quick-start)** — typography, information style, editorial standards, UX writing, and business correspondence.
 
@@ -17,7 +17,7 @@ This plugin exists because a handful of people decided that Russian text on the 
 
 ru-text gives your AI coding assistant a deep understanding of Russian text quality. It auto-activates when the assistant produces or edits Russian text, applying typography rules instantly and loading domain-specific knowledge on demand.
 
-Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copilot, Gemini CLI, Windsurf, Continue.dev, Cline, JetBrains (Junie), and OpenClaw.
+Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains (Junie), and OpenClaw.
 
 - **~1,044 rules** across 7 domains, packed into 9 reference files + addenda
 - **Auto-activation** — no need to remember to turn it on
@@ -128,6 +128,17 @@ Works in VS Code, Visual Studio, and JetBrains IDEs with Copilot.
 ```bash
 gemini extensions install https://github.com/talkstream/ru-text
 ```
+
+### Google Antigravity
+
+Antigravity reads the SKILL.md format natively. Copy the skill into the global skills folder to make it available across all projects:
+
+```bash
+git clone https://github.com/talkstream/ru-text.git
+cp -r ru-text/skills/ru-text ~/.gemini/antigravity/skills/ru-text
+```
+
+For a single project, copy the skill into `<project>/.agent/skills/ru-text` instead. Antigravity is young and the skills path varies by version — check the [official Antigravity Skills codelab](https://codelabs.developers.google.com/getting-started-with-antigravity-skills) for the current location.
 
 ### Windsurf
 
