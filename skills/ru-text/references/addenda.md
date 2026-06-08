@@ -254,7 +254,7 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 | Не мытьём, так катаньем. | Fixed idiom. |
 | Не оферта, а приглашение делать оферты. | Legal formula where the binary is operative semantics. |
 
-**Severity:** Low. Secondary signal in the **С — Structure** dimension (supporting **Ч — Clarity**). Cannot trigger non-compensatory caps alone.
+**Severity:** Medium — the manufactured antithesis is the single strongest machine-generation tell in this addenda set, and density compounds fast. Primary signal in the **С — Structure** dimension (supporting **Ч — Clarity**), reflected in the С rubric anchors. A cluster of manufactured pairs materially lowers the С score; a single antecedent-backed pair does not. Still cannot, by itself, trigger a non-compensatory cap — that stays reserved for the hard dimensions and the global < 3.0 floor.
 
 **Acknowledged:** identified from corpus analysis of AI-generated Russian prose (2026-06); the contrastive-negation antithesis runs at high density in machine drafts and near-zero in human reference corpora.
 
@@ -286,6 +286,10 @@ AD-7.2. Rewrite by deleting the qualifier and letting the statement stand; the v
 AD-7.3. Allow informative «без»: «кофе без сахара», «работает без интернета», «ноль vi.*-моков, без заглушек», «без регистрации» — here «без» names a real removed ingredient, dependency, or feature, not a manner.
 
 AD-7.4. Allow a genuine epistemic qualifier that carries information: «строго говоря, это аппроксимация», «по сути» when it narrows the claim (cf. AD-6.4). These calibrate meaning; they do not advertise sincerity.
+
+AD-7.5 (register). Conversational and literary registers: «честно говоря», «прямо скажем», «по правде сказать» as natural discourse markers of live speech or a character's voice — not a statement about the author's own product or method — are not flagged. The target is the *self-promotional* manner-flourish (AD-7.1, condition 1), not ordinary spoken connective tissue. When in doubt, apply AD-7.1: if the qualifier praises the author's own delivery, flag it; if it merely colours conversational tone, leave it (cf. AD-2.3, which likewise spares the literary register).
+
+AD-7.6. Single-count with neighbours. A «без [vice]» flourish can also be caught by AD-2 (parcellation / filler rhythm in Structure) — the «без воды» tail in «Расскажу последовательно, доступно, без воды» is one fragment, not two faults. Count one violation per fragment: charge it to AD-7 (**Ч — Clarity**) when the defect is the empty self-virtue, to AD-2 (**С — Structure**) when the defect is the staccato or filler rhythm. Never double-charge the same fragment across Ч and С.
 
 **Examples:**
 
