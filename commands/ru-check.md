@@ -37,6 +37,8 @@ Reference files: `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/<filename>`
 
 ## Output format
 
+**Read-only — do NOT modify the source files.** `ru-check` is a *check*: it reports issues and returns the corrected text for the user to apply. It must not write to, edit, or overwrite the analysed file(s) — its `allowed-tools` are `Read, Grep, Glob` by design. Returning the corrected text in the output (not writing it) keeps the command deterministic and free of side effects: e.g. silently inserting NBSP into a source file that a downstream target (Notion, Telegram, Facebook) strips anyway, or that breaks later exact-string tooling (grep/replace) on that file.
+
 Return:
 1. Corrected text
 2. List of changes grouped by category (typography / style / grammar / domain)
