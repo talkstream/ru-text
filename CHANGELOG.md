@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-06-26
+
+Clarifies which references take precedence for web/general text, consolidates duplicate
+rules into canonical homes, and paraphrases attributed quotes. No rules removed; correctness
+coverage fully preserved.
+
+### Changed
+- **Editorial-reference precedence formalized.** The typography precedence note (`typography.md`
+  C.4) now leads with web/screen typography norms (as set out in «Ководство», «Типографика и
+  вёрстка», «Советы»); the print-editorial handbooks («Справочник издателя и автора», Розенталь)
+  and the metrological ГОСТ apply for their own domains or where the web-oriented norms are silent.
+  Framed as an editorial choice by register — explicitly not an endorsement by any author.
+- **Anti-bureaucratic attribution updated.** The канцелярит anti-pattern and the «clean language»
+  section (`editorial-grammar.md` §H) now credit M. Ilyakhov as the modern info-style lead
+  alongside the existing «cf. N. Gal / K. Chukovsky» precursors.
+- **«Дашборд» guidance softened** to neutral — the term is accepted in modern Russian product
+  interfaces; «панель»/«сводка» kept as a context alternative.
+
+### Refactored
+- **Duplicate rules consolidated to canonical homes + cross-references.** Pleonasms and tautology
+  now live canonically in `editorial-grammar.md` §E.1/§E.2; the dead→live канцелярит catalog in
+  §H.2; `anti-patterns.md` cross-references them via a top-N digest (the same pattern its Typography
+  category already used). The diagnostic `anti-patterns.md` is ~11% leaner. Fixed a stale count
+  (READMEs said 139 anti-patterns; the canonical figure is 138). No rule lost — unique entries were
+  relocated, not deleted.
+
+### Fixed
+- Paraphrased all attributed verbatim quotes (Chekhov; an HSE rhetoric note; a БРЭ encyclopedia
+  note — a copyrighted source; Goodhart's law) so the project's «no verbatim quotes» statement holds
+  everywhere; independent formulation with «cf.» attribution.
+- Reworded the `addenda.md` intro to drop extraction-implying framing → «independently formulated;
+  the listed sources informed the work, no rule is taken or copied».
+- Dogfood: corrected ASCII «...» → «…» in examples; minor width/example accuracy fixes.
+
+### Volume & model context (measured before → after)
+- **Always-on `SKILL.md`: unchanged** (585 words) — no change to per-session context.
+- **On-demand reference corpus: ~unchanged** (≈15.8k words, +0.6%). Consolidation removed true
+  duplicates and made the diagnostic `anti-patterns.md` ~11% smaller, but unique rules were
+  relocated to canonical homes rather than deleted, so the total size is flat by design — the
+  value of this release is consistency and correct attribution, not a reduction in context size.
+
 ## [1.8.1] - 2026-06-26
 
 ### Added

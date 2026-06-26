@@ -238,7 +238,7 @@ Start writing Russian text — the plugin takes over automatically. If ru-text m
 | Editorial: grammar | 171 | Capitalization, agreement, 50+ pleonasms, list formatting, clean language principles |
 | UX writing | 217 | 51 button labels, error messages, empty states, forms, notifications, dialogs, onboarding |
 | Business writing | 128 | Email structure, messenger etiquette, tone, 43 clean phrase patterns, meeting notes |
-| Anti-patterns | 139 | Wrong-to-right pairs organized by severity: bureaucratic language, passive voice, bloat |
+| Anti-patterns | 138 | Wrong-to-right pairs organized by severity: bureaucratic language, passive voice, bloat |
 
 ## Commands
 
@@ -255,7 +255,7 @@ If you explicitly request a specific style — casual, academic, SEO, literary, 
 ## Technical quality
 
 Built to Anthropic's Claude Code plugin specs:
-- SKILL.md: 539 words, 88 lines (guideline: under 2,000 words, under 500 lines)
+- SKILL.md: 585 words, 90 lines (guideline: under 2,000 words, under 500 lines)
 - 9 reference files load on demand, never at session start
 - ~1,044 rules organized into 7 thematic areas with progressive disclosure
 
