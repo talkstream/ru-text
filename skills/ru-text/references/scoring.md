@@ -42,7 +42,7 @@ The only way to raise the score is to write better.
 - Readability formulas are unreliable: different formulas diverge by 2–3 grade levels on the same text (Zhou, Jeong, Green 2017). Texts revised for formula scores showed worse reader comprehension (Duffy & Kabance; Olsen & Johnson). 7 reasons to avoid readability formulas (UXmatters 2019).
 - LLM-Rubric (ACL 2024): RMSE < 0.5; inter-rater reliability for Structure exceeded human judges (QWK 0.584 vs 0.541).
 - Hybrid penalty + bonus + non-compensatory floors: best architecture per analysis of sports judging (gymnastics, figure skating) and academic essay scoring systems.
-- Goodhart's Law: «when a measure becomes a target, it ceases to be a good measure.» Five orthogonal dimensions are the primary defense.
+- Goodhart's Law — once a measure becomes the target, it stops working as a good measure (cf. Goodhart; Strathern's formulation). Five orthogonal dimensions are the primary defense.
 
 ---
 

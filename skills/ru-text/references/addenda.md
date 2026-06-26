@@ -1,8 +1,10 @@
 # Addenda — rules added from usage experience
 
-Rules below were NOT part of the initial distillation from 16 canonical sources.
-They emerged from real editorial practice and are supported by academic references.
-Kept separate for traceability: original corpus vs. experiential additions.
+The rules below were added later, from real editorial practice, and were not part of the
+plugin's initial rule set. Like the rest of the plugin, they are independently formulated; the
+16 sources in `sources.md` informed the work, but no rule is taken or copied from them. They are
+supported by academic references. Kept separate for traceability: initial rule set vs. experiential
+additions.
 
 ---
 
@@ -11,7 +13,7 @@ Kept separate for traceability: original corpus vs. experiential additions.
 **Problem:** multiple em dashes in a paragraph create choppy rhythm, monotony, and an affected (mannered) tone.
 
 **Sources:**
-- Chekhov: «Поменьше употребляйте курсивов и тире — это манерно»
+- Chekhov cautioned against overusing italics and dashes, treating the habit as mannered (letters/notebooks)
 - Rozental "Практическая стилистика": dashes should serve clear semantic function, not be default punctuation
 - Gramota.ru: some writers abuse dashes; the 1956 Rules of Russian Orthography note both extremes
 - Gorky, Dostoevsky used excessive dashes as INTENTIONAL literary device — not a model for non-literary prose
@@ -119,7 +121,7 @@ AD-3.3. Qualifiers like «то есть», «другими словами», «
 
 **Sources:**
 - Straw-man fallacy and non-sequitur: Grammarly; Scribbr; Excelsior Online Writing Lab
-- Rhetorical concept of «ритор и оппонент, реальный или фиктивный»: HSE «Риторика» (nnov.hse.ru)
+- The rhetorical idea that a speaker argues against an opponent who may be real or imagined: HSE «Риторика» (nnov.hse.ru)
 
 **Trigger constructions:**
 
@@ -191,7 +193,7 @@ AD-5.3. Apply the diagnostic: would a reader infer conscious will or resistance 
 |---|---|
 | Алгоритм стремится к оптимуму. | Standard optimization terminology (mathematical limit sense). |
 | Градиентный спуск сходится к локальному минимуму. | Standard calculus/optimization term. |
-| Машина решает задачу за 3 секунды. | Established technical usage (БРЭ «Антропоморфизм»: «в технической литературе антропоморфное употребление понятий основано на объективном сходстве»). |
+| Машина решает задачу за 3 секунды. | Established technical usage — in technical writing such anthropomorphic terms rest on an objective similarity rather than literal animacy (cf. БРЭ, «Антропоморфизм»). |
 | Сеть обучается на 10 000 примеров. | Standard ML terminology. |
 
 **Severity:** Low. Secondary signal in the **Ч — Clarity** dimension (supporting **Г — Grammar**), with explicit technical-context exception. Cannot trigger non-compensatory caps alone.
