@@ -44,7 +44,7 @@ Use [conventional commits](https://www.conventionalcommits.org/):
 
 ## Code of Conduct
 
-Be respectful. We're here to make Russian text better, not to argue about it.
+Be respectful. We're here to make Russian text better, not to argue about it. This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md) — please read it before participating.
 
 ## License
 
