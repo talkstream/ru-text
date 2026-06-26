@@ -30,7 +30,7 @@ Remaining 10: nested quotes, en-dash in ranges, double dashes, space before comm
 
 ## Critical: Канцелярит и номинализация (32 entries)
 
-Bureaucratic constructions and verb-hidden-inside-noun patterns. Named by K. Chukovsky, elaborated by N. Gal.
+Bureaucratic constructions and verb-hidden-inside-noun patterns. Anti-bureaucratic tradition: named by K. Chukovsky and N. Gal, operationalized for modern web/info-style by M. Ilyakhov.
 
 Wrong|Correct
 Осуществлять деятельность|Работать

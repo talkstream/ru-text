@@ -6,7 +6,7 @@
 - [E. Tautology and pleonasms](#e-tautology-and-pleonasms)
 - [F. List homogeneity](#f-list-homogeneity)
 - [G. Numbers in text](#g-numbers-in-text)
-- [H. Clean language principles (inspired by the anti-bureaucratic tradition, cf. N. Gal)](#h-clean-language-principles-inspired-by-the-anti-bureaucratic-tradition-cf-n-gal)
+- [H. Clean language principles (inspired by the anti-bureaucratic tradition, cf. N. Gal, M. Ilyakhov)](#h-clean-language-principles-inspired-by-the-anti-bureaucratic-tradition-cf-n-gal-m-ilyakhov)
 - [Sources](#sources)
 
 ## C. Capitalization
@@ -43,9 +43,9 @@ academic degrees, titles|always lower|доктор наук, профессор,
 ### C.5. After ellipsis
 
 situation|upper/lower
-ellipsis ends sentence|upper (new sentence): Всё кончилось... Наступила тишина.
-ellipsis = pause inside sentence|lower: Он вошёл... и остановился.
-ellipsis at text start (continuation)|lower: ...и тогда всё стало ясно.
+ellipsis ends sentence|upper (new sentence): Всё кончилось… Наступила тишина.
+ellipsis = pause inside sentence|lower: Он вошёл… и остановился.
+ellipsis at text start (continuation)|lower: …и тогда всё стало ясно.
 
 ### C.6. Quotation marks and names
 
@@ -259,7 +259,7 @@ Do not mix words and digits for same-type values within one sentence/paragraph.
 
 ---
 
-## H. Clean language principles (inspired by the anti-bureaucratic tradition, cf. N. Gal)
+## H. Clean language principles (inspired by the anti-bureaucratic tradition, cf. N. Gal, M. Ilyakhov)
 
 ### H.1. Officialese (канцелярит) -- disease markers
 
