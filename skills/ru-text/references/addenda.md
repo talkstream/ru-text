@@ -6,6 +6,39 @@ plugin's initial rule set. Like the rest of the plugin, they are independently f
 supported by academic references. Kept separate for traceability: initial rule set vs. experiential
 additions.
 
+## Table of Contents
+
+- [AD-1. Excessive em dashes](#ad-1-excessive-em-dashes-избыточные-тире)
+- [AD-2. Excessive parcellation](#ad-2-excessive-parcellation-избыточная-парцелляция)
+- [AD-3. Patronizing explanation](#ad-3-patronizing-explanation-разжёвывание-очевидного)
+- [AD-4. Unprovoked rebuttal](#ad-4-unprovoked-rebuttal-возражение-без-предпосылок)
+- [AD-5. Subject-predicate semantic mismatch](#ad-5-subject-predicate-semantic-mismatch-семантическое-несоответствие-субъекта-и-предиката)
+- [AD-6. Manufactured antithesis](#ad-6-manufactured-antithesis-ложная-антитеза)
+- [AD-7. Preemptive virtue qualifier](#ad-7-preemptive-virtue-qualifier-непрошенная-оговорка-без-воды)
+- [AD-8. Assistant-register meta-commentary](#ad-8-assistant-register-meta-commentary-сервисные-реплики-ассистента)
+- [AD-9. Hollow opener](#ad-9-hollow-opener-пустой-зачин)
+- [Neuroslop index](#neuroslop-index)
+
+## Neuroslop index
+
+A compact catalogue of the recurring tells of AI-generated Russian prose, each routed to the rule
+that is its canonical home. These tells skew by training era and instruction-tuning style rather
+than by any single vendor; a breakdown by specific model family is intentionally omitted as
+unverifiable and fast-dating.
+
+| Tell | Canonical home |
+|---|---|
+| Manufactured antithesis — «не X, а Y» / «не просто X, а Y» with no antecedent | AD-6 |
+| Preemptive virtue qualifier — «без воды», «чётко, по делу», «коротко и ясно» | AD-7 |
+| Assistant-register meta-commentary — «Отличный вопрос!», «Надеюсь, это помогло» | AD-8 |
+| Hollow opener — «давайте разберёмся», «погрузимся», «важно понимать, что» | AD-9 |
+| Excessive em dashes — staccato dash rhythm | AD-1 |
+| Throat-clearing stop-words — «стоит отметить, что», «нельзя не отметить» | `info-style.md` §B |
+| Empty universal preamble — «в современном мире», «не секрет, что» | `info-style.md` §B |
+| Unproven-claim adjectives — «качественный», «надёжный», «эффективный» | `info-style.md` §B |
+| Generic conclusion — «таким образом, подводя итог» | `anti-patterns.md` |
+| Artificial liveliness — exclamation stacks and emoji as a substitute for detail | `info-style.md` §F |
+
 ---
 
 ## AD-1. Excessive em dashes (избыточные тире)
@@ -216,7 +249,8 @@ AD-5.3. Apply the diagnostic: would a reader infer conscious will or resistance 
 
 - «не X, а Y» / «X, а не Y» — X has no antecedent within the preceding 1–2 paragraphs
 - «это не …, это …» / «X — это не Y. Это Z» — two equiweight definitions of one subject, often split by a period
-- «не про X, а про Y» / «дело не в X, а в Y» — the topic swapped through a phantom rejected topic
+- «не про X, а про Y» / «дело не в X, а в Y» / «вопрос не в X, а в Y» / «суть не в X, а в Y» — the topic swapped through a phantom rejected topic
+- «не просто X, а Y» — the hype escalation; flag on the AD-6.1 test, especially when Y is itself inflated («целый», «настоящий», «полноценный»). Hype in Y is a signal, not a standalone trigger
 - «не потому что X, а потому что Y» — a cause X that no one supposed
 - «не там, где X, а там, где Y» — a locative pseudo-antithesis with no premise
 - «не паранойя и не „всё видят“» — a pre-emptive string negating labels nobody put forward
@@ -236,6 +270,8 @@ AD-6.5 (quota). Headings: **0** — antithesis in a heading is the loudest tell 
 
 AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (one-sided rebuttal) or AD-2 (parcellation when split on periods). Count one violation per fragment: AD-6 takes precedence for a symmetric two-pole fork; a one-sided «но на самом деле…» with no named counter-pole stays AD-4. Do not double-charge Structure.
 
+AD-6.7 (scope of strengthening). The trigger set now includes «не просто X, а Y» and «вопрос/суть не в X, а в Y». Two look-alikes are NOT auto-flagged: «не столько X, сколько Y» (a degree-narrowing, cf. AD-6.4) and «важно не X, а Y» without an antecedent (often a real reader priority). A cluster of manufactured pairs bites harder in **С — Structure** (see `scoring.md`); the carve-outs hold — asymmetric self-correction (AD-6.4) and the 0–2 legitimate antecedent-backed body pairs (AD-6.5) are never penalised, and the construction is never banned outright.
+
 **Examples:**
 
 | Wrong | Correct |
@@ -245,6 +281,7 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 | ИИ — это не инструмент. Это образ мышления. | ИИ меняет то, как я думаю о задаче. |
 | Дело не в модели, а в промпте. | Всё решает промпт. |
 | Не медленно, а быстро. | Отвечает за 200 мс. |
+| Это не просто инструмент, а целая экосистема. | Это экосистема: редактор, отладчик, пакетный менеджер. |
 
 **Counter-examples (do NOT flag):**
 
@@ -255,6 +292,8 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 | Выросло не на 2%, а на 40%. | Both poles carry data; deletion loses information. |
 | Не мытьём, так катаньем. | Fixed idiom. |
 | Не оферта, а приглашение делать оферты. | Legal formula where the binary is operative semantics. |
+| Не столько баг, сколько недокументированное поведение. | Degree-narrowing («не столько… сколько»): X is present and partly true, the clause refines rather than replaces (cf. AD-6.4). |
+| Он сделал это не просто так, а с умыслом. | «не просто так» is a fixed idiom («for a reason»), not the «не просто X, а Y» hype escalation. |
 
 **Severity:** Medium — the manufactured antithesis is the single strongest machine-generation tell in this addenda set, and density compounds fast. Primary signal in the **С — Structure** dimension (supporting **Ч — Clarity**), reflected in the С rubric anchors. A cluster of manufactured pairs materially lowers the С score; a single antecedent-backed pair does not. Still cannot, by itself, trigger a non-compensatory cap — that stays reserved for the hard dimensions and the global < 3.0 floor.
 
@@ -265,7 +304,7 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 
 ## AD-7. Preemptive virtue qualifier (непрошенная оговорка «без воды»)
 
-**Problem:** a trailing manner-flourish that asserts the author's virtue by denying a fault the reader never raised — «без воды», «без виляния», «без лишних слов», «начистоту», «честно говоря», «прямо скажем», «не побоюсь этого слова», «и без всякой магии». The statement reassures the reader against a vice nobody suspected, so the qualifier carries no information and only performs sincerity. It is a cousin of AD-4: where AD-4 rebuts an unvoiced external claim, AD-7 denies an unvoiced fault of the author's own delivery. Virtue is shown by the writing, never announced.
+**Problem:** a trailing manner-flourish that asserts the author's virtue by denying a fault the reader never raised — «без воды», «без виляния», «без лишних слов», «начистоту», «честно говоря», «прямо скажем», «не побоюсь этого слова», «и без всякой магии». The statement reassures the reader against a vice nobody suspected, so the qualifier carries no information and only performs sincerity. It is a cousin of AD-4: where AD-4 rebuts an unvoiced external claim, AD-7 denies an unvoiced fault of the author's own delivery. The same flourish also appears in positive polarity — «чётко, по делу», «коротко и ясно», «простыми словами», «разложу по полочкам» — naming a delivery virtue the text should simply demonstrate; it is flagged identically. Virtue is shown by the writing, never announced.
 
 **Sources:**
 - Telling vs. showing, and self-praise as an empty signal: editorial practice, informed by Нора Галь «Слово живое и мёртвое» on needless self-qualification
@@ -277,6 +316,8 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 - «без воды» / «без виляния» / «без лишних слов» / «без обиняков» — a manner-flourish denying a vice of delivery
 - «честно говоря» / «начистоту» / «прямо скажем» / «не побоюсь этого слова» — announced sincerity
 - «и без всякой магии» / «без всяких фокусов» / «без нервов» appended to a claim about one's own product or method
+- «чётко, по делу» / «коротко и ясно» / «простыми словами» / «разложу по полочкам» / «на пальцах» — a positive-form flourish praising the author's own delivery (the polarity twin of «без воды»)
+- a self-praise tricolon about one's own product or method — «быстро, качественно, надёжно» — where each adjective is itself an unproven claim (cf. `info-style.md` §B) and the rule-of-three stacking is the added tell
 - a virtue adverb stacked on a self-statement where deleting it loses no fact
 
 **Rules:**
@@ -293,6 +334,10 @@ AD-7.5 (register). Conversational and literary registers: «честно гов�
 
 AD-7.6. Single-count with neighbours. A «без [vice]» flourish can also be caught by AD-2 (parcellation / filler rhythm in Structure) — the «без воды» tail in «Расскажу последовательно, доступно, без воды» is one fragment, not two faults. Count one violation per fragment: charge it to AD-7 (**Ч — Clarity**) when the defect is the empty self-virtue, to AD-2 (**С — Structure**) when the defect is the staccato or filler rhythm. Never double-charge the same fragment across Ч and С.
 
+AD-7.7. Positive-form delivery self-praise is flagged on the same AD-7.1 test: it (1) characterises the author's own delivery or method, (2) names a virtue the writing should simply demonstrate, and (3) carries no fact — deleting it loses nothing. «Объясню чётко, по делу» → «Объясню» (then actually do). Do NOT flag a qualifier that previews concrete content that immediately follows: «Объясню коротко: значение лежит в стеке» carries information about what comes next and stays. An established genre or rubric label — a column or book title «… на пальцах», «… простыми словами» — is a recognised popular-science convention, not a delivery flourish, and is not flagged.
+
+AD-7.8 (single-count with info-style §B). The unproven-claim tricolon «быстро, качественно, надёжно» is also three §B unproven adjectives (`info-style.md` §B, «качественный»/«надёжный»/«эффективный» family). Count it once in **Ч — Clarity**: charge AD-7 when the defect is the self-virtue rule-of-three, or info-style §B when the defect is the missing evidence per the domain brief — never both for the same fragment.
+
 **Examples:**
 
 | Wrong | Correct |
@@ -302,6 +347,8 @@ AD-7.6. Single-count with neighbours. A «без [vice]» flourish can also be c
 | Скажу прямо, без обиняков: тест не проходит. | Тест не проходит. |
 | Это работает, и без всякой магии. | Это работает. |
 | Max 20× закрывает запрос начисто, без нервов. | Max 20× закрывает запрос. |
+| Объясню чётко, по делу, без воды. | Объясню. |
+| Расскажу простыми словами, разложу по полочкам. | Расскажу. |
 
 **Counter-examples (do NOT flag):**
 
@@ -311,7 +358,118 @@ AD-7.6. Single-count with neighbours. A «без [vice]» flourish can also be c
 | Ноль vi.*-моков — без заглушек. | «без» names a real removed thing. |
 | Сервис работает без интернета. | «без» names a real capability. |
 | Строго говоря, это аппроксимация. | Epistemic qualifier carrying real information. |
+| Объясню коротко: значение лежит в стеке. | «коротко» previews concrete content that immediately follows (AD-7.7). |
+| Работает быстро: ответ за 200 мс. | A speed claim backed by a number, not a self-virtue flourish. |
 
 **Severity:** Low. Secondary signal in the **Ч — Clarity** dimension (supporting **С — Structure**). Cannot trigger non-compensatory caps alone.
 
 **Acknowledged:** identified from corpus analysis of AI-generated Russian prose (2026-06); the «без [vice]» self-virtue flourish recurs in machine drafts and reads as announced rather than demonstrated quality.
+
+
+---
+
+## AD-8. Assistant-register meta-commentary (сервисные реплики ассистента)
+
+**Problem:** a chatbot-persona flourish that addresses the reader as a live interlocutor or narrates the helping transaction instead of carrying the subject — a sycophantic acknowledgement of the question («Отличный вопрос!», «Прекрасная идея», «Вы абсолютно правы»), or an assistant sign-off offering further help («Надеюсь, это помогло», «Готов помочь», «Обращайтесь, если что»). It breaks the fourth wall of written prose: it talks about the helping exchange rather than delivering content. A cousin of AD-7 — both perform a stance instead of demonstrating it — but distinct in that AD-7 praises the text's quality while AD-8 performs the assistant's service persona.
+
+**Sources:**
+- Telling vs. showing, and respect for the reader's time: editorial practice, informed by Нора Галь «Слово живое и мёртвое»
+- Adjacent to AD-7 (preemptive virtue) and to business-writing email-closing norms
+- Independently formulated from corpus analysis of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- «Отличный вопрос!» / «Прекрасный вопрос» / «Хороший вопрос» / «Прекрасная идея» / «Вы абсолютно правы» — a sycophantic acknowledgement of the reader as interlocutor
+- «Надеюсь, это помогло» / «Надеюсь, было полезно» / «Готов помочь» / «Обращайтесь, если что» / «Если будут вопросы — спрашивайте» — an assistant sign-off offering further help
+- «Сейчас всё объясню» / «Давайте я расскажу» narrating the helping process where no real internal cross-reference is meant
+
+**Rules:**
+
+AD-8.1. Flag a flourish that (1) addresses the reader as a conversational interlocutor or narrates the helping transaction, and (2) carries zero subject content — deleting it loses no fact and the surrounding text stands whole.
+
+AD-8.2. Rewrite by deleting the flourish: open with the answer, end on the last substantive point. «Отличный вопрос! Давайте посмотрим…» → start with the answer.
+
+AD-8.3. Cross-reference, not double-charge. A genuine call to action with a real channel in correspondence — «пишите на support@…», «звоните в будни» — is business-writing territory, and an over-bloated email closing is already covered (cf. `business-writing.md:158`, `anti-patterns.md:90`). AD-8 targets the persona leak into article or documentation prose, not a real email CTA; charge a given fragment once.
+
+AD-8.4 (register carve-out). Not flagged in genuine live dialogue, chat-support exchanges, or interview and quoted registers, where the speaker is responding to a real interlocutor: a support reply «Спасибо за обращение! Подскажите номер заказа», or «„Хороший вопрос“, — ответил инженер», is natural discourse (cf. AD-2.3, AD-7.5). A standalone «Готов помочь» in a real contact or footer block is a genuine offer, not meta-commentary. A sincere authorial wish in a book preface, foreword, or acknowledgements («надеюсь, книга окажется полезной») is a conventional register, not a chat-persona leak. The target is the assistant persona injected into monologue or educational prose, not a one-way FAQ that answers anticipated questions.
+
+AD-8.5. Single-count with neighbours. A sign-off that also reads as filler rhythm can be caught by AD-2; charge the empty-persona defect to AD-8 (**Ч — Clarity**), the staccato or filler defect to AD-2 (**С — Structure**). Never double-charge the same fragment.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Отличный вопрос! Давайте разберёмся. | (delete; open with the answer) |
+| Вы абсолютно правы, и вот почему. | Вот почему. |
+| Надеюсь, это было полезно. Обращайтесь! | (delete; end on the last substantive point) |
+| Готов помочь с любыми вопросами по теме. | (delete) |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Спасибо за обращение! Подскажите номер заказа. | Real support dialogue with a live user. |
+| Если остались вопросы по договору — пишите на support@example.com. | Genuine CTA with a real channel (cf. business-writing.md:158). |
+| «Хороший вопрос», — ответил инженер. | Quoted dialogue / interview register. |
+| Вы правы: в расчёте действительно ошибка. | A genuine concession in real correspondence, carrying a fact. |
+
+**Severity:** Low. Secondary signal in the **Ч — Clarity** dimension (supporting **С — Structure** at lead and closer position). Cannot trigger non-compensatory caps alone.
+
+**Acknowledged:** identified from corpus analysis of AI-generated Russian prose (2026-06); the assistant-persona flourish leaks the chat register into monologue text and reads as service performance rather than content.
+
+
+---
+
+## AD-9. Hollow opener (пустой зачин)
+
+**Problem:** an opening or transitional flourish that announces explanation instead of delivering it — «давайте разберёмся», «давайте погрузимся», «копнём глубже», «разложим по полочкам», «важно понимать, что», and «итак» used as filler. The lead carries no fact; it only clears the throat before the real first sentence. It works against the inverted pyramid (`info-style.md` §D: the main point goes first, and the first sentence is the paragraph's thesis). The strongest signal is density — a cluster of such openers, one per paragraph, padding a text that never quite begins.
+
+**Sources:**
+- Main point first, first sentence as thesis: `info-style.md` §D (structure)
+- The throat-clearing openers «стоит отметить, что» / «не секрет, что» are already catalogued as stop-words in `info-style.md` §B (see AD-9.3)
+- Independently formulated from corpus analysis of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- «давайте разберёмся» / «давайте погрузимся» / «копнём глубже» / «разложим по полочкам» — a narrated descent into the topic with no content
+- «важно понимать, что» / «здесь важно понять» / «нужно понимать» — a hedged preamble before a claim
+- «итак,» / «как известно,» used as a paragraph opener that introduces nothing new
+- a lead whose only content is the promise to explain
+- the strongest signal: a cluster of two or more such openers within a short section (~200 words)
+
+**Rules:**
+
+AD-9.1. Flag an opener or transition that (1) announces explanation rather than delivering it, and (2) carries zero increment — deleting it loses no fact and the next sentence stands as the real lead. A cluster of two or more hollow openers in a paragraph or short section is the primary signal; an isolated instance is weak.
+
+AD-9.2. Rewrite by deleting the flourish and promoting the first substantive sentence to the lead (`info-style.md` §D).
+
+AD-9.3 (single-count with info-style §B). The throat-clearing openers «стоит отметить, что», «следует подчеркнуть», «нельзя не отметить», «не секрет, что», «в современном мире» are already stop-words in `info-style.md` §B — apply them there and count once. AD-9 adds the dive-in family («давайте разберёмся», «погрузимся», «важно понимать») not listed in §B, plus the cluster signal. Never charge one fragment to both §B and AD-9.
+
+AD-9.4 (carve-out — genuine connective). «Итак» as a real summative connective that closes a reasoning chain, or a resumptive connective that picks up a narrative thread (cf. `editorial-punctuation.md:119`), is not flagged; only the empty opener «Итак,» that introduces nothing.
+
+AD-9.5 (carve-out — real tutorial). «Давайте разберём» / «давайте посмотрим» in a genuine step-by-step walkthrough, where the next sentence actually begins with concrete steps, is not flagged. The target is the decorative promise with no follow-through.
+
+AD-9.6 (carve-out — informative «важно»). «Важно понимать разницу между TCP и UDP — от неё зависит выбор протокола» carries a real consequence and is not flagged (analogous to AD-7.4). Flag only the empty hedge.
+
+AD-9.7 (carve-out — dialogue register). «Давайте разберёмся» / «давайте посмотрим» in genuine live dialogue or a quoted or interview register, where a real interlocutor proposes to look into something together, is natural speech, not a hollow opener (cf. AD-7.5, AD-8.4).
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Давайте разберёмся, как это работает. | Алгоритм делает три вещи: … |
+| В этой статье мы погрузимся в мир машинного обучения. | Машинное обучение… (open with the subject) |
+| Важно понимать, что скорость зависит от железа. | Скорость зависит от железа. |
+| Итак, что же мы имеем? | (delete; state what we have) |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Итак, из трёх замеров следует: задержка не выше 200 мс. | Genuine summative connective closing a chain (cf. editorial-punctuation.md:119). |
+| Давайте разберём по шагам. Шаг 1: откройте файл. | Real tutorial; the next sentence delivers concrete steps. |
+| Важно понимать разницу между TCP и UDP — от неё зависит выбор протокола. | The «важно» clause carries a real consequence (cf. AD-7.4). |
+
+**Severity:** Low. Secondary signal in the **С — Structure** dimension (supporting **Ч — Clarity**). A cluster lowers Structure; an isolated opener does not. Cannot trigger non-compensatory caps alone.
+
+**Acknowledged:** identified from corpus analysis of AI-generated Russian prose (2026-06); the hollow opener announces explanation instead of leading with the point and clusters densely in machine drafts.

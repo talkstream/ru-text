@@ -35,6 +35,12 @@ Reference files: `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/<filename>`
    - Email/business → `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/business-writing.md`
    - Needs grammar review → `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-punctuation.md` + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-grammar.md`
 
+5. **Experience-based / neuroslop** — read `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/addenda.md`, then scan for the AI-generated-prose tells:
+   - Manufactured antithesis (AD-6) — «не X, а Y» / «не просто X, а Y» with no antecedent
+   - Preemptive virtue qualifier (AD-7) — «без воды», «чётко, по делу»
+   - Assistant-register meta-commentary (AD-8) — «Отличный вопрос!», «Надеюсь, это помогло»
+   - Hollow openers (AD-9) — «давайте разберёмся», «погрузимся», «важно понимать, что»
+
 ## Output format
 
 **Read-only — do NOT modify the source files.** `ru-check` is a *check*: it reports issues and returns the corrected text for the user to apply. It must not write to, edit, or overwrite the analysed file(s) — its `allowed-tools` are `Read, Grep, Glob` by design. Returning the corrected text in the output (not writing it) keeps the command deterministic and free of side effects. Silently inserting NBSP into a source file is doubly harmful: a target that strips NBSP on import (e.g. Notion) shows the reader no change, and the same insertion breaks later exact-string tooling (grep/replace) on that file.

@@ -36,6 +36,8 @@ Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copi
 
 **README and documentation.** Writing docs for an open-source project in Russian. Proper typography (guillemets, em dashes, non-breaking spaces), no filler words, clear inverted-pyramid structure.
 
+**Cleaning up AI-slop.** Text reads as machine-generated. The plugin catches the tells: manufactured antithesis ("не X, а Y" with no antecedent), preemptive self-praise ("чётко, по делу, без воды"), assistant-register filler ("Отличный вопрос!", "Надеюсь, помог"), and hollow openers ("давайте разберёмся", "погрузимся").
+
 **Text quality scoring.** Want to know how your text measures up? `/ru-text:ru-score` evaluates text across 5 dimensions (typography, clarity, grammar, structure, reader precision) and returns a 0.0–10.0 score with specific issues per dimension.
 
 **AI agent quality.** Building AI features in your product? Uncertain how the agent will phrase responses in Russian? ru-text ensures predictable, high-quality Russian text from any Claude-powered agent: consistent typography, no bureaucratic language, reader-first structure.
