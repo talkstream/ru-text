@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-06-27
+
+Adds a model-agnostic neuroslop catalogue — a named index of the recurring tells of AI-generated
+Russian prose — with two new experiential rules, an extended virtue-qualifier rule, and sharper
+detection and scoring for manufactured antithesis. No correctness coverage removed; the approximate
+"~1 044" headline is unchanged (the two new experiential rules stay within its tolerance).
+
+### Added
+- **AD-8. Assistant-register meta-commentary (сервисные реплики ассистента).** New experiential rule
+  in `addenda.md` flagging the chatbot-persona flourish — sycophantic acknowledgements («Отличный
+  вопрос!», «Вы абсолютно правы») and assistant sign-offs («Надеюсь, это помогло», «Готов помочь»)
+  — that perform a service persona instead of carrying content. Carve-outs spare genuine live
+  dialogue, chat support, interviews, contact blocks, authorial prefaces, and one-way FAQs; a
+  single-count clause prevents double-charging with AD-2. Severity **Low**, a secondary signal in
+  Ч — Clarity, wired into `scoring.md`.
+- **AD-9. Hollow opener (пустой зачин).** New experiential rule flagging openers that announce
+  explanation instead of delivering it — «давайте разберёмся», «погрузимся», «важно понимать, что»,
+  filler «итак» — with density (a cluster of such openers) as the primary signal. Carve-outs spare
+  genuine summative or resumptive «итак», real step-by-step tutorials, informative «важно», and the
+  quoted or live-dialogue register; it cross-references the throat-clearing stop-words already in
+  `info-style.md` §B rather than restating them. Severity **Low**, a secondary signal in С — Structure.
+- **Neuroslop index.** A named digest at the head of `addenda.md` mapping each recurring tell of
+  AI-generated Russian prose to its canonical home (AD-6/AD-7/AD-8/AD-9, plus `info-style.md` §B and
+  `anti-patterns.md`). A model-agnostic preamble notes the tells skew by training era and
+  instruction-tuning style; a breakdown by specific model family is intentionally omitted as
+  unverifiable and fast-dating.
+- **Table of contents for `addenda.md`** (the file now exceeds 100 lines; per the repo convention).
+- **`/ru-check` step 5.** The check now also loads `addenda.md` and scans for the neuroslop tells
+  (AD-6 through AD-9), closing a gap where the experiential rules were not part of the check flow.
+- **README neuroslop use-case** in both languages (RU and EN), describing cleanup of AI-generated text.
+
+### Changed
+- **AD-7 extended to positive-polarity self-praise.** The preemptive virtue qualifier now also covers
+  positive-form delivery flourishes — «чётко, по делу», «коротко и ясно», «простыми словами»,
+  «разложу по полочкам» — and the unproven-claim tricolon «быстро, качественно, надёжно». New
+  carve-outs spare qualifiers that preview concrete content and established genre or rubric labels; a
+  single-count clause prevents double-charging with the `info-style.md` §B unproven-claim adjectives.
+- **AD-6 detection and scoring strengthened (without banning the construction).** The
+  manufactured-antithesis rule adds the triggers «не просто X, а Y» and «вопрос/суть не в X, а в Y»,
+  while explicitly NOT auto-flagging the degree-narrowing «не столько X, сколько Y» or an
+  antecedent-free «важно не X, а Y». In `scoring.md`, a cluster of two or more manufactured pairs
+  within ~150 words now lands С — Structure in the 5–6 band or lower, while a single antecedent-backed
+  pair still does not move it (the 7–8 anchor is unchanged) — stronger, but never to zero, and with no
+  new non-compensatory cap. The 0–2 legitimate-pair body quota and the asymmetric-self-correction
+  allowance are preserved.
+
 ## [1.9.0] - 2026-06-26
 
 Clarifies which references take precedence for web/general text, consolidates duplicate
