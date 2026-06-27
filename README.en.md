@@ -1,6 +1,6 @@
 # ru-text
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
+[![Version](https://img.shields.io/github/v/release/talkstream/ru-text?label=version&color=2ea44f)](https://github.com/talkstream/ru-text/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Platforms](https://img.shields.io/badge/platforms-12-blue)](#quick-start) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![GitHub stars](https://img.shields.io/github/stars/talkstream/ru-text?style=flat&label=stars)](https://github.com/talkstream/ru-text/stargazers) [![Last commit](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
 
 **Languages:** [Русский (primary)](README.md) | English
 
@@ -229,6 +229,41 @@ git clone https://github.com/talkstream/ru-text.git
 Then add the repo as a plugin source per your platform's docs.
 
 Start writing Russian text — the plugin takes over automatically. If ru-text makes your products better, consider [sponsoring](https://github.com/sponsors/talkstream) continued development.
+
+## Updating ru-text
+
+Latest version — **v1.10.0** (see the [CHANGELOG](CHANGELOG.md)). Check your installed version in Claude Code with `claude plugins list`.
+
+**Primary method** — for skill-based platforms (GitHub Copilot, Windsurf, Continue.dev, Cline, JetBrains Junie, Google Antigravity, manual Cursor install). Re-run the install — the command pulls the latest version from the repository and overwrites the skill:
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+**Claude Code (CLI and Desktop).** Refresh the marketplace cache first, then update the plugin:
+
+```bash
+claude plugins marketplace update claude-community
+claude plugins update ru-text@claude-community
+```
+
+Restart Claude Code (or run `/reload-plugins`) to apply the change. You can also do this from the `/plugin` menu, "Installed" tab. Note: the community marketplace pins the plugin to a specific version and advances the pin automatically with up to a day's lag — if the version doesn't change right after a release, that's expected; give the marketplace time to re-pin.
+
+**Gemini CLI:**
+
+```bash
+gemini extensions update ru-text
+```
+
+**OpenClaw:**
+
+```bash
+openclaw skills update ru-text
+```
+
+**Codex CLI.** Open `/plugins`, find ru-text, and update.
+
+**Manual copy.** If you installed the skill manually (`git clone` + `cp`), repeat your platform's install steps — they overwrite the skill with the latest version.
 
 ## Domains
 
