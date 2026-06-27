@@ -227,7 +227,7 @@ A symmetric «не X, а Y» where X was never raised — it invents an opponent
 | Дело не в модели, а в промпте. | Всё решает промпт. |
 | Это не просто инструмент, а целая экосистема. | Это экосистема: редактор, отладчик, пакетный менеджер. |
 
-Keep a genuine antithesis only when X is voiced first. Do not flag «не столько X, сколько Y» (narrowing) or a numeric correction «выросло не на 2%, а на 40%».
+Keep a genuine antithesis only when X is voiced first. Do not flag «не столько X, сколько Y» (narrowing), a numeric correction «выросло не на 2%, а на 40%», fixed idioms («не мытьём, так катаньем»), or legal formulas («не оферта, а приглашение делать оферты»).
 
 ### Непрошенная самопохвала
 
@@ -238,7 +238,7 @@ Announcing a virtue the writing should simply show — «без воды», «ч
 | Отвечу честно, без воды: дедлайн сорван. | Дедлайн сорван. |
 | Объясню чётко, по делу. | Объясню. |
 
-Allow informative «без» («кофе без сахара», «работает без интернета») and a qualifier that previews real content («Объясню коротко: значение лежит в стеке»).
+Allow informative «без» («кофе без сахара», «работает без интернета») and a qualifier that previews real content («Объясню коротко: значение лежит в стеке»). In casual or quoted speech, «честно говоря» / «прямо скажем» as natural discourse markers are fine.
 
 ### Сервисные реплики ассистента
 
@@ -249,7 +249,7 @@ Chatbot-persona flourishes — sycophantic openers and sign-offs that perform se
 | Отличный вопрос! Давайте разберёмся. | (убрать; начать с ответа) |
 | Надеюсь, это было полезно. Обращайтесь! | (убрать; закончить на сути) |
 
-Allow live dialogue, support replies, and a genuine offer in a contact block.
+Allow live dialogue, support replies, a genuine offer in a contact block, and a sincere wish in a book preface («надеюсь, книга окажется полезной»).
 
 ### Пустой зачин
 
@@ -260,7 +260,7 @@ Openers that announce explanation instead of delivering it — «давайте 
 | Давайте разберёмся, как это работает. | Алгоритм делает три вещи: … |
 | Важно понимать, что скорость зависит от железа. | Скорость зависит от железа. |
 
-Allow a real summative «итак», a genuine tutorial step, and an informative «важно … — от этого зависит …».
+Allow a real summative «итак», a genuine tutorial step, an informative «важно … — от этого зависит …», and «давайте разберёмся» in live or quoted dialogue.
 
 ## Quality Checklist
 

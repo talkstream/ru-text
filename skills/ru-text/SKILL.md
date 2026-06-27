@@ -3,7 +3,7 @@ name: ru-text
 description: >
   Use when writing, editing, or reviewing Russian-language text, or when user
   mentions ru-text. Covers typography, info-style, editorial, UX writing, business
-  correspondence. Auto-activates on Russian text output.
+  correspondence, AI-text cleanup. Auto-activates on Russian text output.
 metadata:
   openclaw:
     always: true
