@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Documentation and distribution polish following the v1.10.0 neuroslop release — no rule changes.
+
+### Added
+- **README badges and an update guide.** Both READMEs gained version, platform, and stars badges,
+  plus a dedicated «Обновление» / «Updating ru-text» section: a primary cross-platform method
+  (`npx skills add talkstream/ru-text`), per-platform update commands (Claude Code marketplace +
+  plugin update, `gemini extensions update`, OpenClaw, Codex, manual copy), and a note that the
+  community-marketplace pin advances with up to a day's lag (#19).
+- **Neuroslop parity for the Notion AI-Skill template.** The self-contained Notion template now
+  carries a condensed AI-Text Tells section — manufactured antithesis, virtue self-praise,
+  assistant-register replies, hollow openers — with carve-outs faithful to the canonical
+  AD-6/AD-7/AD-8/AD-9 (#20, #21).
+
+### Changed
+- **Capability descriptions** across all manifests and the cross-platform `SKILL.md` descriptor now
+  list "AI-text cleanup", so the v1.10.0 neuroslop capability appears on every listing surface (#21).
+
 ## [1.10.0] - 2026-06-27
 
 Adds a model-agnostic neuroslop catalogue — a named index of the recurring tells of AI-generated
@@ -37,6 +54,9 @@ detection and scoring for manufactured antithesis. No correctness coverage remov
 - **`/ru-check` step 5.** The check now also loads `addenda.md` and scans for the neuroslop tells
   (AD-6 through AD-9), closing a gap where the experiential rules were not part of the check flow.
 - **README neuroslop use-case** in both languages (RU and EN), describing cleanup of AI-generated text.
+- **Community health files.** `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), `SECURITY.md`, and
+  `.github/PULL_REQUEST_TEMPLATE.md`, closing the remaining GitHub Community Standards gaps;
+  `CONTRIBUTING.md` links the Code of Conduct (#17).
 
 ### Changed
 - **AD-7 extended to positive-polarity self-praise.** The preemptive virtue qualifier now also covers
