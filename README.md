@@ -1,6 +1,6 @@
 # ru-text
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![Last Updated](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
+[![Version](https://img.shields.io/github/v/release/talkstream/ru-text?label=version&color=2ea44f)](https://github.com/talkstream/ru-text/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Platforms](https://img.shields.io/badge/platforms-12-blue)](#быстрый-старт) [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue?logo=anthropic)](https://github.com/anthropics/claude-plugins-community) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream) [![GitHub stars](https://img.shields.io/github/stars/talkstream/ru-text?style=flat&label=stars)](https://github.com/talkstream/ru-text/stargazers) [![Last commit](https://img.shields.io/github/last-commit/talkstream/ru-text/main?label=updated)](https://github.com/talkstream/ru-text)
 
 **Языки:** Русский | [English](README.en.md)
 
@@ -231,6 +231,41 @@ git clone https://github.com/talkstream/ru-text.git
 Затем добавьте репозиторий как источник плагинов по документации вашей платформы.
 
 Начните писать на русском — плагин подключится сам. Если ru-text делает ваши продукты лучше, поддержите [разработку](https://github.com/sponsors/talkstream).
+
+## Обновление
+
+Свежая версия — **v1.10.0** (что нового — в [CHANGELOG](CHANGELOG.md)). Узнать свою версию в Claude Code: `claude plugins list`.
+
+**Основной способ** — для платформ на основе навыков (GitHub Copilot, Windsurf, Continue.dev, Cline, JetBrains Junie, Google Antigravity, ручная установка в Cursor). Повторите установку — команда подтянет последнюю версию из репозитория и перезапишет навык:
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+**Claude Code (CLI и Desktop).** Сначала обновите кэш маркетплейса, затем плагин:
+
+```bash
+claude plugins marketplace update claude-community
+claude plugins update ru-text@claude-community
+```
+
+Перезапустите Claude Code (или выполните `/reload-plugins`), чтобы изменения вступили в силу. То же самое можно сделать в меню `/plugin`, вкладка «Installed». Важно: community-маркетплейс закрепляет плагин на конкретной версии и подтягивает свежую с задержкой до суток — если сразу после релиза версия не сменилась, это нормально, дайте маркетплейсу обновить закрепление.
+
+**Gemini CLI:**
+
+```bash
+gemini extensions update ru-text
+```
+
+**OpenClaw:**
+
+```bash
+openclaw skills update ru-text
+```
+
+**Codex CLI.** Откройте `/plugins`, найдите ru-text и обновите.
+
+**Ручное копирование.** Если вы устанавливали навык вручную (`git clone` + `cp`), повторите шаги установки своей платформы — они перезапишут навык свежей версией.
 
 ## Домены
 
