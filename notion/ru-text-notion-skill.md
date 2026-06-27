@@ -213,6 +213,55 @@ Common mistakes — wrong → correct.
 | Главный приоритет | Приоритет |
 | Период времени | Период |
 
+## AI-Text Tells (Neuroslop)
+
+Patterns that mark machine-generated Russian prose. Flag and rewrite — keep the real point, drop the performance. Density (a cluster of these) is the strongest signal.
+
+### Ложная антитеза
+
+A symmetric «не X, а Y» where X was never raised — it invents an opponent to argue against. Drop the phantom X, state Y directly.
+
+| Неправильно | Правильно |
+|---|---|
+| Это не баг, а фича. | Так и задумано. |
+| Дело не в модели, а в промпте. | Всё решает промпт. |
+| Это не просто инструмент, а целая экосистема. | Это экосистема: редактор, отладчик, пакетный менеджер. |
+
+Keep a genuine antithesis only when X is voiced first. Do not flag «не столько X, сколько Y» (narrowing) or a numeric correction «выросло не на 2%, а на 40%».
+
+### Непрошенная самопохвала
+
+Announcing a virtue the writing should simply show — «без воды», «чётко, по делу», «коротко и ясно». Delete it; let the text stand.
+
+| Неправильно | Правильно |
+|---|---|
+| Отвечу честно, без воды: дедлайн сорван. | Дедлайн сорван. |
+| Объясню чётко, по делу. | Объясню. |
+
+Allow informative «без» («кофе без сахара», «работает без интернета») and a qualifier that previews real content («Объясню коротко: значение лежит в стеке»).
+
+### Сервисные реплики ассистента
+
+Chatbot-persona flourishes — sycophantic openers and sign-offs that perform service instead of carrying content.
+
+| Неправильно | Правильно |
+|---|---|
+| Отличный вопрос! Давайте разберёмся. | (убрать; начать с ответа) |
+| Надеюсь, это было полезно. Обращайтесь! | (убрать; закончить на сути) |
+
+Allow live dialogue, support replies, and a genuine offer in a contact block.
+
+### Пустой зачин
+
+Openers that announce explanation instead of delivering it — «давайте разберёмся», «погрузимся», «важно понимать, что», filler «итак».
+
+| Неправильно | Правильно |
+|---|---|
+| Давайте разберёмся, как это работает. | Алгоритм делает три вещи: … |
+| Важно понимать, что скорость зависит от железа. | Скорость зависит от железа. |
+
+Allow a real summative «итак», a genuine tutorial step, and an informative «важно … — от этого зависит …».
+
 ## Quality Checklist
 
 Before delivering Russian text, verify:
@@ -226,6 +275,7 @@ Before delivering Russian text, verify:
 - No bureaucratic language or hidden verbs
 - Facts instead of adjectives, specifics instead of generalities
 - Active voice with a named actor
+- No AI-text tells: no manufactured antithesis («не X, а Y»), no virtue self-praise («без воды»), no assistant-persona filler, no hollow openers
 
 ---
 
