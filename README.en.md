@@ -270,11 +270,11 @@ openclaw skills update ru-text
 | Domain | Rules | What it covers |
 |---|---|---|
 | Typography | 96 | Quotes (guillemets, lapki), dashes, non-breaking spaces, digit grouping, special characters, abbreviations |
-| Information style | 197 | Stop-words (97 entries), text structure, facts over adjectives, register, T-Zh editorial principles |
-| Editorial: punctuation | 88 | Complex sentences, 57 comma-trap constructions, introductory words, semicolons |
+| Information style | 197 | Stop-words (92 entries), text structure, facts over adjectives, register, T-Zh editorial principles |
+| Editorial: punctuation | 88 | Complex sentences, 56 comma-trap constructions, introductory words, semicolons |
 | Editorial: grammar | 171 | Capitalization, agreement, 50+ pleonasms, list formatting, clean language principles |
-| UX writing | 217 | 51 button labels, error messages, empty states, forms, notifications, dialogs, onboarding |
-| Business writing | 128 | Email structure, messenger etiquette, tone, 43 clean phrase patterns, meeting notes |
+| UX writing | 217 | 58 button labels, error messages, empty states, forms, notifications, dialogs, onboarding |
+| Business writing | 128 | Email structure, messenger etiquette, tone, 41 clean phrase patterns, meeting notes |
 | Anti-patterns | 138 | Wrong-to-right pairs organized by severity: bureaucratic language, passive voice, bloat |
 
 ## Commands
@@ -292,7 +292,7 @@ If you explicitly request a specific style — casual, academic, SEO, literary, 
 ## Technical quality
 
 Built to Anthropic's Claude Code plugin specs:
-- SKILL.md: 585 words, 90 lines (guideline: under 2,000 words, under 500 lines)
+- SKILL.md: 587 words, 90 lines (guideline: under 2,000 words, under 500 lines)
 - 9 reference files load on demand, never at session start
 - ~1,044 rules organized into 7 thematic areas with progressive disclosure
 
@@ -364,12 +364,6 @@ Contributions and ideas welcome — [open an issue](https://github.com/talkstrea
 - **Glavred** ([glvrd.ru](https://glvrd.ru)) — checks text for info-style quality, highlights filler, scores 0–10
 - **Lebedev Typograf** ([typograf.artlebedev.ru](https://www.artlebedev.ru/typograf/)) — auto-fixes typography: quotes, dashes, non-breaking spaces
 - **Orfogrammka** ([orfogrammka.ru](https://orfogrammka.ru)) — grammar, spelling, and punctuation checker
-
-## See also
-
-- [Glavred](https://glvrd.ru) — checks text for info-style quality, highlights filler, scores 0–10
-- [Typograf](https://www.artlebedev.ru/typograf/) — auto-fixes typography: quotes, dashes, non-breaking spaces
-- [Orfogrammka](https://orfogrammka.ru) — grammar, spelling, and punctuation checker
 
 ## Author
 
