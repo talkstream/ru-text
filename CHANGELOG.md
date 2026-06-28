@@ -35,6 +35,9 @@ Documentation and distribution polish following the v1.10.0 neuroslop release �
   97 → 92, comma-trap constructions 57 → 56, clean business-writing phrases 43 → 41, plus the
   SKILL.md word count 585 → 587. The approximate headline rule count is an intentional anchor and is
   unchanged (#23).
+- **Dogfooding: dropped a self-virtue phrase.** Removed «никакой воды» / «no filler words» from the
+  documentation use-case in both READMEs — it was exactly the preemptive virtue qualifier the plugin's
+  own AD-7 rule flags as neuroslop (#24).
 
 ## [1.10.0] - 2026-06-27
 
