@@ -34,7 +34,7 @@ Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copi
 
 **Landing page copy.** Writing an "About" section for an IT company. The plugin replaces cliches ("команда профессионалов", "индивидуальный подход") with specific facts and numbers.
 
-**README and documentation.** Writing docs for an open-source project in Russian. Proper typography (guillemets, em dashes, non-breaking spaces), no filler words, clear inverted-pyramid structure.
+**README and documentation.** Writing docs for an open-source project in Russian. Proper typography (guillemets, em dashes, non-breaking spaces), clear inverted-pyramid structure.
 
 **Cleaning up AI-slop.** Text reads as machine-generated. The plugin catches the tells: manufactured antithesis ("не X, а Y" with no antecedent), preemptive self-praise ("чётко, по делу, без воды"), assistant-register filler ("Отличный вопрос!", "Надеюсь, помог"), and hollow openers ("давайте разберёмся", "погрузимся").
 
