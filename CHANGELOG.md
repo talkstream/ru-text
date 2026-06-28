@@ -24,6 +24,18 @@ Documentation and distribution polish following the v1.10.0 neuroslop release �
 - **Capability descriptions** across all manifests and the cross-platform `SKILL.md` descriptor now
   list "AI-text cleanup", so the v1.10.0 neuroslop capability appears on every listing surface (#21).
 
+### Removed
+- **Redundant duplicate tools list.** The standalone «Смотрите также» / «See also» section repeated
+  the three online tools already listed under «Онлайн-инструменты» / «Online tools»; removed as
+  info-style redundancy (#23).
+
+### Fixed
+- **Domain-table counters corrected to verified recounts.** Both READMEs now report the authoritative
+  per-section counts, each re-derived from its reference file: button labels 51 → 58, stop-words
+  97 → 92, comma-trap constructions 57 → 56, clean business-writing phrases 43 → 41, plus the
+  SKILL.md word count 585 → 587. The approximate headline rule count is an intentional anchor and is
+  unchanged (#23).
+
 ## [1.10.0] - 2026-06-27
 
 Adds a model-agnostic neuroslop catalogue — a named index of the recurring tells of AI-generated
