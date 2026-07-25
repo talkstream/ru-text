@@ -232,7 +232,7 @@ Start writing Russian text — the plugin takes over automatically. If ru-text m
 
 ## Updating ru-text
 
-Latest version — **v1.10.0** (see the [CHANGELOG](CHANGELOG.md)). Check your installed version in Claude Code with `claude plugins list`.
+Latest version — **v1.10.1** (see the [CHANGELOG](CHANGELOG.md)). Check your installed version in Claude Code with `claude plugins list`.
 
 **Primary method** — for skill-based platforms (GitHub Copilot, Windsurf, Continue.dev, Cline, JetBrains Junie, Google Antigravity, manual Cursor install). Re-run the install — the command pulls the latest version from the repository and overwrites the skill:
 

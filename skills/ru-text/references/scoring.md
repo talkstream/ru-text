@@ -1,7 +1,7 @@
 # Scoring: text quality assessment (0–10)
 
 Analytic rubric for evaluating Russian text quality across 5 dimensions.
-Context-aware LLM evaluation against ~1 044 independently formulated rules (informed by 16 published sources; see sources.md).
+Context-aware LLM evaluation against ~1 044 independently formulated rules (informed by 16 published sources; see sources.md).
 
 ## Table of Contents
 
@@ -33,7 +33,7 @@ Context-aware LLM evaluation against ~1 044 independently formulated rules (info
 
 Formula-based tools (Glavred, Turgenev, Advego) count surface features: stop-words, sentence length, keyword density. Removing «очень» raises the score without improving the text. An SEO text scored 9.1 on Glavred without any real quality.
 
-This rubric evaluates text contextually against ~1 044 rules. «Очень» in quoted direct speech is not penalized. «Инновационный» without evidence is penalized. Five orthogonal dimensions cannot be optimized simultaneously without genuinely improving the text.
+This rubric evaluates text contextually against ~1 044 rules. «Очень» in quoted direct speech is not penalized. «Инновационный» without evidence is penalized. Five orthogonal dimensions cannot be optimized simultaneously without genuinely improving the text.
 
 The only way to raise the score is to write better.
 

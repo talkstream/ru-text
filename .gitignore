@@ -1,5 +1,9 @@
 content/originals/
 .DS_Store
-.claude/
+.claude/*
+!.claude/CLAUDE.md
 *.pen
 scratchpad/
+.playwright-mcp/
+ru-text-landing-*.png
+warn-callout.png

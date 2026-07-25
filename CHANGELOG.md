@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.10.1] - 2026-07-25
 
-Documentation and distribution polish following the v1.10.0 neuroslop release — no rule changes.
+Corrects a safety claim that was never enforced, and folds in the documentation and distribution work
+that landed after the v1.10.0 tag (#19–#24). Those commits sit inside this tag, so they belong in a
+dated entry rather than in an unreleased section the tag would quietly carry along.
 
 ### Added
 - **README badges and an update guide.** Both READMEs gained version, platform, and stars badges,
@@ -19,6 +21,12 @@ Documentation and distribution polish following the v1.10.0 neuroslop release �
   carries a condensed AI-Text Tells section — manufactured antithesis, virtue self-praise,
   assistant-register replies, hollow openers — with carve-outs faithful to the canonical
   AD-6/AD-7/AD-8/AD-9 (#20, #21).
+- **The project's own conventions are now part of the repository.** `.claude/CLAUDE.md` — the release
+  checklist, the manifest field rules, the per-platform gotchas — sat inside a gitignored directory,
+  so it existed on one machine and reached no contributor and no fresh clone. The ignore rule is now
+  scoped (`.claude/*` with an exception for `CLAUDE.md`), keeping `settings.local.json` private. The
+  checklist itself gained the line the release gate caught missing: bump the hardcoded version in both
+  READMEs alongside the seven manifest fields.
 
 ### Changed
 - **Capability descriptions** across all manifests and the cross-platform `SKILL.md` descriptor now
@@ -28,16 +36,45 @@ Documentation and distribution polish following the v1.10.0 neuroslop release �
 - **Redundant duplicate tools list.** The standalone «Смотрите также» / «See also» section repeated
   the three online tools already listed under «Онлайн-инструменты» / «Online tools»; removed as
   info-style redundancy (#23).
+- **`Social Preview 1280x640.png` (60 KB).** Referenced by nothing, yet shipped to every user who
+  installed the plugin. `.playwright-mcp/` and local screenshot artefacts are now gitignored too.
 
 ### Fixed
-- **Domain-table counters corrected to verified recounts.** Both READMEs now report the authoritative
+- **The read-only contract is now mechanically backed, not merely declared.** Since v1.8.1 `/ru-check` and
+  `/ru-score` have stated they never write to your files, citing `allowed-tools: Read, Grep, Glob` as
+  the mechanism. That field restricts nothing: Claude Code's documentation says it "grants permission
+  for the listed tools" and "does not restrict which tools are available: every tool remains
+  callable", and the Agent Skills specification calls the same field "pre-approved". The guarantee
+  rested on nothing. Both commands now carry
+  `disallowed-tools: Write, Edit, NotebookEdit, Bash, PowerShell, Monitor`, which removes those tools
+  while the command is active. Beyond the three file-writing tools the list names the command-executing tools we
+  identified and tested — it names the paths we closed, not every path that exists. `Monitor` is easy
+  to overlook: it runs commands and follows `Bash` permission rules,
+  so a broad `Bash` allow-rule silently pre-approves it while a `disallowed-tools: Bash` entry does not
+  remove it. Verified on Claude Code 2.1.220 by attempting a write through `Write`, through `Bash`
+  redirection, through `Monitor` and through a delegated subagent: every path denied, no file created,
+  and the reference files still read normally. Four limits are stated in the commands themselves: a
+  connected MCP server can expose write tools a per-tool denial list cannot know about; a named
+  subagent whose own definition grants it `tools: Write` is governed by that definition rather than by
+  a parent denial list; a later Claude Code release can add a tool this file does not name; and on
+  hosts that do not implement the field this is an instruction rather than a platform guarantee. The
+  contract itself stays behavioural — the commands return text and never write, whatever the roster
+  contains.
+- **Stop-word catalog count in `SKILL.md`.** The always-on skill advertised "97 entries"; the catalog
+  in `references/info-style.md` §B holds 92. Corrected in both copies of `SKILL.md`.
+- **`scoring.md` broke the plugin's own R53.** The rule count was written with a plain space between
+  digit groups where R53 requires a thin non-breaking space. The corpus now obeys itself here.
+- **`openclaw.plugin.json` declared skills that do not exist.** The manifest listed `ru-check` and
+  `ru-score` as sibling skills; only `skills/ru-text/` exists — the other two are commands. The
+  declaration now matches reality.
+- **Domain-table counters corrected to verified recounts.** Both READMEs report the authoritative
   per-section counts, each re-derived from its reference file: button labels 51 → 58, stop-words
   97 → 92, comma-trap constructions 57 → 56, clean business-writing phrases 43 → 41, plus the
   SKILL.md word count 585 → 587. The approximate headline rule count is an intentional anchor and is
   unchanged (#23).
 - **Dogfooding: dropped a self-virtue phrase.** Removed «никакой воды» / «no filler words» from the
-  documentation use-case in both READMEs — it was exactly the preemptive virtue qualifier the plugin's
-  own AD-7 rule flags as neuroslop (#24).
+  documentation use-case in both READMEs — it was exactly the preemptive virtue qualifier the
+  plugin's own AD-7 rule flags as neuroslop (#24).
 
 ## [1.10.0] - 2026-06-27
 

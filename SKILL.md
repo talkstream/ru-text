@@ -59,7 +59,7 @@ Full typography reference: `references/typography.md`
 | на сегодняшний день | сегодня |
 | в целях | чтобы |
 
-Full stop-word catalog (97 entries): `references/info-style.md`
+Full stop-word catalog (92 entries): `references/info-style.md`
 
 ## When to Load Reference Files
 

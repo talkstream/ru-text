@@ -2,6 +2,7 @@
 name: ru-score
 description: Score Russian text quality on a 0.0–10.0 scale across 5 dimensions
 allowed-tools: Read, Grep, Glob
+disallowed-tools: Write, Edit, NotebookEdit, Bash, PowerShell, Monitor
 context: fork
 ---
 
@@ -54,7 +55,13 @@ Reference files: `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/<filename>`
 
 ## Output format
 
-**Read-only — do NOT modify the source files.** `ru-score` reports a score and issues; it must not write to, edit, or overwrite the analysed file(s) — its `allowed-tools` are `Read, Grep, Glob` by design.
+**Read-only — do NOT modify the source files.** `ru-score` reports a score and issues; it must not write to, edit, or overwrite the analysed file(s).
+
+In Claude Code this is hardened by `disallowed-tools`, which removes the listed tools while the command is active — verified on 2.1.220. The list removes the direct file-writers `Write`, `Edit` and `NotebookEdit`, plus the command-executing tools we identified and tested: `Bash`, `PowerShell` and `Monitor`. It names the paths we closed, not every path that exists. `allowed-tools` pre-approves tools; it does not restrict them.
+
+Four limits, stated plainly. A connected MCP server can expose write tools that a per-tool denial list cannot know about. A named subagent whose own definition grants it `tools: Write` is governed by that definition, not by this list. A later Claude Code release can add a tool this file does not name. And on hosts without `disallowed-tools` support the rule is an instruction rather than a platform guarantee.
+
+The contract itself is behavioural and does not depend on the list: this command returns a score and never writes.
 
 ```
 ## Оценка: X.X / 10 — [label from table above]
