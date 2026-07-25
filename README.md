@@ -234,7 +234,7 @@ git clone https://github.com/talkstream/ru-text.git
 
 ## Обновление
 
-Свежая версия — **v1.10.0** (что нового — в [CHANGELOG](CHANGELOG.md)). Узнать свою версию в Claude Code: `claude plugins list`.
+Свежая версия — **v1.10.1** (что нового — в [CHANGELOG](CHANGELOG.md)). Узнать свою версию в Claude Code: `claude plugins list`.
 
 **Основной способ** — для платформ на основе навыков (GitHub Copilot, Windsurf, Continue.dev, Cline, JetBrains Junie, Google Antigravity, ручная установка в Cursor). Повторите установку — команда подтянет последнюю версию из репозитория и перезапишет навык:
 
