@@ -108,16 +108,36 @@ d=$(fresh_copy)
 grep -v '^catalog_entries=' "$d/tools/frozen.sha256" > "$d/t" && mv "$d/t" "$d/tools/frozen.sha256"
 expect_fail "a baseline key gone missing is caught" "catalog_entries is not recorded" "$d"
 
-# ── 7. the locale trap, pinned as a test ──────────────────────────────────────
-# The reason every tool here exports LC_ALL=C. Under a UTF-8 locale this awk reports
-# distinct Cyrillic strings as equal, and the catalog parser silently loses 8 of its 92
-# entries. If a future awk fixes this, the test fails and the workaround can be retired
-# knowingly rather than carried forever as folklore.
-if printf 'ну|убрать\n' | LC_ALL=en_US.UTF-8 awk '$0 == "слово|замена" { print "EQ" }' | grep -q EQ; then
-  ok "the BSD awk multibyte == trap still exists (LC_ALL=C is still required)"
-else
-  bad "the BSD awk multibyte == trap is GONE — re-examine why LC_ALL=C is set, then update this test"
-fi
+# ── 7. the locale trap: a canary, reported per platform ───────────────────────
+# Why LC_ALL=C is exported everywhere. Under a UTF-8 locale the BSD awk on macOS reports
+# distinct Cyrillic strings as equal, and the catalog parser silently returns 84 of its 92
+# entries. Reproduce there with:
+#   printf 'ну|убрать\n' | awk '$0 == "слово|замена" { print "EQ" }'
+#
+# The first version of this case asserted the trap exists, full stop — and CI failed on
+# its very first run, because gawk on the Linux runner is not affected. That was a
+# property of one machine's awk stated as a property of every awk: the same
+# over-quantification this project keeps having to correct, this time caught by a second
+# platform instead of a reviewer. So the canary now reports what it finds and fails only
+# on the outcome that would actually mislead someone — the trap having quietly vanished on
+# a platform that used to have it, which is the day LC_ALL=C could be reconsidered.
+trap_probe=$(printf 'ну|убрать\n' | LC_ALL=en_US.UTF-8 awk '$0 == "слово|замена" { print "EQ" }' 2>/dev/null || true)
+case "$(uname -s)" in
+  Darwin)
+    if [ "$trap_probe" = "EQ" ]; then
+      ok "the awk multibyte == trap is present on this platform, as expected (LC_ALL=C required)"
+    else
+      bad "the awk multibyte == trap is GONE on macOS — re-examine why LC_ALL=C is set, then update this case"
+    fi
+    ;;
+  *)
+    if [ "$trap_probe" = "EQ" ]; then
+      bad "this platform's awk has the multibyte == trap too — widen the note in check-frozen.sh"
+    else
+      ok "no awk multibyte == trap on $(uname -s); LC_ALL=C stays for the platforms that have it"
+    fi
+    ;;
+esac
 
 
 printf 'selftest: extract-atoms.sh + diff-atoms.sh\n'
@@ -158,7 +178,10 @@ fi
 # Testing a tool against what it actually emits is the only version of this that means
 # anything; testing it against what you assumed it emits reports on your assumptions.
 probe_recall() {
-  if cut -f3 "$W/a.tsv" | /usr/bin/grep -qF "$2"; then
+  # cut's stderr is discarded: grep -q exits on the first match, cut takes SIGPIPE, and
+  # GNU cut prints "write error: Broken pipe" where BSD cut is silent. The message is
+  # noise either way, but noise in a gate's output teaches people to skim it.
+  if cut -f3 "$W/a.tsv" 2>/dev/null | /usr/bin/grep -qF "$2"; then
     ok "extract-atoms keeps $1"
   else
     bad "extract-atoms LOST $1 — wanted a line containing: $2"
