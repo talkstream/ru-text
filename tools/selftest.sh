@@ -104,6 +104,13 @@ perl -i -pe 's{^является\|тире / перестроить$}{являе
   "$d/skills/ru-text/references/info-style.md"
 expect_fail "a reworded probe row is caught" "probe row is" "$d"
 
+# ── 5b. the root SKILL.md guard ───────────────────────────────────────────────
+# The check added in v2.0 when the duplicate root file was removed. Without a case it is
+# a check nobody has watched fire, which is how the DOC credit shipped dead.
+d=$(fresh_copy)
+cp "$d/skills/ru-text/SKILL.md" "$d/SKILL.md"
+expect_fail "a returning root SKILL.md is caught" "registers ru-text twice" "$d"
+
 # ── 6. the baseline itself ────────────────────────────────────────────────────
 # A checker that reads its expectations from a file must fail loudly when the file has
 # lost one, rather than quietly skipping the check it can no longer make.

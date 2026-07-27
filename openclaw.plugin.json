@@ -8,6 +8,8 @@
     "additionalProperties": false
   },
   "skills": [
-    "ru-text"
+    "ru-text",
+    "ru-check",
+    "ru-score"
   ]
 }

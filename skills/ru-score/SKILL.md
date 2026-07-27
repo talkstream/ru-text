@@ -4,6 +4,8 @@ description: Score Russian text quality on a 0.0–10.0 scale across 5 dimension
 allowed-tools: Read, Grep, Glob
 disallowed-tools: Write, Edit, NotebookEdit, Bash, PowerShell, Monitor
 context: fork
+user-invocable: true
+disable-model-invocation: true
 ---
 
 # Russian Text Quality Score
@@ -12,20 +14,30 @@ Score the text provided in $ARGUMENTS (or the most recent Russian text output if
 
 ## Procedure
 
-Reference files: `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/<filename>`
+## Where the reference files live
 
-1. **Load rubric** — read `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/scoring.md` for the full rubric with anchors.
+This skill reads the corpus that ships with the **ru-text** skill, which is installed
+alongside it. Locate that folder once, then read the named files from it:
+
+- Look for a directory named `references` whose parent directory is named `ru-text`, and
+  which contains `info-style.md`. Every file named below sits in that folder.
+- In Claude Code the plugin root is also available directly, which saves the search.
+- **Do not guess a path.** If the folder cannot be found, say so and stop — a check run
+  against remembered rules instead of the corpus is not this command, and reporting one
+  as the other is the failure this whole product exists to prevent.
+
+1. **Load rubric** — read `scoring.md` for the full rubric with anchors.
 
 2. **Determine domain** — identify whether the text is UI/interface, business email, article, or general:
-   - UI text → also load `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/ux-writing.md` for the Reader Precision dimension
-   - Business email → also load `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/business-writing.md` for the Reader Precision dimension
-   - General → use `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/info-style.md` only
+   - UI text → also load `ux-writing.md` for the Reader Precision dimension
+   - Business email → also load `business-writing.md` for the Reader Precision dimension
+   - General → use `info-style.md` only
 
 3. **Evaluate each dimension separately** — score in this order:
-   - **T — Типографика** (weight 0.15): quotes, dashes, spaces, special characters per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/typography.md`
-   - **Ч — Чистота языка** (weight 0.25): stop-words, bureaucratic language, clichés, passive voice per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/info-style.md` + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/anti-patterns.md`
-   - **Г — Грамотность** (weight 0.20): punctuation, agreement, tautology per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-grammar.md` + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-punctuation.md`
-   - **С — Структура** (weight 0.20): logical flow, paragraphs, transitions, heading use per `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/info-style.md` structure section + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/addenda.md`
+   - **T — Типографика** (weight 0.15): quotes, dashes, spaces, special characters per `typography.md`
+   - **Ч — Чистота языка** (weight 0.25): stop-words, bureaucratic language, clichés, passive voice per `info-style.md` + `anti-patterns.md`
+   - **Г — Грамотность** (weight 0.20): punctuation, agreement, tautology per `editorial-grammar.md` + `editorial-punctuation.md`
+   - **С — Структура** (weight 0.20): logical flow, paragraphs, transitions, heading use per `info-style.md` structure section + `addenda.md`
    - **Ц — Точность для читателя** (weight 0.20): facts, evidence, reader benefit, actionability per domain rules
 
 4. **For each dimension** — assign a score (0.0–10.0) using the rubric anchors in scoring.md. List 1–3 specific issues, quoting the problematic text fragment.
@@ -63,22 +75,12 @@ Four limits, stated plainly. A connected MCP server can expose write tools that 
 
 The contract itself is behavioural and does not depend on the list: this command returns a score and never writes.
 
-```
-## Оценка: X.X / 10 — [label from table above]
+The report shape is not written twice. Read section «Output format» of `scoring.md` —
+the mandated heading, the five Russian dimension labels, the per-cell limit of one to
+three issues with quoted fragments, the weighted formula, the cap note, and the closing
+«Что оценка не измеряет» section — and follow it exactly.
 
-| Измерение | Балл | Замечания |
-|---|---|---|
-| Типографика | X.X | [1–3 specific issues with «quoted fragments»] |
-| Чистота языка | X.X | ... |
-| Грамотность | X.X | ... |
-| Структура | X.X | ... |
-| Точность для читателя | X.X | ... |
-
-**Формула:** T×0.15 + Ч×0.25 + Г×0.20 + С×0.20 + Ц×0.20 = X.X
-[If non-compensatory cap triggered: «Ограничение: [dimension] ниже порога → итог ≤ X.X»]
-
-### Что оценка не измеряет
-Фактическую точность, уместность тона для аудитории, креативность, конверсию, соответствие заданию.
-```
+That file is the single source of it. A copy lived here until v2.0 and sat outside the
+no-loss gate, so the two could drift and only a reader comparing them would notice.
 
 If a dimension has no issues, write «Замечаний нет» in the remarks column.
