@@ -53,6 +53,20 @@ alongside it. Locate that folder once, then read the named files from it:
    - Preemptive virtue qualifier (AD-7) — «без воды», «чётко, по делу»
    - Assistant-register meta-commentary (AD-8) — «Отличный вопрос!», «Надеюсь, это помогло»
    - Hollow openers (AD-9) — «давайте разберёмся», «погрузимся», «важно понимать, что»
+   - Declared sincerity (AD-10) — «честный разбор», «давайте будем честны»: honesty predicated of the piece.
+     The same reflex on a single statement — «скажу честно: дедлайн сорван» — is AD-7
+   - Mandatory tricolon (AD-11) — «инновационный, трансформирующий, прорывной»
+   - Hollowed mechanism (AD-12) — «зависит от различных факторов», «свои особенности»
+   - Phantom attribution (AD-13) — «исследования показывают», «эксперты отмечают»
+   - Chat transcript as the artifact (AD-14) — the document's skeleton is a dialogue
+   - Search-engine addressee (AD-15) — the query phrase where a pronoun would serve
+   - Additive pseudo-pair (AD-16) — «не только X, но и Y» where Y adds nothing
+
+   The list above is a prompt for the eye, not the rule set. Two of these — AD-14 and AD-15
+   — are charged to the **document**, so ask them of the piece as a whole and not of any
+   one sentence. Every rule has carve-outs that decide as many cases as the triggers do;
+   they are in `addenda.md`, and a finding raised without checking them is the false
+   positive this command costs the most trust for.
 
 ## Output format
 

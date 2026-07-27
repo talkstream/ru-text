@@ -17,7 +17,15 @@ additions.
 - [AD-7. Preemptive virtue qualifier](#ad-7-preemptive-virtue-qualifier-непрошенная-оговорка-без-воды)
 - [AD-8. Assistant-register meta-commentary](#ad-8-assistant-register-meta-commentary-сервисные-реплики-ассистента)
 - [AD-9. Hollow opener](#ad-9-hollow-opener-пустой-зачин)
+- [AD-10. Declared sincerity](#ad-10-declared-sincerity-объявленная-искренность)
+- [AD-11. Mandatory tricolon](#ad-11-mandatory-tricolon-обязательная-триада)
+- [AD-12. Hollowed mechanism](#ad-12-hollowed-mechanism-выхолощенность)
+- [AD-13. Phantom attribution](#ad-13-phantom-attribution-неопределённая-атрибуция)
+- [AD-14. Chat transcript as the artifact](#ad-14-chat-transcript-as-the-artifact-диалог-с-нейросетью-вместо-текста)
+- [AD-15. Search-engine addressee](#ad-15-search-engine-addressee-адресат--поисковик-а-не-читатель)
+- [AD-16. Additive pseudo-pair](#ad-16-additive-pseudo-pair-не-только-x-но-и-y)
 - [Neuroslop index](#neuroslop-index)
+- [Two rules that govern all the others](#two-rules-that-govern-all-the-others)
 
 ## Neuroslop index
 
@@ -29,6 +37,13 @@ unverifiable and fast-dating.
 | Tell | Canonical home |
 |---|---|
 | Manufactured antithesis — «не X, а Y» / «не просто X, а Y» with no antecedent | AD-6 |
+| Declared sincerity — «честный разбор», «давайте будем честны», «рассказываю как есть» | AD-10 |
+| Mandatory tricolon — «инновационный, трансформирующий, прорывной» | AD-11 |
+| Hollowed mechanism — «зависит от различных факторов», «свои особенности» | AD-12 |
+| Phantom attribution — «исследования показывают», «эксперты отмечают» | AD-13 |
+| Chat transcript as the artifact — «Я: … / Модель: …» as the document's skeleton | AD-14 |
+| Search-engine addressee — the query phrase repeated where a pronoun would serve | AD-15 |
+| Additive pseudo-pair — «не только X, но и Y» where Y adds nothing | AD-16 |
 | Preemptive virtue qualifier — «без воды», «чётко, по делу», «коротко и ясно» | AD-7 |
 | Assistant-register meta-commentary — «Отличный вопрос!», «Надеюсь, это помогло» | AD-8 |
 | Hollow opener — «давайте разберёмся», «погрузимся», «важно понимать, что» | AD-9 |
@@ -38,6 +53,32 @@ unverifiable and fast-dating.
 | Unproven-claim adjectives — «качественный», «надёжный», «эффективный» | `info-style.md` §B |
 | Generic conclusion — «таким образом, подводя итог» | `anti-patterns.md` |
 | Artificial liveliness — exclamation stacks and emoji as a substitute for detail | `info-style.md` §F |
+
+## Two rules that govern all the others
+
+**Density raises severity; it never replaces the findings.** Several rules here treat a
+cluster as their main signal — AD-1, AD-2, AD-6, AD-9, AD-11, AD-16. Once a rule has
+decided that it fires, report every instance, individually, with its own quoted fragment,
+and let the count govern how far the score moves. One line saying «два и более на текст» in
+place of the four fragments is a loss of coverage wearing the clothes of a summary: the
+person fixing the text is left without the list of lines to fix.
+
+This says nothing about **whether** a rule fires. Two of the six — AD-11 and AD-16 — put
+density into the flag condition itself, so an isolated triple or an isolated pair is not a
+finding at all; that is their own text and it stands. The rule here governs what happens
+after a rule has decided to fire, never before.
+
+**Reporting every instance is not a limit on the score card.** `scoring.md` asks for one to
+three issues per dimension in the scored output; that is the size of a table cell, not the
+size of the check. `/ru-text:ru-check` lists what it found; `/ru-text:ru-score` quotes the
+most telling of them per dimension. Neither number licenses dropping a finding.
+
+**A document-level charge adds; it never replaces.** AD-14 and AD-15 are charged to the
+piece as a whole. Each absorbs only its own evidence — the repetitions that demonstrate it
+— and absorbs nothing else. Every ordinary finding in that text stands: stop-words,
+unproven claims, passive voice, punctuation, typography. Both statements exist because a
+measured run did the opposite: on 27.07.2026 it replaced ten ordinary findings with three
+document-level ones, and the text came out looking better for it.
 
 ---
 
@@ -272,6 +313,8 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 
 AD-6.7 (scope of strengthening). The trigger set now includes «не просто X, а Y» and «вопрос/суть не в X, а в Y». Two look-alikes are NOT auto-flagged: «не столько X, сколько Y» (a degree-narrowing, cf. AD-6.4) and «важно не X, а Y» without an antecedent (often a real reader priority). A cluster of manufactured pairs bites harder in **С — Structure** (see `scoring.md`); the carve-outs hold — asymmetric self-correction (AD-6.4) and the 0–2 legitimate antecedent-backed body pairs (AD-6.5) are never penalised, and the construction is never banned outright.
 
+AD-6.8 (the quota is not a finding). AD-6.5 sets how many pairs a text may carry; it is not a line to report in place of them. Report each manufactured pair with its own fragment and let the count raise the weight in **С — Structure**. Measured on 27.07.2026: a run reported «два и более на ~150 слов» and dropped one of the pairs it was counting.
+
 **Examples:**
 
 | Wrong | Correct |
@@ -315,6 +358,7 @@ AD-6.7 (scope of strengthening). The trigger set now includes «не прост�
 
 - «без воды» / «без виляния» / «без лишних слов» / «без обиняков» — a manner-flourish denying a vice of delivery
 - «честно говоря» / «начистоту» / «прямо скажем» / «не побоюсь этого слова» — announced sincerity
+- «скажу честно» / «если честно» / «честно» / «по-честному» / «не буду врать» / «откровенно говоря» / «положа руку на сердце» — the same announced sincerity in the forms a model reaches for most. Where the sincerity is predicated of the whole piece rather than of one statement — «честный разбор», «давайте будем честны» — the home is AD-10; charge the fragment once (AD-10.6)
 - «и без всякой магии» / «без всяких фокусов» / «без нервов» appended to a claim about one's own product or method
 - «чётко, по делу» / «коротко и ясно» / «простыми словами» / «разложу по полочкам» / «на пальцах» — a positive-form flourish praising the author's own delivery (the polarity twin of «без воды»)
 - a self-praise tricolon about one's own product or method — «быстро, качественно, надёжно» — where each adjective is itself an unproven claim (cf. `info-style.md` §B) and the rule-of-three stacking is the added tell
@@ -330,7 +374,7 @@ AD-7.3. Allow informative «без»: «кофе без сахара», «раб
 
 AD-7.4. Allow a genuine epistemic qualifier that carries information: «строго говоря, это аппроксимация», «по сути» when it narrows the claim (cf. AD-6.4). These calibrate meaning; they do not advertise sincerity.
 
-AD-7.5 (register). Conversational and literary registers: «честно говоря», «прямо скажем», «по правде сказать» as natural discourse markers of live speech or a character's voice — not a statement about the author's own product or method — are not flagged. The target is the *self-promotional* manner-flourish (AD-7.1, condition 1), not ordinary spoken connective tissue. When in doubt, apply AD-7.1: if the qualifier praises the author's own delivery, flag it; if it merely colours conversational tone, leave it (cf. AD-2.3, which likewise spares the literary register).
+AD-7.5 (register — whose voice it is). The carve-out holds when the construction belongs to a **speaker inside the text**: a line of dialogue, a quotation, an interviewee, a character. «— Скажу честно, я не знаю, — ответил инженер» is speech and is not flagged. It does **not** hold when the author says it about their own text, in any register — an author addressing the reader in a conversational tone is still the author, and «скажу честно» in a lead is the self-promotional flourish AD-7.1 describes, not spoken connective tissue. This is the narrowing of 27.07.2026: the earlier wording exempted the conversational register as such, and the assistant register — a monologue written to sound like speech — fell straight through it, which is how a construction listed among the triggers went unflagged for a year. The same boundary is written once, at AD-10.4, and governs both rules.
 
 AD-7.6. Single-count with neighbours. A «без [vice]» flourish can also be caught by AD-2 (parcellation / filler rhythm in Structure) — the «без воды» tail in «Расскажу последовательно, доступно, без воды» is one fragment, not two faults. Count one violation per fragment: charge it to AD-7 (**Ч — Clarity**) when the defect is the empty self-virtue, to AD-2 (**С — Structure**) when the defect is the staccato or filler rhythm. Never double-charge the same fragment across Ч and С.
 
@@ -473,3 +517,408 @@ AD-9.7 (carve-out — dialogue register). «Давайте разберёмся�
 **Severity:** Low. Secondary signal in the **С — Structure** dimension (supporting **Ч — Clarity**). A cluster lowers Structure; an isolated opener does not. Cannot trigger non-compensatory caps alone.
 
 **Acknowledged:** identified from corpus analysis of AI-generated Russian prose (2026-06); the hollow opener announces explanation instead of leading with the point and clusters densely in machine drafts.
+
+
+---
+
+## AD-10. Declared sincerity (объявленная искренность)
+
+**Problem:** the text asserts its own honesty as a property of itself — «честный разбор», «давайте
+будем честны», «рассказываю как есть», «без прикрас», «вся правда о…». Sincerity is what a reader
+infers from what a text does with an inconvenient fact; announced, it is a claim with no evidence,
+and it takes the place of the evidence that would have earned it. AD-7 catches the same reflex
+attached to one statement («скажу честно: дедлайн сорван»); AD-10 catches it when honesty is
+predicated of the piece or of the block that follows. The label form is the louder of the two and is
+graded accordingly, and giving it its own name is what lets the carve-out be stated once instead of
+twice.
+
+**Sources:**
+- Telling vs. showing, and self-praise as an empty signal: editorial practice, informed by Нора Галь «Слово живое и мёртвое»
+- Platform moderation practice treats stylistic resemblance as sufficient grounds on its own, without proof of generation — Habr's site rules as they stood on 27.07.2026, the version announced in the platform's own post of 17.06.2026 (paraphrased, not quoted); this is external evidence that a style-level rule has a real object
+- Adjacent to AD-7 (delivery-virtue qualifier) and AD-13 (phantom attribution): all three perform a stance instead of demonstrating it
+- Independently formulated from the 2026 review of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- «честный разбор» / «честный обзор» / «честно о…» / «вся правда о…» / «без прикрас» — the piece labelled honest, most often in a title
+- «давайте будем честны» / «будем откровенны» / «скажем прямо» opening a paragraph or a section
+- «рассказываю как есть» / «пишу как думаю» / «без купюр» / «начистоту»
+- a title or lead whose only claim is the author's own sincerity
+- the strongest signal: the label in a heading, where the reader has been given nothing yet against which to weigh it
+
+**Rules:**
+
+AD-10.1. Flag a construction when all three hold: (1) it predicates honesty, frankness or candour of the text, of the author's account, or of the block that follows; (2) the author is speaking about their own text; (3) it carries no fact — deleting it loses nothing.
+
+AD-10.2. Rewrite by deleting the label and letting the inconvenient fact do the work it was standing in for. «Честный разбор: почему сроки срываются» → «Почему сроки срываются» — and then name the reason.
+
+AD-10.3. Honesty is demonstrated specifically: an admitted mistake, a number that costs the author something, a stated limit of what is known. Where the demonstration is present the label is redundant; where it is absent the label is false.
+
+AD-10.4 (carve-out — the speaker inside the text). Not flagged when the construction belongs to a speaker inside the text: a line of dialogue, a quotation, an interviewee, a character. «— Скажу честно, я не знаю, — ответил инженер» is speech, not a label. This is the same boundary the narrowed AD-7.5 draws, and it is written here once for both: the carve-out protects a voice inside the text, never the author speaking about their own text.
+
+AD-10.5 (carve-out — informative «честный»). «Честная цена» meaning a price with no hidden fees, «честный вес», «честный тест» meaning one whose method is published — here «честный» names a checkable property of the object, not a virtue of the prose (compare AD-7.3).
+
+AD-10.6 (single-count with AD-7). One fragment, one charge. AD-10 takes it when honesty is predicated of the text or frames what follows; AD-7 takes it when the qualifier modifies a single statement in the flow. Never both.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Честный разбор: почему проекты срываются | Почему проекты срываются |
+| Давайте будем честны — планировать умеет не каждая команда. | Из двенадцати команд в срок уложились три. |
+| Рассказываю как есть, без прикрас. | (delete; then tell it) |
+| Вся правда о подписках. | Что входит в подписку и что нет. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| — Скажу честно, я не знаю, — ответил инженер. | Speech of a person inside the text (AD-10.4). |
+| Честная цена: 4 900 ₽, доставка входит. | «Честный» names a checkable property of the object (AD-10.5). |
+| Мы ошиблись в расчёте на 30% и потеряли квартал. | Honesty demonstrated rather than announced (AD-10.3). |
+| Строго говоря, это аппроксимация. | Epistemic qualifier carrying information (cf. AD-7.4). |
+
+**Severity:** Medium — the label form is the most conspicuous member of the declared-sincerity family and the one a reader notices first. Primary signal in the **Ч — Clarity** dimension (supporting **Ц — Reader precision**), reflected in the Ч rubric anchors. A label in a heading, or two instances in one text, materially lowers Ч; a single one in the body does not. Still cannot, by itself, trigger a non-compensatory cap.
+
+**Acknowledged:** identified in the 2026 neuroslop review, from a reader-complaint channel and from a probe the author supplied — «скажу честно». That exact form was in no trigger list; its close relative «честно говоря» was, among AD-7's, and the register carve-out then exempted it. So the family was named and the coverage was not, which is the same failure the probe exposed.
+
+
+---
+
+## AD-11. Mandatory tricolon (обязательная триада)
+
+**Problem:** enumerations that arrive in threes because three is the shape, not because the subject has three parts — «инновационный, трансформирующий, прорывной». The rule of three is a real device with a long rhetorical history; the tell is its automatic application. The giveaways are that the third member rewords the first two, that the members are of unequal rank, and above all that the pattern repeats: a text where every list is three items long is being written by a form, not about a subject.
+
+**Sources:**
+- Expressive syntax and the cost of a figure applied mechanically: editorial practice, informed by Розенталь «Справочник по правописанию и стилистике»
+- `info-style.md` §B — the unproven-claim adjectives that most often fill the three slots
+- AD-7 already names the self-praise tricolon about one's own product; AD-11 is the general case and the two are kept apart by AD-11.5
+- Independently formulated from the 2026 review of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- three adjectives in a row, none of them measurable — «инновационный, трансформирующий, прорывной»
+- three noun phrases where the third rewords the first two
+- every heading in a section followed by exactly three bullets
+- «во-первых… во-вторых… в-третьих» where the third point restates the first
+- the strongest signal: two or more forced triples in one text
+
+**Rules:**
+
+AD-11.1. Flag a triple when all three hold: (1) the subject does not have exactly three parts — a fourth could be added, or one dropped, with nothing lost; (2) the members are not distinct — one repeats or contains another; (3) deleting a member loses no fact. Density is part of the test, not a separate remark: a cluster of two or more such triples in one text is the primary signal, and an isolated triple is flagged only when every member is an unproven claim from `info-style.md` §B.
+
+AD-11.2. Rewrite by keeping what carries information: two members with distinct content, or one member with a number behind it.
+
+AD-11.3 (density raises severity; it never replaces the findings). When a text carries several forced triples, report **each** of them and let the cluster raise the weight in **С — Structure**. A single line saying «два и более на текст» in place of the individual triples is a loss of coverage dressed as a summary: the writer fixing the text needs to know which lines to rewrite.
+
+AD-11.4 (carve-out — the subject has three). An exhaustive enumeration — «рожковые, капсульные и автоматические» — three real steps, three measurements, three named parties: not flagged. The test is whether a fourth member could exist. If it could not, the three belong to the subject rather than to the form.
+
+AD-11.5 (single-count with AD-7). A triple that praises the author's own product or delivery — «быстро, надёжно, красиво» — is AD-7's self-praise tricolon and is charged there, in **Ч — Clarity**. AD-11 takes the forced triple that is not self-praise, in **С — Structure**. Never both for one fragment.
+
+AD-11.6 (single-count with info-style §B — the SAME fragment only). Where the members of the triple are §B unproven adjectives, count that fragment once: §B when the defect is the missing evidence, AD-11 when it is the forced count. Never both **for that fragment**. An unproven adjective elsewhere in the sentence — «хороший процесс должен быть прозрачным, предсказуемым и управляемым», where «хороший» is the subject and not a member — is a separate defect and is reported separately. Single-count means one charge per fragment, never one charge per sentence.
+
+AD-11.7 (carve-out — oratorical and literary register). The tricolon is a legitimate figure in speeches, manifestos and literary prose, where rhythm is part of the work (cf. AD-2.3, which likewise spares the literary register).
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Инструмент инновационный, трансформирующий и прорывной. | Инструмент собирает отчёт за 4 с вместо 3 мин. |
+| Процесс должен быть прозрачным, предсказуемым и управляемым. | Процесс должен быть предсказуемым: срок известен на старте. |
+| Он меняет подход к планированию, к оценке и к контролю. | Он меняет оценку сроков. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Кофемашины бывают рожковые, капсульные и автоматические. | Exhaustive enumeration: no fourth type exists (AD-11.4). |
+| Задержку определяют три вещи: расстояние, загрузка канала и версия протокола. | Three distinct mechanisms, each named (AD-11.4, cf. AD-12.3). |
+| Сначала открываем конфиг, затем меняем порт, затем перезапускаем сервис. | Three real steps of a procedure. |
+| Мы измеряли в Москве, Франкфурте и Сингапуре. | Three named places, each carrying its own datum. |
+
+**Severity:** Low. Secondary signal in the **С — Structure** dimension (supporting **Ч — Clarity**). A cluster lowers Structure; an isolated triple does not. Cannot trigger non-compensatory caps alone.
+
+**Acknowledged:** identified in the 2026 neuroslop review, from a reader-complaint channel where the forced three was named repeatedly and independently of any single model family.
+
+
+---
+
+## AD-12. Hollowed mechanism (выхолощенность)
+
+**Problem:** a claim that something matters, with the operative term replaced by a placeholder — «зависит от различных факторов», «есть целый ряд причин», «имеет свои особенности», «определённая специфика». The sentence has the shape of an explanation and none of its content: the reader cannot act on it, check it, or disagree with it, because nothing has been said. It is the most economical way for a paragraph to pass for informative. Not to be confused with AD-3: AD-3 says the same thing twice, AD-12 says nothing once.
+
+**Sources:**
+- `info-style.md` §E — a claim without a number or a source is an opinion; §B lists «определённый» among the stop-words with the instruction to name the specific thing
+- `info-style.md` §D — the worked contrast between «различные проблемы» and a problem named
+- `editorial-grammar.md` §E.2 — «следует учитывать следующие факторы» is catalogued there as a tautology (the cognate pair «следует… следующие»): the neighbouring defect is the wording, the defect here is the emptiness
+- Independently formulated from the 2026 review of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- «различные факторы» / «ряд факторов» / «целый ряд причин» / «по ряду причин»
+- «свои особенности» / «своя специфика» / «определённая специфика» / «известные нюансы»
+- «многие аспекты» / «те или иные» / «в той или иной степени» / «разный эффект»
+- «зависит от многого» / «всё индивидуально» / «зависит от ситуации» as a whole answer
+- «играет важную роль» / «имеет большое значение» where neither the role nor the significance is named (cf. AD-13)
+
+**Rules:**
+
+AD-12.1. Flag a clause when all three hold: (1) it asserts influence, dependence, importance or difficulty; (2) the term carrying the mechanism is a placeholder rather than a name — «факторы», «аспекты», «особенности», «специфика», «моменты», «нюансы» are the common ones, and so is any bare quantifier or degree word standing in for the mechanism: «многое», «те или иные», «в той или иной степени», «разный», «большое значение». The list is open; the test is whether the word tells the reader WHICH; (3) nothing in the piece names what the placeholder stands for — not this sentence, not its neighbours, and not a section, table or source the sentence points to (AD-12.3).
+
+AD-12.2. Rewrite by naming: replace the placeholder with the two or three actual items. If they cannot be named, the sentence was not knowledge, and deleting it loses nothing.
+
+AD-12.3 (carve-out — the placeholder is cashed out, here or elsewhere). «Задержку определяют три вещи: расстояние до дата-центра, загрузка канала и версия протокола» — the placeholder is a colon away from its content. It counts just as much when the cash-out is deferred by an explicit pointer: «объясняется рядом факторов, разобранных в разделе 4», a reference to a table, an appendix, or a named source. That is the normal convention of technical, normative and academic writing, and the window is the whole document — the same reach AD-13.3 gives an attribution named once and referred to later. The defect is the placeholder that stays empty, not the one answered on another page.
+
+AD-12.4 (carve-out — honest uncertainty). A stated limit of knowledge that says what is unknown and why — «мы не знаем, откуда разброс: замеры шли на разном железе» — is information. The target is a pretence of an answer, never the admission that there is none.
+
+AD-12.5 (single-count with info-style §B). «Определённый» is already a §B stop-word. Charge the fragment once: §B when the defect is the empty determiner, AD-12 when it is the unnamed mechanism. Never both.
+
+AD-12.6 (single-count with AD-13). A clause can carry both defects in two different fragments — «исследования показывают, что влияют различные факторы» is AD-13 on the attribution and AD-12 on the mechanism, which is two fragments and two charges. One fragment is never charged to both.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Результат зависит от различных факторов. | Результат зависит от версии протокола и от загрузки канала. |
+| У каждого проекта своя специфика. | В этом проекте два подрядчика и общий репозиторий. |
+| Многие аспекты процесса изучены недостаточно. | Мы не измеряли, как влияет размер команды. |
+| Мотивация имеет большое значение. | Команды с недельным циклом обратной связи закрывали задачи на 20% быстрее. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Задержку определяют три вещи: расстояние, загрузка канала и версия протокола. | The placeholder is cashed out in the same sentence (AD-12.3). |
+| Мы не знаем, откуда разброс: замеры шли на разном железе. | Honest uncertainty, with the reason named (AD-12.4). |
+| Специфика ГОСТ 8.417 в том, что единицы пишутся без точки. | «Специфика» followed by the specific thing. |
+
+**Severity:** Medium — a text made of these sentences is indistinguishable in shape from an informative one, which is exactly what makes it expensive. Primary signal in the **Ц — Reader precision** dimension (supporting **Ч — Clarity**), reflected in the Ц rubric anchors. Two or more hollowed clauses land Ц in the 5–6 band or lower. Cannot trigger a non-compensatory cap alone.
+
+**Acknowledged:** identified in the 2026 neuroslop review from a reader-complaint channel; checked against the corpus before proposing, where the pattern was found absent — the nearest neighbours are a tautology entry about the wording and a worked example about a different point.
+
+
+---
+
+## AD-13. Phantom attribution (неопределённая атрибуция)
+
+**Problem:** the gesture of citing, without a source — «исследования показывают», «эксперты отмечают», «учёные доказали», «по мнению аналитиков». The sentence borrows the authority of a body of work that is never identified, so the reader cannot go and look. This is worse than an unsupported claim, not better: a bare claim invites the question «откуда это?», while a dressed one discourages it. Distinct from the unproven-claim adjectives of `info-style.md` §B — there no source is offered at all, here a source is imitated.
+
+**Sources:**
+- `info-style.md` §E — a number or claim without a source is an opinion, not a fact
+- Adjacent to AD-10: both perform an authority instead of holding one
+- Independently formulated from the 2026 review of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- «исследования показывают» / «согласно исследованиям» / «учёные доказали»
+- «эксперты отмечают» / «специалисты рекомендуют» / «аналитики прогнозируют»
+- «принято считать» / «общеизвестно, что» / «как показывает практика» / «статистика говорит»
+- «играет ключевую роль» — a rank assigned with nobody ranking and no criterion given. Where the defect is the missing mechanism rather than the missing source, AD-12 is the home; charge the fragment once
+- the strongest signal: an attribution that no sentence in the piece ever redeems
+
+**Rules:**
+
+AD-13.1. Flag an attribution when the source is not identifiable anywhere in the text: no author, organisation, publication, date or link, here or elsewhere in the piece.
+
+AD-13.2. Rewrite by naming the source, or by dropping the attribution and owning the claim. «Исследования показывают, что удалёнка снижает продуктивность» → «По данным опроса N (2025, 1 200 респондентов), …» or «На наших четырёх проектах продуктивность упала».
+
+AD-13.3 (carve-out — a real source). Named, dated and checkable — «По данным Росстата за 2025 год» — is not flagged, and neither is a later reference to a source the piece named once.
+
+AD-13.4 (carve-out — consensus with a citation). Where the existence of a consensus is itself the point and a citation follows, «принято считать» is a legitimate framing move rather than a phantom.
+
+AD-13.5 (carve-out — marked personal experience). «По моему опыту», «у нас на проекте», «в трёх наших внедрениях» attribute to the author, who is identifiable and answerable. That is a source.
+
+AD-13.6 (single-count with info-style §B). An unproven adjective and a phantom attribution in one fragment are one charge: §B when the defect is the unevidenced claim, AD-13 when it is the imitated citation. Never both.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Исследования показывают, что удалёнка снижает продуктивность. | По данным опроса Института X (2025, 1 200 респондентов), продуктивность упала на 8%. |
+| Эксперты отмечают: рынок вырастет. | ЦБ в июльском прогнозе ждёт роста на 3%. |
+| Учёные доказали, что кофе полезен. | (delete, or cite the study) |
+| Мотивация играет ключевую роль. | Без обратной связи в первую неделю уходит каждый третий новичок. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| По данным Росстата за 2025 год, зарплата выросла на 12%. | Named, dated, checkable (AD-13.3). |
+| По моему опыту, миграции такого размера занимают неделю. | Attributed to the author, who is answerable (AD-13.5). |
+| Принято считать, что индексы ускоряют чтение; замер ниже это опровергает. | Consensus named in order to be tested, and it is (AD-13.4). |
+
+**Severity:** Medium — an imitated citation does more damage than a missing one, because it suppresses the reader's question. Primary signal in the **Ц — Reader precision** dimension (supporting **Ч — Clarity**), reflected in the Ц rubric anchors. Cannot trigger a non-compensatory cap alone.
+
+**Acknowledged:** identified in the 2026 neuroslop review from a reader-complaint channel; checked against the corpus before proposing, where the pattern had no entry of any kind.
+
+
+---
+
+## AD-14. Chat transcript as the artifact (диалог с нейросетью вместо текста)
+
+**Problem:** the published piece is the log of a conversation with a model. Its skeleton is a sequence of turns rather than an argument: questions become headings, answers become sections, and the piece ends when the conversation did. The reader is handed the raw material and asked to do the author's work on it. This is one of the set's two rules charged to the **document** rather than to a fragment — the other is AD-15 — and no local edit removes either, because the defect is the shape.
+
+**Sources:**
+- Platform editorial policy names this artifact directly: Habr's site rules as they stood on 27.07.2026 (the version announced 17.06.2026) list, among material that should not be posted, pieces that are the author's dialogues with neural networks and pieces consisting only of model answers; a separate section of the same rules restricts unfinished drafts and streams of consciousness (paraphrased, not quoted)
+- Distinct from AD-8, which flags an assistant reply leaking into monologue prose: that is a sentence, this is a skeleton (see AD-14.5)
+- `info-style.md` §D — the inverted pyramid a transcript cannot have, because a conversation is ordered by turns
+- Independently formulated from the 2026 review of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- alternating speaker labels — «Я:» / «Модель:», «Пользователь:» / «Ответ:», «Промпт:» / «Результат:»
+- the piece's headings are the questions that were asked
+- prompt echo: each answer restates the question before answering it
+- the closing is the end of the exchange — «Спасибо, теперь понятно» — rather than a conclusion
+- no sentence in the piece is a claim of the author's own
+
+**Rules:**
+
+AD-14.1. Charge the document when both hold: (1) its structure is a sequence of exchanges rather than an exposition; (2) the author contributes no claim of their own — no thesis, no synthesis, no assessment of what the model said.
+
+AD-14.2. Rewrite by writing the piece: state what you learned, in the order a reader needs it, and keep from the transcript only what a reader must see in order to check you.
+
+AD-14.3 (level — the document charge ADDS, it never replaces). AD-14 is a property of the whole document: attach it once, not to an individual line, and a single quoted exchange inside an ordinary article is not this rule at all. Charging it changes nothing about the rest of the check — every stop-word, every assistant flourish, every punctuation error inside the transcript is reported as it would be otherwise. A document-level finding is one more finding, never a replacement for the list.
+
+AD-14.4 (carve-out — the transcript as evidence). A log published as evidence for the author's own finding, with the finding stated and the log subordinate to it, is not flagged: a prompt-engineering write-up, a documented experiment, a bug report, a reproduction. The test is one deletion: remove the log — does a claim of the author's remain? If yes, the log was evidence.
+
+AD-14.5 (relationship to AD-8 — not a double charge). AD-8 flags individual assistant replies inside a text; AD-14 flags the text's shape. Repair every AD-8 flourish and an AD-14 document is still a transcript; repair the shape and the flourishes were never the problem. The two defects survive each other's repair, so both are charged — this is not one fragment counted twice.
+
+AD-14.6 (carve-out — human dialogue). An interview, a Q&A with a human respondent, a play, a chat-support excerpt, a quoted exchange: dialogue between people is a genre, not a tell (cf. AD-8.4).
+
+AD-14.7 (carve-out — the transcript was what was asked for). Where the user's brief is a transcript — documentation of a session, a teaching example showing prompts and outputs — the style priority stated in `SKILL.md` applies and these defaults do not override the request.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| **Я:** Объясни кеширование. **Модель:** Отличный вопрос! … | ETag сравнивает версию ресурса; при совпадении сервер отвечает 304. (then the author's own account) |
+| Заголовок раздела: «А что такое ETag?» | Заголовок раздела: «ETag: когда сервер отвечает 304» |
+| Закрытие: «Спасибо, теперь понятно.» | Закрытие: вывод, ради которого текст написан. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Ниже — расшифровка: я задал модели один вопрос трижды и свёл ответы в таблицу. Разброс — вывод статьи. | The log is evidence for the author's own finding (AD-14.4). |
+| «Хороший вопрос», — ответил инженер. | Quoted human dialogue (AD-14.6, cf. AD-8.4). |
+| Интервью с разработчиком, вопрос — ответ. | An interview is a genre. |
+
+**Severity:** High — the highest in this addenda set, and it means something specific: the defect is not a fragment to repair but the form of the piece, so no sequence of local edits removes it. Primary signal in the **С — Structure** dimension (supporting **Ц — Reader precision**), reflected in the С rubric anchors: a document charged with AD-14 does not reach the upper Structure bands. It does **not** introduce a new non-compensatory cap — those stay reserved for the hard dimensions and the global floor (see `scoring.md`). Severity here says how far the dimension moves, not that a new cap exists.
+
+**Acknowledged:** identified in the 2026 neuroslop review from the editorial-policy channel, where a Russian platform names the artifact in its own rules rather than in commentary.
+
+
+---
+
+## AD-15. Search-engine addressee (адресат — поисковик, а не читатель)
+
+**Problem:** the implied reader is a crawler. Nothing in the text is ungrammatical and no single sentence is wrong; the piece is simply not addressed to a person. The query phrase is repeated verbatim where a language addressed to a reader would use a pronoun; sections are variants of one question rather than steps of an argument; and after reading, the reader still cannot do the thing the piece is about. Two platforms formulate the test the same way, and both formulate it as a question of **addressee** rather than of provenance.
+
+**Sources:**
+- Habr's site rules as they stood on 27.07.2026 (the version announced 17.06.2026) name material aimed at search engines rather than living readers among the content it restricts (paraphrased, not quoted)
+- Яндекс Вебмастер lists automatically generated *and* useless-to-the-user content among the examples its algorithms may restrict; the conjunction is operative — machine origin alone is not the stated violation (paraphrased, not quoted)
+- `info-style.md` §A (полезное действие) and §D (main point first) — the two properties such a text lacks
+- `scoring.md` notes that formula tools score an SEO text highly without any real quality; that is the observation, and this rule is the judgement it calls for
+- **The sentence-level signature below is this corpus's own formulation.** Neither platform states what the tell looks like inside a sentence; only the criterion of addressee is theirs
+
+**Trigger constructions:**
+
+- the exact query phrase repeated verbatim in the title, in a heading, and again in the body
+- headings that are variants of one another rather than steps — «как выбрать X», «какие бывают X», «сколько стоит X»
+- the subject named by its full noun phrase where a pronoun or a short form would serve
+- a «выводы» section that restates the headings and adds no number
+- length without a fact: the piece answers a query and leaves the reader unable to act
+
+**Rules:**
+
+AD-15.1. Charge the document when all three hold: (1) a query phrase is repeated where the language would use a pronoun or a short form; (2) sections are variants of one question rather than steps of an argument; (3) after reading, a reader cannot do the thing the piece is about — no number, no criterion, no named option.
+
+AD-15.2. Rewrite by answering the question once and with specifics: name the options, the prices, the criterion by which one is chosen.
+
+AD-15.3 (carve-out — the user's explicit brief). Where the user asks for SEO copy, the style priority stated in `SKILL.md` applies: their request overrides these defaults. State what the trade-off costs and write what was asked.
+
+AD-15.4 (carve-out — functional repetition). Technical writing repeats an identifier because a pronoun would be ambiguous — «поле `updated_at` меняется при каждой записи, поле `created_at` — нет». Reference works, glossaries and legal texts repeat the term by design. The defect is the addressee, not the repetition.
+
+AD-15.5 (carve-out — optimisation that still serves the reader). Keyword research legitimately shapes what a useful text covers. A piece that answers the query with facts is not flagged for having the query in its title.
+
+AD-15.6 (level — the document charge ADDS, it never replaces). A note on what the repetition is and is not: `editorial-grammar.md` §E defines tautology as ADJACENT cognates and pleonasm as words duplicating each other's meaning, so a query phrase repeated across four paragraphs is neither, and the corpus has no separate rule for distant lexical repetition. That repetition is AD-15's own evidence and belongs to AD-15 alone — do not borrow a Г finding the corpus does not carry. Like AD-14, this rule is charged to the document, and the repetitions are the evidence for that one charge rather than one AD-15 finding each. That is the **only** thing it absorbs. Every other defect in the same text is reported exactly as it would be without this rule: the stop-words and unproven claims in **Ч**, any pleonasm or tautology the corpus already catalogues in **Г** (`editorial-grammar.md` §E), the passive constructions, the missing полезное действие, the headings that are not theses. Measured on 27.07.2026, a run that read the earlier wording of this clause replaced ten ordinary findings with three document-level ones and reported the text as improved. A summary that costs the writer the list of lines to fix is not a summary.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Купить кофемашину в Москве: как выбрать кофемашину для дома | Как выбрать кофемашину для дома |
+| Цена кофемашины зависит от типа кофемашины и производителя кофемашины. | Цена зависит от типа и производителя: рожковые — от 12 000 ₽, автоматические — от 40 000 ₽. |
+| Раздел «Как выбрать кофемашину для дома: выводы», пересказывающий предыдущие заголовки | Раздел с рекомендацией: какая модель кому подходит и почему |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Поле `updated_at` меняется при каждой записи, поле `created_at` — нет. | Repetition because a pronoun would be ambiguous (AD-15.4). |
+| Заголовок «Как выбрать кофемашину» над текстом с ценами и критериями | The query is answered with facts (AD-15.5). |
+| Глоссарий, где термин повторён в каждой статье | Reference format (AD-15.4). |
+
+**Severity:** High — like AD-14, the defect is the piece rather than a phrase in it, and the reader's loss is total: the text is about their question and gives them nothing. Primary signal in the **Ц — Reader precision** dimension (supporting **С — Structure**), reflected in the Ц rubric anchors: a document charged with AD-15 does not reach the upper Ц bands. It does **not** introduce a new non-compensatory cap (see `scoring.md`).
+
+**Acknowledged:** identified in the 2026 neuroslop review from the editorial-policy channel, where two platforms independently formulated the same test of implied addressee.
+
+
+---
+
+## AD-16. Additive pseudo-pair («не только X, но и Y»)
+
+**Problem:** a pair joined by «не только… но и», «как… так и», «и… и», in which the second pole adds nothing — it rewords the first, or is contained in it, or both are empty. The construction promises an increment and delivers a rhythm. It is the neighbour of AD-6 and not the same rule: there an opposition with no antecedent, here an addition with no content.
+
+**Sources:**
+- `editorial-grammar.md` — the corpus's only «не только… но и» entry is a predicate-agreement rule, a different subject entirely; the two do not collide
+- Informed by a 2025 linguo-pragmatic study of AI-assisted Russian social-media posts (cf. Оломская, Юрова; CyberLeninka), which counts the construction among the clichés it treats as markers of generated text. **The density threshold is this corpus's own caution, not the study's finding:** the study measured 38 posts of one political-SMM channel, a genre that reaches for the construction anyway, so the frequency it reports cannot carry a per-sentence rule and the threshold keeps an isolated pair out of the flag
+- Distinct from AD-6 (see AD-16.5)
+- Independently formulated from the 2026 review of AI-generated Russian prose
+
+**Trigger constructions:**
+
+- «не только X, но и Y» where Y rewords X or is contained in it
+- «как X, так и Y» with the same defect
+- «и X, и Y» with synonymous poles
+- a cluster of two or more such pairs in a short text — density is the signal
+
+**Rules:**
+
+AD-16.1. Flag a pair when all three hold: (1) **no increment** — Y states nothing X did not; (2) **not a contrast** — this is addition, so it is not AD-6 and must not be charged there; (3) **deletable** — drop «не только» and one pole, and no fact is lost. Density belongs to the test: two or more such pairs in one text is the signal, and an isolated pair is not flagged.
+
+AD-16.2. Rewrite as the single claim that survives, and give it something to stand on: «не только удобный, но и комфортный» → name what the interface does, in one step, with a number if there is one.
+
+AD-16.3 (carve-out — a real pair). Both poles carry distinct facts and deleting either loses one: «не только в Москве, но и в Новосибирске: 12 мс и 47 мс».
+
+AD-16.4 (carve-out — scope). «Не только для физлиц, но и для ИП» defines who is covered. Scope-widening is operative content, frequently legal, and is never flagged.
+
+AD-16.5 (single-count with AD-6). A fragment is charged once. AD-6 takes a symmetric opposition whose negated pole has no antecedent; AD-16 takes an addition whose second pole has no content. If a construction reads as both, it is almost always AD-6 — check for a rejected pole before charging here.
+
+AD-16.6 (single-count with info-style §B — the SAME fragment only). Where both poles are §B unproven adjectives, count that fragment once: §B for the missing evidence, AD-16 for the empty pair. An unproven adjective outside the pair stays its own finding; single-count is per fragment, never per sentence.
+
+AD-16.7 (density raises severity; it never replaces the findings). Report **each** pair and let the count raise the weight. Replacing four pairs with one line about density loses exactly what the writer needs in order to fix them.
+
+AD-16.8 (the pair and the synonymy are two defects, not one). «Не только удобный, но и комфортный» carries both: the poles are synonyms, which is a pleonasm and belongs where pleonasms have always belonged — `editorial-grammar.md` §E, in **Г — Grammar** — and the frame adds nothing, which is AD-16, in **С — Structure**. They are separable, and that is the test: «Сервис удобный и комфортный» is the pleonasm with no pair; «не только быстрее, но и дешевле» with two real numbers behind it is neither. Where both hold, report both. Measured on 27.07.2026: a run that folded the pleonasm into AD-16 scored the same text **1.1 higher than before the rule existed** — Grammar recovered 4.5 points because its finding had moved to a Low signal in another dimension. A new rule against a text must never make that text score better.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Сервис не только удобный, но и комфортный. | Сервис открывает отчёт в два клика вместо семи. |
+| Платформа помогает не только экономить время, но и тратить его меньше. | Платформа сокращает сборку отчёта с 3 мин до 4 с. |
+| Мы предлагаем как качественные решения, так и решения высокого уровня. | Мы делаем интеграции с 1С и с SAP. |
+| Обновление затрагивает не только интерфейс, но и внешний вид. | Обновление меняет интерфейс. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Мы измеряли не только в Москве, но и в Новосибирске: 12 мс и 47 мс. | Both poles carry data (AD-16.3). |
+| Скидка действует не только для физлиц, но и для ИП. | Scope-widening: operative content (AD-16.4). |
+| Не только студенты, но и преподаватель присутствовал. | The corpus's agreement example: a different rule about a different thing. |
+
+**Severity:** Low. Secondary signal in the **С — Structure** dimension (supporting **Ч — Clarity**). Density is the signal; an isolated pair is not flagged at all. Cannot trigger non-compensatory caps alone.
+
+**Acknowledged:** identified in the 2026 neuroslop review from the linguistic channel; checked against the corpus before proposing, where the construction appears exactly once and as a rule about predicate agreement.
