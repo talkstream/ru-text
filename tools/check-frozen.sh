@@ -170,7 +170,19 @@ else
   fail=1
 fi
 
-# ── 5. one exact row ──────────────────────────────────────────────────────────
+# ── 5. no duplicate skill registration at the repository root ─────────────────
+# A root SKILL.md registers the SAME skill name a second time, and it does worse than
+# that: `npx skills` parses the root file first and sets the payload to
+# dirname(SKILL.md) — the entire repository. That is how .github/, notion/, the logo and
+# CHANGELOG.md ended up inside ~/.agents/skills/ru-text/. Removed in v2.0; this check
+# exists so it cannot come back by habit.
+if [ -f "$ROOT/SKILL.md" ]; then
+  bad "a SKILL.md at the repository root registers ru-text twice and makes the whole repo the payload"
+else
+  ok "no duplicate SKILL.md at the repository root"
+fi
+
+# ── 6. one exact row ──────────────────────────────────────────────────────────
 # The MCP's own test asserts this precise replacement string. Pinning it here means a
 # reworded replacement fails in this repository first, where the change was made.
 if want=$(expect probe_row); then

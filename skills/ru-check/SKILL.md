@@ -4,6 +4,8 @@ description: Run a comprehensive Russian text quality check on provided text or 
 allowed-tools: Read, Grep, Glob
 disallowed-tools: Write, Edit, NotebookEdit, Bash, PowerShell, Monitor
 context: fork
+user-invocable: true
+disable-model-invocation: true
 ---
 
 # Russian Text Quality Check
@@ -12,31 +14,41 @@ Review the text provided in $ARGUMENTS (or the most recent Russian text output i
 
 ## Check order
 
-Reference files: `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/<filename>`
+## Where the reference files live
 
-1. **Typography** — read `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/typography.md`, then apply:
+This skill reads the corpus that ships with the **ru-text** skill, which is installed
+alongside it. Locate that folder once, then read the named files from it:
+
+- Look for a directory named `references` whose parent directory is named `ru-text`, and
+  which contains `info-style.md`. Every file named below sits in that folder.
+- In Claude Code the plugin root is also available directly, which saves the search.
+- **Do not guess a path.** If the folder cannot be found, say so and stop — a check run
+  against remembered rules instead of the corpus is not this command, and reporting one
+  as the other is the failure this whole product exists to prevent.
+
+1. **Typography** — read `typography.md`, then apply:
    - Quotes: «» primary, „" nested
    - Dashes: — (em) in text, – (en) in ranges, - (hyphen) in compounds only
    - Spaces: NBSP after single-letter prepositions, in digit groups, before units
    - Ellipsis, abbreviations, special characters
 
-2. **Anti-patterns** — read `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/anti-patterns.md`, then scan for:
+2. **Anti-patterns** — read `anti-patterns.md`, then scan for:
    - Bureaucratic language and nominalization
    - Passive voice overuse
    - Sentence bloat
    - Tautology and pleonasm
 
-3. **Writing quality** — read `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/info-style.md`, then apply:
+3. **Writing quality** — read `info-style.md`, then apply:
    - Stop-words and filler
    - Specificity and facts
    - Structure and clarity
 
 4. **Domain-specific** — load if text type is identifiable:
-   - UI/interface text → `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/ux-writing.md`
-   - Email/business → `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/business-writing.md`
-   - Needs grammar review → `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-punctuation.md` + `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/editorial-grammar.md`
+   - UI/interface text → `ux-writing.md`
+   - Email/business → `business-writing.md`
+   - Needs grammar review → `editorial-punctuation.md` + `editorial-grammar.md`
 
-5. **Experience-based / neuroslop** — read `${CLAUDE_PLUGIN_ROOT}/skills/ru-text/references/addenda.md`, then scan for the AI-generated-prose tells:
+5. **Experience-based / neuroslop** — read `addenda.md`, then scan for the AI-generated-prose tells:
    - Manufactured antithesis (AD-6) — «не X, а Y» / «не просто X, а Y» with no antecedent
    - Preemptive virtue qualifier (AD-7) — «без воды», «чётко, по делу»
    - Assistant-register meta-commentary (AD-8) — «Отличный вопрос!», «Надеюсь, это помогло»
