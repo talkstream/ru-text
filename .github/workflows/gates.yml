@@ -31,9 +31,12 @@ jobs:
       - name: Tools are executable and POSIX-parseable
         # A syntax error in a checker reads as a passing checker to anything that only
         # looks at whether the file exists.
+        # `find`, not the `tools/*.sh` glob: the glob stops at the top level, and a checker
+        # one directory down was invisible here and to tools/gates.sh both. Kept identical
+        # to the loop in tools/gates.sh — tools/selftest.sh fails when the two diverge.
         run: |
           set -eu
-          for f in tools/*.sh; do
+          for f in $(find tools -name '*.sh' -type f | sort); do
             [ -x "$f" ] || { echo "not executable: $f"; exit 1; }
             sh -n "$f" || { echo "syntax error: $f"; exit 1; }
           done
