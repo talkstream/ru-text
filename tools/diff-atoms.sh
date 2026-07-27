@@ -17,10 +17,15 @@
 # So the comparison counts occurrences. A set difference would report nothing when
 # "Rules" drops from eleven blocks to nine, which is two whole rule blocks gone.
 #
-# ── why there is no DELETED disposition ──────────────────────────────────────────────
-# The map cannot express "this rule was removed", so a removal cannot be waved through as
-# a recorded decision. Removing a rule requires editing THIS script — a visible, arguable
-# act — rather than adding a row to a data file during a large refactor.
+# ── what the map can and cannot wave through ─────────────────────────────────────────
+# There is no DELETED disposition, but that is a speed bump, not a wall, and an earlier
+# version of this comment claimed otherwise. A reviewer showed two data-file-only routes
+# to deleting a rule: MERGED against any unrelated surviving hash, and DOC against a file
+# that merely contains the text somewhere. Both are narrowed below — a target must now
+# have the multiplicity to absorb what it claims, and a DOC target may not be a snapshot —
+# but the honest statement is that the map raises the cost of a silent deletion and makes
+# it attributable, not that it makes one impossible. The rationale field is written for a
+# human reviewer, and it is a human reviewer who has to read it.
 #
 # ── map format: sha1 <TAB> disposition <TAB> target <TAB> rationale ─────────────────
 #   MOVED       target = new sha1. For a relocation that also reworded the line. A pure
@@ -70,7 +75,15 @@ awk -F'\t' -v mapfile="$MAP" -v root="$ROOT" '
       if (line ~ /^#/ || line !~ /[^ \t]/) continue
       n = split(line, f, "\t")
       if (n < 3) { printf "  BAD MAP ROW (needs at least sha1, disposition, target): %s\n", line; bad++; continue }
-      h = f[1]; disp[h] = f[2]; target[h] = f[3]
+      h = f[1]
+      # A second row for the same source hash used to overwrite the first without a word,
+      # so a row that would have failed the run could be cancelled by appending another.
+      if (h in disp) {
+        printf "  DUPLICATE MAP ROW  %s (already %s -> %s)\n", h, disp[h], target[h]
+        bad++
+        continue
+      }
+      disp[h] = f[2]; target[h] = f[3]
       if (f[2] != "MOVED" && f[2] != "RENUMBERED" && f[2] != "NORMALISED" && f[2] != "MERGED" && f[2] != "DOC") {
         printf "  BAD DISPOSITION %s for %s — there is no DELETED, by design\n", f[2], h
         bad++
@@ -93,24 +106,54 @@ awk -F'\t' -v mapfile="$MAP" -v root="$ROOT" '
 
       d = disp[h]; t = target[h]
       if (d == "DOC") {
+        # A DOC target may not be an atom snapshot. Column three of a snapshot IS the
+        # normalised atom text, so pointing a DOC row at tools/baseline/atoms-v1.10.1.tsv
+        # satisfied the containment test for EVERY atom in the corpus — the input file of
+        # this very gate was a universal escape hatch. Refusing snapshots by shape rather than
+        # by name, so a copy under another path does not slip through.
         path = (t ~ /^\//) ? t : root "/" t
         if ((getline probe < path) < 0) {
           printf "  BROKEN DOC TARGET  %s -> %s (no such file)\n", h, t
           broken++
         } else {
           close(path)
-          found = 0
-          while ((getline probe < path) > 0) if (index(probe, oldtext[h])) { found = 1; break }
+          snapshotish = 0; found = 0; scanned = 0
+          while ((getline probe < path) > 0) {
+            scanned++
+            if (scanned <= 5 && probe ~ /^[0-9a-f]{40}\t[^\t]+\t/) snapshotish = 1
+            if (index(probe, oldtext[h])) found = 1
+          }
           close(path)
-          if (!found) { printf "  DOC TARGET LACKS THE TEXT  %s -> %s\n", h, t; broken++ }
-          else resolved++
+          if (snapshotish) {
+            printf "  DOC TARGET IS AN ATOM SNAPSHOT  %s -> %s (it contains every atom by construction)\n", h, t
+            broken++
+          } else if (!found) {
+            printf "  DOC TARGET LACKS THE TEXT  %s -> %s\n", h, t
+            broken++
+          } else {
+            resolved++
+          }
         }
       } else if (!(t in newn)) {
         printf "  BROKEN TARGET  %s --%s--> %s (not in the new snapshot)\n", h, d, t
         broken++
+      } else if (used_target[t] + deficit > newn[t]) {
+        # Multiplicity, not mere membership. The first version asked only whether the
+        # target existed, so ONE row absorbed a deficit of any size: three copies of an
+        # atom could vanish and a single MOVED row pointing at one surviving atom
+        # accounted for all three. Targets are consumed here, so two rows cannot both
+        # claim the same surviving atom either.
+        printf "  TARGET OVERSUBSCRIBED  %s --%s--> %s (needs %d, %d available, %d already claimed)\n",
+          h, d, t, deficit, newn[t], used_target[t]
+        broken++
       } else {
+        used_target[t] += deficit
         resolved++
-        if (d == "MERGED") merged += deficit
+        # DOC and MERGED are the two dispositions under which the corpus legitimately
+        # holds fewer atoms afterwards. DOC was omitted from this budget at first, which
+        # made every correctly written DOC row trip the shortfall check below — the one
+        # disposition for moving a rule into documentation could never pass.
+        if (d == "MERGED" || d == "DOC") merged += deficit
       }
       used[h] = 1
     }

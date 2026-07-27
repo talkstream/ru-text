@@ -61,22 +61,19 @@ c51cffc64cf0fc9d15cbaea89083a1bfa822e5cb	SKILL.md:87	NBSP after в к с о у �
 540c80f4f3c9ab9699bd42920b2c98d9e539025a	SKILL.md:88	Ellipsis … single char
 ff6aeb4e13fd68a9e1a7c856b5fe7a857c3cdf60	SKILL.md:89	Abbreviations т д т п with NBSP
 16b2c71d53a3062f20a38b9d3ed35f8cbd0f9900	SKILL.md:90	No double spaces no space before punctuation
+5ea2d81a89e0cdc89baf7cd1ff38cdfefa33ba78	gemini.yaml:1	interface
+6e519fd7701c0f6106144b002f73cf1b6e95337b	gemini.yaml:2	displayname ru-text
+ebb6dcae93c2eed6231bad511315e698d8d406e6	gemini.yaml:3	shortdescription Russian text quality - typography info-style editorial UX writing business correspondence and AI-text cleanup
+5ea2d81a89e0cdc89baf7cd1ff38cdfefa33ba78	openai.yaml:1	interface
+6e519fd7701c0f6106144b002f73cf1b6e95337b	openai.yaml:2	displayname ru-text
+ebb6dcae93c2eed6231bad511315e698d8d406e6	openai.yaml:3	shortdescription Russian text quality - typography info-style editorial UX writing business correspondence and AI-text cleanup
+9f00fad98badc1330e637a0a015d704113498420	openai.yaml:5	policy
+ddeedb5b2a5841a1b763d05a216e0c4c7bb92b70	openai.yaml:6	allowimplicitinvocation true
 eb6ab7de16b1ce236ac0c7df462c06e05b289d02	addenda.md:3	The rules below were added later from real editorial practice and were not part of the
 e4c6902f47011e8b106539aeb57a6d286df013e4	addenda.md:4	plugin's initial rule set Like the rest of the plugin they are independently formulated the
 34c746c4a3e0dd5e8b0ed8a9c0a6a5d872c00c55	addenda.md:5	sources in sourcesmd informed the work but no rule is taken or copied from them They are
 ca6709fd0f8b32d62c350000ea6cdaa45cc60add	addenda.md:6	supported by academic references Kept separate for traceability initial rule set vs experiential
 9913b746d0d886ea4561bc3a6590cff1b3837f73	addenda.md:7	additions
-9730d4326a7b8a0d13c2be3b7fe29b80ad152bf6	addenda.md:9	Table of Contents
-91676fbee560dd35535be88964ea72be6acc01c2	addenda.md:11	AD-1 Excessive em dashesad-1-excessive-em-dashes-избыточные-тире
-14987e8ac4aac6892b4b9d6521be22328bfdc72b	addenda.md:12	AD-2 Excessive parcellationad-2-excessive-parcellation-избыточная-парцелляция
-6b4a2c98dca22239c148f68a2758a031eda71764	addenda.md:13	AD-3 Patronizing explanationad-3-patronizing-explanation-разжевывание-очевидного
-b9116785bd98e44cd2dc1275c7397935c36d30c0	addenda.md:14	AD-4 Unprovoked rebuttalad-4-unprovoked-rebuttal-возражение-без-предпосылок
-c268777277eba1a33a6b7ffb12e8b8d09d769de7	addenda.md:15	AD-5 Subject-predicate semantic mismatchad-5-subject-predicate-semantic-mismatch-семантическое-несоответствие-субъекта-и-предиката
-df5503e83075857a480f93390b32ba60fbef3146	addenda.md:16	AD-6 Manufactured antithesisad-6-manufactured-antithesis-ложная-антитеза
-9b92a98e3385e5a69c95b1102ecc91674e6533f4	addenda.md:17	AD-7 Preemptive virtue qualifierad-7-preemptive-virtue-qualifier-непрошенная-оговорка-без-воды
-c15ae6a42fb4c4881e9be8150573c39972d47a88	addenda.md:18	AD-8 Assistant-register meta-commentaryad-8-assistant-register-meta-commentary-сервисные-реплики-ассистента
-8cfe590c9603c92152c4411846bd9848af20de04	addenda.md:19	AD-9 Hollow openerad-9-hollow-opener-пустой-зачин
-71605c8ba0c7609f4a9f692b3c363070bb5d0180	addenda.md:20	Neuroslop indexneuroslop-index
 c62c6141053710be26a710e23c76a4a2f0fdfb50	addenda.md:22	Neuroslop index
 33e697d72ac6c1a19c0ffdae1a0040292a3b5752	addenda.md:24	A compact catalogue of the recurring tells of AI-generated Russian prose each routed to the rule
 4c97b4b1ecaa30f60ced34f453bfffd589381e3e	addenda.md:25	that is its canonical home These tells skew by training era and instruction-tuning style rather
@@ -588,6 +585,17 @@ d684d7939c5559b8e041200c68190f26a7a1e5a7	business-writing.md:179	Вышеука�
 3abadae54da954e6e2e900b27ca26557b707f223	business-writing.md:184	Выражаем надежду на взаимовыгодное сотрудничество|Будем рады работать вместе|closing |
 e994bdf95a580d8b2dc0b3ef1cca20866966005b	business-writing.md:188	E Meeting Notes Structure
 3ec1ae061c27325c7ecb543adf91235e22cbc9ed	business-writing.md:190	Template
+3d120204fae2af250096861dc218f8fd32e005f6	business-writing.md:194	Date date time
+f15ceb0398ba643b88a1bf5f52e7d0b348ead1c6	business-writing.md:195	Participants names
+af2f32cc9200c51fc9691ec8696610a75f220376	business-writing.md:197	Decisions
+ab7c6379fe430f9d9a2fcd73c55653918880111c	business-writing.md:198	Decision -- rationale if not obvious
+1363e6593c6d58b63d976fd1607b3a26c84046e1	business-writing.md:200	Action Items
+ee9f64dcc71e1a8fab2c7e4ccf4629080dd8d83a	business-writing.md:201	| Task | Owner | Deadline |
+1ac3b0cd4ddc0ae29d43adffd988cfc39bcf1939	business-writing.md:203	| Task | Name | Date |
+43e55ec8a314e42c9bef02e6fd14c2ff9737519e	business-writing.md:205	Open Questions
+4b7bb0509afa1d2d84c95fa4ac847d7b53e8661a	business-writing.md:206	Question -- who investigates by when
+df0eb466bb6aab18ad81b25eec729db846181cbb	business-writing.md:208	Next Meeting
+84089d6ffc728e6b02c960d3ed31908dd9d07925	business-writing.md:209	Date time agenda if known
 bb11a8e3f8712e36e7cd9d1c615a4e3dbb03336a	business-writing.md:212	Rules
 eccc2dd0113cde063fd9587b3962efeabc62c42c	business-writing.md:213	Decisions as statements not discussion summaries Decided to postpone to April 5 -- not We discussed and considered options
 3eb48f77f420a973c399f088e2c3566e6d107d97	business-writing.md:214	Every action item exactly one owner one deadline The team is not an owner
@@ -1209,19 +1217,6 @@ c00feeaf66a1e1c86e45dbf355d5604a28a411b3	info-style.md:301	Отсев на вх�
 563ae7bc3a9e5d6f1575396916f8f2a3f1bf8d20	info-style.md:303	Масштабирование через шефов система шеф-редакторов по разделам вместо одного главреда
 5cbc60e896938462635ea48170dafba0e2ba922c	scoring.md:3	Analytic rubric for evaluating Russian text quality across 5 dimensions
 38e4534b7ef70e2058c5b6ac578ef56dcc00c2cc	scoring.md:4	Context-aware LLM evaluation against 1 044 independently formulated rules informed by 16 published sources see sourcesmd
-9730d4326a7b8a0d13c2be3b7fe29b80ad152bf6	scoring.md:6	Table of Contents
-f750927ee9c0ed063e539dc9e8a93d0844e7bf8f	scoring.md:8	Algorithm overviewalgorithm-overview
-4ab7276cdc68b197e7e763dfb08f649a5a25e35b	scoring.md:9	Dimensionsdimensions
-20260e3a2f35c3f411dc9f2fe546bc42c33e6a2a	scoring.md:10	T - Typographyt--typography-weight-015
-f1a8667feeae0d5239367ee469567c2dede88957	scoring.md:11	Ч - Clarityч--clarity-weight-025
-d360c866e9fe83efd9b3a5f7a9b4d161f32cbfb8	scoring.md:12	Г - Grammarг--grammar-weight-020
-6d7beeb6bf81d49de460390aed735ef52b636c90	scoring.md:13	С - Structureс--structure-weight-020
-0aee9d43e1bce844423880238eef04c330bb3109	scoring.md:14	Ц - Reader precisionц--reader-precision-weight-020
-3be90912129e364ebcefa78e4d2d53b70e402b82	scoring.md:15	Composite scorecomposite-score
-9ef5241dfddffd7b4f43cb0c1d667c7bec3202fc	scoring.md:16	Non-compensatory rulesnon-compensatory-rules
-3a8250c4ceef0c32622943e162b59ce08ee3992d	scoring.md:17	Score interpretationscore-interpretation
-86da653701dc4f0b2866280a0f2bd1f97b9a5832	scoring.md:18	Output formatoutput-format
-8679b812e7c1698b753ca3f0f867d4b4d4542cc2	scoring.md:19	Limitationslimitations
 814a01a6cf1dfe4ba15234bc03c716ac3608213f	scoring.md:21	Algorithm overview
 125e2ce2aed17edc01d732a0aeefcaf86eeb0eec	scoring.md:23	Step-by-step procedure
 7f40083c89125e6d29450034b52b6c48afb5cd0a	scoring.md:25	Input Russian text of any length
@@ -1280,6 +1275,7 @@ e77ee79085ab0bd4f73a570bd4020680a689c2e7	scoring.md:115	5-6 | Mix of concrete an
 8867312137bcd1b063030ef5f0d6a6c7532fa1ca	scoring.md:116	3-4 | Declarations and promises dominate over facts Text says nothing |
 4c6a1bb090206fe0c9d5437de3ad986cb4e229ba	scoring.md:117	1-2 | Fully abstract Мы предлагаем комплексные решения для вашего бизнеса |
 44c5ebf274ed9c5c8922a7e126f086d1c8a70736	scoring.md:121	Composite score
+6cd4b20f8d21912bdf282cf895acdf03dfd22edc	scoring.md:124	S round₁T × 015 Ч × 025 Г × 020 С × 020 Ц × 020
 c18b8fb56dda4261f5600aed525d9b52599ae3e7	scoring.md:127	Where round₁ round to one decimal place
 6a064e77ad229ff96bbef1984e3af5911b7b9737	scoring.md:129	Total weight 015 025 020 020 020 100
 8d3e4d94527be4c5efe9615034d3508ec0fe724d	scoring.md:131	Non-compensatory rules
@@ -1296,6 +1292,17 @@ c6a9920d32476dff63e153395c1888580a69308c	scoring.md:147	90-100 | Эталонн�
 acdd34edc9ea603d25623d756ebbe2495a89b07c	scoring.md:151	00-29 | Критический | Critical | Full rewrite required |
 66b9a9fcbf1a016cf228575594f09c95db5c0849	scoring.md:153	A score of 8 is a strong result 100 is a theoretical ideal not a practical target
 c03f08a8f205e4568e916e3cfaa50c6a48749706	scoring.md:155	Output format
+7d4d67d8390929a03657c3a5fa3966d36c3f1a62	scoring.md:158	Оценка XX 10 - Label
+56eb10973638c4efde68d3c85f6795e72e5e9f18	scoring.md:160	Измерение | Балл | Замечания |
+70d1ab6223671ba9b5800089c60cb2fc505c456d	scoring.md:162	Типографика | XX | 1-3 specific issues with quoted fragments |
+172b786bcd4cddb7c8e71e2f3e379046a44a0276	scoring.md:163	Чистота языка | XX | 1-3 specific issues |
+92f534ca8b9590520955fae31ebfcf990d69d6f9	scoring.md:164	Грамотность | XX | 1-3 specific issues |
+7422c5627f94043a090631bbd86ad0434ea5587b	scoring.md:165	Структура | XX | 1-3 specific issues |
+5dea68b10ebf56a91454ed142f4d19890d9d8bb8	scoring.md:166	Точность для читателя | XX | 1-3 specific issues |
+4786a8ee945e95aa08f505c4d0b44b632099b204	scoring.md:168	Формула T×015 Ч×025 Г×020 С×020 Ц×020 XX
+ee5743c13728ef3dd78139d05e0c19489c6b3676	scoring.md:169	Non-compensatory cap note if triggered
+aa7b20516f3e13edc62bd9fe1dba2d5205193898	scoring.md:171	Что оценка не измеряет
+07144afcc17a0efb66ed6dd7173d7ae15acdf742	scoring.md:172	Limitations list
 d1cf65751cdab4257ec34472585ca2c158b365f8	scoring.md:175	For texts under 50 words prepend Текст короткий - оценка менее надежна Для точной оценки рекомендуется текст от 50 слов
 a7c04c64ed3f2a9374590c76c50d3b7f1b18e3da	scoring.md:177	Limitations
 1da85edf8424ab415fa9e0fa9ae111c55942c0bd	scoring.md:179	The score does NOT measure

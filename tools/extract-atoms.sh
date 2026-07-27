@@ -11,10 +11,16 @@
 # what "content" means.
 #
 # **Recall is the whole gate.** A shape this script fails to recognise is a rule that can
-# be deleted with nothing noticing. Over-inclusion is harmless: noise appears in both
-# snapshots and cancels. So the selection is a BLACKLIST — every non-blank line is an atom
-# unless it is provably not one. A whitelist of known shapes was the first design and it
-# was rejected: it cannot see a shape v2 introduces, and v2 is precisely what it must police.
+# be deleted with nothing noticing. So the selection is a BLACKLIST — every non-blank line
+# is an atom unless it is provably not one. A whitelist of known shapes was written first
+# and rejected: it cannot see a shape v2 introduces, and v2 is precisely what it must police.
+#
+# Over-inclusion is the cheap direction to be wrong in, but it is not free, and an earlier
+# note here said it "cancels between snapshots" without qualification. It cancels for noise
+# that survives verbatim. Noise that a v2 operation TOUCHES — a navigation line, a section
+# label, a cross-reference — becomes an unaccounted atom needing a map row, and no
+# disposition means "this was never a rule in the first place". The cost is paperwork on
+# the day a heading is reworded; the cost of the other direction is a rule disappearing.
 #
 # ── what the corpus actually looks like, measured rather than assumed ────────────────
 #
@@ -33,20 +39,28 @@
 #
 # ── normalisation, each step justified by a measurement ─────────────────────────────
 #
-# On this corpus the pipeline below produces ZERO collisions: no two distinct source lines
-# normalise to the same string. Two steps from the original design were dropped:
+# On this corpus the pipeline below collapses exactly two groups of distinct source lines
+# to one string: «в связи с тем, что|потому что, так как» (info-style.md:42) with its
+# comma-free twin (editorial-grammar.md:294), and `### Rules` with the ten `**Rules:**`
+# labels. An earlier version of this comment said ZERO, which was measured on whole raw
+# lines rather than on normalised text — the wrong quantity. Neither group is a problem:
+# diff-atoms counts occurrences, so losing one copy of a collided pair still shows a
+# deficit of one. Two steps from the original design were dropped:
 #
 #   NFC normalisation — the corpus is already NFC (0 of 2085 lines change), and no POSIX
 #   tool does it. Pinned by a selftest case so the day that stops being true is loud.
 #
-#   case folding — REJECTED, and this one matters. Lowercasing collapses five groups, and
-#   four of them are the same rule living in two files: anti-patterns.md:38 with
-#   editorial-grammar.md:298, anti-patterns.md:40 with info-style.md:37, and two more.
-#   Those duplicates are exactly what a later stage is meant to merge DELIBERATELY. Fold
-#   case and the merged-away copy still matches its surviving twin, the diff shows nothing
-#   unmatched, and a deletion is approved in silence — the failure this gate exists to
-#   prevent. Case-sensitive comparison keeps both copies visible until someone writes down
-#   what happened to each.
+#   case folding — rejected, but not for the reason first written here. The original note
+#   claimed a folded duplicate would let a deletion pass in silence. That describes a SET
+#   difference; diff-atoms counts occurrences, so a folded pair losing one copy still has
+#   a deficit of one and is reported. The claim was wrong and is withdrawn.
+#
+#   The reason that survives is weaker and about legibility, not safety. Folding merges
+#   five groups, four of which are the same rule living in two files (anti-patterns.md:38
+#   with editorial-grammar.md:298, anti-patterns.md:40 with info-style.md:37, and two
+#   more). Merged, the deficit is still caught but the report names one arbitrary home of
+#   the pair, and whoever has to write the map row is sent to the wrong file. Keeping case
+#   keeps the two homes distinguishable at the moment someone has to account for them.
 #
 # ⚠ LC_ALL=C everywhere. Byte-wise is what we want: sort order becomes machine-independent,
 # and the multibyte literals below match exact byte sequences, which UTF-8 makes
@@ -91,12 +105,25 @@ select_atoms() {
         if (i == 1 && s == "---") { fm = 1; continue }
         if (fm && s == "---")     { fm = 0; continue }
 
-        # Fenced code blocks: illustrations of output, not statements of rule.
+        # Fence markers are dropped; what is INSIDE a fence is kept. The first version
+        # skipped fenced content as "illustrations of output, not statements of rule",
+        # and a reviewer showed that is false of this corpus twice over: the whole
+        # /ru-score output contract lives in scoring.md 157-173 (the report heading, the
+        # five Russian dimension labels, the weighted formula, the limit of 1-3 issues
+        # with quoted fragments) and the entire structure of business-writing.md section
+        # E lives in its template at 192-210. Deleting either passed the gate in silence.
+        #
+        # Worse than the other exclusions: a fenced line is absent from BOTH snapshots, so
+        # its removal produces no difference at all, where a wrongly dropped heading at
+        # least surfaces as UNACCOUNTED. Recall is the gate; example blocks becoming atoms
+        # is the price, and it is the cheap direction to be wrong in.
         if (s ~ /^ *(```|~~~)/) { fence = !fence; continue }
-        if (fence) continue
 
-        # "## Contents" through the next "## " — navigation.
-        if (s ~ /^## Contents/) { toc = 1; continue }
+        # A table of contents through to the next "## " — navigation. Both spellings the
+        # corpus actually uses: seven files head it "## Contents", addenda.md and
+        # scoring.md head it "## Table of Contents", and matching only the first let 24
+        # anchor links into the snapshot as though they were rules.
+        if (s ~ /^## (Table of )?Contents/) { toc = 1; continue }
         if (toc && s ~ /^## /)  { toc = 0 }
         if (toc) continue
 
@@ -104,13 +131,23 @@ select_atoms() {
         if (s ~ /^## Sources/) break
         if (s ~ /^# /) continue
 
-        # A markdown separator row, and the header row directly above it.
-        if (s ~ /^\|[ :|-]+\|? *$/) continue
-        if (i < NR && line[i + 1] ~ /^\|[ :|-]+\|? *$/) continue
+        # A markdown separator row, and the header row directly above it — OUTSIDE a fence
+        # only. Inside one, the column names are the specification: dropping the header of
+        # scoring.md`s result table took «| Измерение | Балл | Замечания |» with it, and
+        # business-writing.md`s «| # | Task | Owner | Deadline |» likewise. Inside a fence
+        # nothing is excluded; that is the whole point of keeping fenced content.
+        if (!fence && s ~ /^\|[ :|-]+\|? *$/) continue
+        if (!fence && i < NR && line[i + 1] ~ /^\|[ :|-]+\|? *$/) continue
 
-        # Bare-syntax table headers. Listed literally rather than pattern-matched: these
-        # three are what exist, and a genuine rule row that happened to resemble a header
-        # would be lost to anything looser.
+        # Bare-syntax table headers, listed literally rather than pattern-matched, because
+        # anything looser would swallow a genuine rule row that happens to resemble one.
+        #
+        # These three are NOT all of them — editorial-grammar.md alone carries eleven more
+        # (situation|upper/lower|example, condition|example, wrong|correct|why and so on),
+        # and there are two elsewhere. The rest stay in as atoms, which is over-inclusion
+        # in the harmless direction: they are stable text that survives verbatim, so they
+        # cancel between snapshots. These three are named because they repeat across
+        # sections, which would otherwise put eight identical phantom atoms in the count.
         if (s ~ /^слово\|замена$/) continue
         if (s ~ /^уровень\|когда\|признаки$/) continue
         if (s ~ /^[Ww]rong\|[Cc]orrect$/) continue
@@ -123,15 +160,22 @@ select_atoms() {
 
 for dir in "$@"; do
   [ -d "$dir" ] || { echo "extract-atoms: not a directory: $dir" >&2; exit 2; }
-  find "$dir" -name '*.md' -type f | sort | while IFS= read -r f; do
+  # .yaml as well as .md: skills/ru-text/agents/{openai,gemini}.yaml carry the Codex and
+  # Gemini activation descriptors, the exact analogue of the SKILL.md frontmatter
+  # description this script goes out of its way to keep. Leaving them out meant the
+  # per-platform advertisement of the whole skill could change with nothing noticing.
+  find "$dir" \( -name '*.md' -o -name '*.yaml' \) -type f | sort | while IFS= read -r f; do
     base=$(basename "$f")
     select_atoms "$f" "$base"
   done
 done |
-  # text field: fold characters, drop a leading rule identifier or ordinal, drop
-  # emphasis and quotes, drop ASCII punctuation except the pipe and the hyphen, then
-  # collapse whitespace. The tr sets are pure ASCII, which UTF-8 guarantees cannot
-  # collide with any byte of a multibyte character.
+  # text field: fold characters, drop a leading rule identifier or ordinal, drop emphasis
+  # and quotes, drop ASCII punctuation except the pipe and the hyphen, then collapse
+  # whitespace. Two mechanisms, and an earlier note here described a third that does not
+  # exist ("the tr sets"): sed with literal multibyte patterns, which under LC_ALL=C match
+  # exact byte sequences and cannot match half a character because UTF-8 is
+  # self-synchronising; and awk gsub with genuinely ASCII-only classes, which for the same
+  # reason cannot touch a byte of a multibyte character.
   sed -e 's/ё/е/g' -e 's/Ё/Е/g' \
       -e 's/—/-/g' -e 's/–/-/g' -e 's/−/-/g' -e 's/‒/-/g' -e 's/―/-/g' \
       -e 's/ / /g' -e 's/ / /g' -e 's/ / /g' \

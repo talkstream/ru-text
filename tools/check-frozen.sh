@@ -22,15 +22,29 @@
 #
 # ⚠ LC_ALL=C is load-bearing, not habit. Under a UTF-8 locale, BSD awk (20200816, the awk
 # shipped with macOS) reports DIFFERENT Cyrillic strings as equal: with LANG=en_NZ.UTF-8,
-# `$0 == "слово|замена"` matches «конечно|убрать», «разумеется|убрать», «скажем|убрать»
-# and «ну|убрать». The catalog parser below silently returned 84 pairs instead of 92
-# before this line existed. Reproduce:
+# `$0 == "слово|замена"` matches EIGHT rows of §B — функционировать, задействовать,
+# крайне, реально, конечно, разумеется, скажем and ну. Eight, which is why the catalog
+# parser silently returned 84 pairs instead of 92 before this line existed; an earlier
+# version of this note listed four and left the arithmetic not adding up. Reproduce:
 #   printf 'ну|убрать\n' | awk '$0 == "слово|замена" { print "EQ" }'
 # Every tool in this directory sets it, and comparisons on Russian text use regex anchors
 # rather than `==` as a second line of defence.
 
 set -eu
 export LC_ALL=C
+
+# sha256: coreutils on Linux, perl's shasum on macOS. Resolved once and checked, because
+# the first version hardcoded `shasum` inside a pipeline whose exit status came from
+# `cut` — on a machine without it the §B check compared an empty string and reported the
+# CORPUS as changed, sending the reader to the wrong file entirely.
+if command -v sha256sum >/dev/null 2>&1; then
+  SHA256='sha256sum'
+elif command -v shasum >/dev/null 2>&1; then
+  SHA256='shasum -a 256'
+else
+  echo "check-frozen: no sha256sum or shasum on PATH" >&2
+  exit 2
+fi
 
 PRINT=0
 if [ "${1:-}" = "--print" ]; then PRINT=1; shift; fi
@@ -89,11 +103,25 @@ parse_catalog() {
 }
 
 if [ "$PRINT" -eq 1 ]; then
+  # Each value is checked before it is printed. The first version piped straight into
+  # printf, and because printf itself succeeds, a corpus that had LOST the pinned row
+  # emitted `probe_row=` and exited 0 — the documented way to regenerate the baseline
+  # would have quietly recorded the absence as the new truth.
+  pr=$(parse_catalog | grep '^является|' || true)
+  ce=$(parse_catalog | wc -l | tr -d ' ')
+  sb=$(section_b | $SHA256 | cut -d' ' -f1)
+  if [ -z "$pr" ] || [ "$ce" -eq 0 ] || [ -z "$sb" ]; then
+    echo "check-frozen --print: refusing to emit a baseline from a corpus that is missing pieces" >&2
+    [ -z "$pr" ] && echo "  the probe row (является|…) is not in §B" >&2
+    [ "$ce" -eq 0 ] && echo "  §B parses to zero entries" >&2
+    [ -z "$sb" ] && echo "  §B produced no checksum — is a sha256 tool on PATH?" >&2
+    exit 1
+  fi
   printf 'files=%s\n' "$(find "$REF" -name '*.md' -type f | wc -l | tr -d ' ')"
-  printf 'section_b_sha256=%s\n' "$(section_b | shasum -a 256 | cut -d' ' -f1)"
+  printf 'section_b_sha256=%s\n' "$sb"
   printf 'table_headers=%s\n' "$(grep -c '^слово|замена$' "$INFO" | tr -d ' ')"
-  printf 'catalog_entries=%s\n' "$(parse_catalog | wc -l | tr -d ' ')"
-  printf 'probe_row=%s\n' "$(parse_catalog | grep '^является|')"
+  printf 'catalog_entries=%s\n' "$ce"
+  printf 'probe_row=%s\n' "$pr"
   exit 0
 fi
 
@@ -112,7 +140,7 @@ fi
 
 # ── 2. §B byte identity ───────────────────────────────────────────────────────
 if want=$(expect section_b_sha256); then
-  have=$(section_b | shasum -a 256 | cut -d' ' -f1)
+  have=$(section_b | $SHA256 | cut -d' ' -f1)
   if [ "$have" = "$want" ]; then
     ok "§B «Каталог стоп-слов» byte-identical ($(section_b | wc -l | tr -d ' ') lines)"
   else

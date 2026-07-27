@@ -121,17 +121,34 @@ expect_fail "a baseline key gone missing is caught" "catalog_entries is not reco
 # platform instead of a reviewer. So the canary now reports what it finds and fails only
 # on the outcome that would actually mislead someone — the trap having quietly vanished on
 # a platform that used to have it, which is the day LC_ALL=C could be reconsidered.
-trap_probe=$(printf 'ну|убрать\n' | LC_ALL=en_US.UTF-8 awk '$0 == "слово|замена" { print "EQ" }' 2>/dev/null || true)
+# The probe needs a UTF-8 locale to be MEANINGFUL: with none installed the C locale is
+# used silently, no match occurs, and "this awk is unaffected" is indistinguishable from
+# "the experiment never ran". So the locale is checked first and an absent one is reported
+# as what it is — an inconclusive probe — rather than as a clean bill of health.
+utf8_locale=$(locale -a 2>/dev/null | /usr/bin/grep -iE '^(en_US|C)\.(utf-?8)$' | head -1 || true)
+if [ -z "$utf8_locale" ]; then
+  ok "no UTF-8 locale on this machine — the awk trap probe is inconclusive, LC_ALL=C stays"
+  trap_probe=SKIP
+else
+  trap_probe=$(printf 'ну|убрать\n' | LC_ALL="$utf8_locale" awk '$0 == "слово|замена" { print "EQ" }' 2>/dev/null || true)
+fi
+case "${trap_probe}::$(uname -s)" in
+  SKIP::*) ;;
+esac
 case "$(uname -s)" in
   Darwin)
-    if [ "$trap_probe" = "EQ" ]; then
+    if [ "$trap_probe" = "SKIP" ]; then
+      :
+    elif [ "$trap_probe" = "EQ" ]; then
       ok "the awk multibyte == trap is present on this platform, as expected (LC_ALL=C required)"
     else
       bad "the awk multibyte == trap is GONE on macOS — re-examine why LC_ALL=C is set, then update this case"
     fi
     ;;
   *)
-    if [ "$trap_probe" = "EQ" ]; then
+    if [ "$trap_probe" = "SKIP" ]; then
+      :
+    elif [ "$trap_probe" = "EQ" ]; then
       bad "this platform's awk has the multibyte == trap too — widen the note in check-frozen.sh"
     else
       ok "no awk multibyte == trap on $(uname -s); LC_ALL=C stays for the platforms that have it"
@@ -170,6 +187,67 @@ if cmp -s "$W/a.tsv" "$W/b.tsv"; then
 else
   bad "extract-atoms output differs between two runs of the same corpus"
 fi
+
+# ── the golden fixture ────────────────────────────────────────────────────────
+# tools/testdata/corpus is a small corpus carrying one instance of every shape and every
+# exclusion: frontmatter, an H1, both spellings of a table of contents, a Sources section,
+# a bare a|b table with its header, a markdown table with its separator, a heading that IS
+# a rule, a two-line До/После rule, a fenced specification, a --- separator, and a .yaml
+# manifest. Its expected output is committed beside it.
+#
+# This is what pins ORDERING and the file:line column. Running the extractor twice on one
+# machine cannot see a machine-dependent construct, and comparing against the live corpus
+# would start failing legitimately at the first stage that moves a rule. A fixture keeps
+# working forever, and two corruptions of extract-atoms that previously passed 22/22 are
+# caught here.
+if "$ROOT/tools/extract-atoms.sh" "$ROOT/tools/testdata/corpus" > "$W/fixture.tsv" 2>"$W/fixture.err"; then
+  if cmp -s "$W/fixture.tsv" "$ROOT/tools/testdata/expected-atoms.tsv"; then
+    ok "the fixture corpus extracts exactly as recorded ($(wc -l < "$W/fixture.tsv" | tr -d ' ') atoms)"
+  else
+    bad "the fixture corpus no longer extracts as recorded"
+    diff "$ROOT/tools/testdata/expected-atoms.tsv" "$W/fixture.tsv" | head -12 | sed 's/^/        /'
+  fi
+else
+  bad "extract-atoms failed on the fixture corpus"
+  sed 's/^/        /' < "$W/fixture.err"
+fi
+
+# ── proof that extract-atoms itself can fail ──────────────────────────────────
+# Every other extract-atoms case reads the pristine corpus and asserts a string is
+# present, so none of them had ever been seen to fire — the probes could have been passing
+# because grep matches, not because the control works. This removes one rule from a copy
+# of the fixture and requires the extractor to notice.
+FX=$(mktemp -d "$TMPROOT/fx.XXXXXX")
+cp -R "$ROOT/tools/testdata/corpus" "$FX/corpus"
+/usr/bin/grep -v '^осуществлять|делать$' "$FX/corpus/references/rules.md" > "$FX/t" \
+  && mv "$FX/t" "$FX/corpus/references/rules.md"
+"$ROOT/tools/extract-atoms.sh" "$FX/corpus" > "$FX/cut.tsv"
+if cmp -s "$FX/cut.tsv" "$ROOT/tools/testdata/expected-atoms.tsv"; then
+  bad "extract-atoms produced identical output after a rule was deleted — it cannot fail"
+else
+  ok "extract-atoms notices a deleted rule"
+fi
+expect_diff "the gate catches a rule deleted from the fixture" 1 "UNACCOUNTED" \
+  "$ROOT/tools/testdata/expected-atoms.tsv" "$FX/cut.tsv"
+
+# ── the exclusions are exclusions, and the inclusions are inclusions ──────────
+# Named against the fixture rather than the live corpus so these stay meaningful when the
+# corpus changes. Each line here was, at some point, wrong in the extractor.
+fixture_has()    { if /usr/bin/grep -qF "$2" "$W/fixture.tsv"; then ok "fixture keeps $1"; else bad "fixture LOST $1 — wanted: $2"; fi; }
+fixture_lacks()  { if /usr/bin/grep -qF "$2" "$W/fixture.tsv"; then bad "fixture leaked $1 — found: $2"; else ok "fixture drops $1"; fi; }
+fixture_has   "a fenced specification"        "Оценка XX 10"
+fixture_has   "a fenced table header"         "Измерение | Балл |"
+fixture_has   "the SKILL.md description"      "это триггер активации"
+fixture_has   "a yaml manifest descriptor"    "fixture descriptor"
+fixture_has   "a heading that is a rule"      "Канцелярит bureaucratic"
+fixture_has   "both halves of a two-line rule" "До Наша компания"
+fixture_lacks "a table of contents"           "[A](#a)"
+fixture_lacks "the other table of contents"   "Разметка](#"
+fixture_lacks "a Sources section"             "атрибуция"
+fixture_lacks "an H1 title"                   "Заголовок первого уровня"
+fixture_lacks "a bare table header"           "слово|замена"
+fixture_lacks "a markdown table header"       "Условие | Действие"
+
 
 # Recall on the four shapes the reconnaissance flagged as easiest to lose. The probes are
 # written in POST-normalisation form — punctuation is gone by then, so the frozen row
@@ -235,12 +313,18 @@ expect_diff "a stale map row is caught" 1 "STALE MAP ROW" "$W/a.tsv" "$W/a.tsv" 
 
 # The corpus is already NFC, which is why the extractor does not normalise it. If that
 # ever stops being true the comparison starts depending on how a file was saved.
-if python3 -c "
+# The interpreter is checked separately from the claim. Folded together, a machine with no
+# python3 exited 127, landed in the else branch, and announced that the CORPUS had changed
+# — a true-sounding sentence about the wrong file, with 2>/dev/null hiding the one line
+# that would have said otherwise.
+if ! command -v python3 >/dev/null 2>&1; then
+  bad "python3 is absent, so the NFC assumption behind extract-atoms is unverified here"
+elif python3 -c "
 import unicodedata,glob,io,sys
 bad=[(f,i+1) for f in glob.glob('$ROOT/skills/ru-text/references/*.md')+['$ROOT/skills/ru-text/SKILL.md']
      for i,l in enumerate(io.open(f,encoding='utf-8').read().split(chr(10)))
      if unicodedata.normalize('NFC',l)!=l]
-sys.exit(1 if bad else 0)" 2>/dev/null; then
+sys.exit(1 if bad else 0)"; then
   ok "the corpus is still NFC (no normalisation step needed)"
 else
   bad "the corpus is no longer NFC — extract-atoms must normalise, or comparisons will drift"
