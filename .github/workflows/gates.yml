@@ -1,0 +1,64 @@
+name: gates
+
+# The first CI this repository has had. Until now every check on a pure-markdown plugin
+# was a thing someone remembered to run, which is why a version could sit wrong in two
+# READMEs through a release and a section could advertise 97 catalog entries against 92.
+#
+# Runs on ubuntu-latest deliberately, not macOS: the tools are written against BSD
+# behaviour on the author's machine, and a Linux runner is the second opinion that catches
+# a GNU/BSD divergence before a contributor does. The tools set LC_ALL=C for the same
+# reason they set it locally — the corpus is Russian, and locale-dependent string handling
+# has already silently mis-parsed it once.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Tools are executable and POSIX-parseable
+        # A syntax error in a checker reads as a passing checker to anything that only
+        # looks at whether the file exists.
+        run: |
+          set -eu
+          for f in tools/*.sh; do
+            [ -x "$f" ] || { echo "not executable: $f"; exit 1; }
+            sh -n "$f" || { echo "syntax error: $f"; exit 1; }
+          done
+
+      - name: Selftest — every checker must be able to fail
+        # Runs first. If the checkers cannot fail, their passing below means nothing.
+        run: tools/selftest.sh
+
+      - name: check-frozen — the paid-MCP corpus contract
+        run: tools/check-frozen.sh
+
+      - name: No-loss gate — every atom of the pinned baseline still accounted for
+        # The baseline is the v1.10.1 corpus, frozen as a historical artefact: it is NOT
+        # regenerated when the corpus changes. That is the whole point — it is the "before"
+        # side of every comparison from here to the v2.0 release. A rule that leaves the
+        # corpus must appear in tools/atom-map.tsv with what happened to it, or this fails.
+        run: |
+          set -eu
+          # The baseline is pinned by content, not by policy. Without this, deleting a
+          # rule from the corpus AND its line from the baseline passes every gate green:
+          # the comparison is with a file the same commit is free to edit. Changing the
+          # pin is then a visible line in a diff rather than a quiet edit inside a
+          # 1825-line data file. It moves once, at the v2.0 release.
+          sha256sum -c - <<'PIN'
+          98b2e03bc771d7c0b3268f4eb406fbb3641bc8fdb01243ff3053a1790e2b3aa4  tools/baseline/atoms-v1.10.1.tsv
+          PIN
+          tools/extract-atoms.sh skills/ru-text > /tmp/atoms-now.tsv
+          tools/diff-atoms.sh tools/baseline/atoms-v1.10.1.tsv /tmp/atoms-now.tsv
