@@ -52,5 +52,13 @@ jobs:
         # corpus must appear in tools/atom-map.tsv with what happened to it, or this fails.
         run: |
           set -eu
+          # The baseline is pinned by content, not by policy. Without this, deleting a
+          # rule from the corpus AND its line from the baseline passes every gate green:
+          # the comparison is with a file the same commit is free to edit. Changing the
+          # pin is then a visible line in a diff rather than a quiet edit inside a
+          # 1825-line data file. It moves once, at the v2.0 release.
+          sha256sum -c - <<'PIN'
+          98b2e03bc771d7c0b3268f4eb406fbb3641bc8fdb01243ff3053a1790e2b3aa4  tools/baseline/atoms-v1.10.1.tsv
+          PIN
           tools/extract-atoms.sh skills/ru-text > /tmp/atoms-now.tsv
           tools/diff-atoms.sh tools/baseline/atoms-v1.10.1.tsv /tmp/atoms-now.tsv

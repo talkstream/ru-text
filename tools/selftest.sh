@@ -7,8 +7,11 @@
 # one that reported. Exit code alone is not enough — a mutation that happens to break a
 # different check would pass a weaker test and leave the intended one unpinned.
 #
-# Everything happens in a copy under a temporary directory: the corpus and the baseline
-# both. The real tree is never a test subject, and never has to be trusted not to be.
+# Corruption always happens in a copy under a temporary directory — the corpus and the
+# baseline both. Several cases DO read the real corpus, read-only, to check assumptions
+# the tools rest on (that it is still NFC, that the frozen section still parses). The real
+# tree is a measurement subject and never a mutation subject; an earlier version of this
+# header said it was never a test subject at all, which was not true of those cases.
 #
 # Run: tools/selftest.sh
 
@@ -132,9 +135,6 @@ if [ -z "$utf8_locale" ]; then
 else
   trap_probe=$(printf 'ну|убрать\n' | LC_ALL="$utf8_locale" awk '$0 == "слово|замена" { print "EQ" }' 2>/dev/null || true)
 fi
-case "${trap_probe}::$(uname -s)" in
-  SKIP::*) ;;
-esac
 case "$(uname -s)" in
   Darwin)
     if [ "$trap_probe" = "SKIP" ]; then
@@ -313,6 +313,107 @@ expect_diff "a stale map row is caught" 1 "STALE MAP ROW" "$W/a.tsv" "$W/a.tsv" 
 
 # The corpus is already NFC, which is why the extractor does not normalise it. If that
 # ever stops being true the comparison starts depending on how a file was saved.
+# ── every diagnostic diff-atoms can print, exercised ─────────────────────────
+# None of the checks added after the panel had a case: not the DOC branches, not
+# OVERSUBSCRIBED, not DUPLICATE MAP ROW. That is how a DOC fix shipped as dead code with
+# the suite at 37/37 and the commit body announcing it closed. One case per diagnostic.
+DG=$(mktemp -d "$TMPROOT/diag.XXXXXX")
+printf 'a1b2c3\tf.md:1\tправило уехало в доки\nd4e5f6\tf.md:2\tостаётся\n' > "$DG/old.tsv"
+printf 'd4e5f6\tf.md:2\tостаётся\n' > "$DG/new.tsv"
+mkdir -p "$DG/docs"
+# the documentation must carry the NORMALISED text, which is what UNACCOUNTED prints
+printf '# перенесённые правила\n\nправило уехало в доки\n' > "$DG/docs/moved.md"
+
+printf 'a1b2c3\tDOC\t%s/docs/moved.md\tпереехало в документацию\n' "$DG" > "$DG/map-doc.tsv"
+expect_diff "a clean DOC row passes" 0 "PASS" "$DG/old.tsv" "$DG/new.tsv" "$DG/map-doc.tsv"
+
+printf 'a1b2c3\tDOC\t%s/tools/testdata/expected-atoms.tsv\tотмычка\n' "$ROOT" > "$DG/map-snap.tsv"
+expect_diff "a DOC row aimed at an atom snapshot is refused" 1 "DOC TARGET IS AN ATOM SNAPSHOT" \
+  "$DG/old.tsv" "$DG/new.tsv" "$DG/map-snap.tsv"
+
+printf 'a1b2c3\tf.md:1\tдубль\na1b2c3\tf.md:2\tдубль\na1b2c3\tf.md:3\tдубль\nd4e5f6\tf.md:9\tживой\n' > "$DG/many.tsv"
+printf 'd4e5f6\tf.md:9\tживой\n' > "$DG/one.tsv"
+printf 'a1b2c3\tMOVED\td4e5f6\tодна строка на три потери\n' > "$DG/map-over.tsv"
+expect_diff "one map row cannot absorb three lost copies" 1 "TARGET OVERSUBSCRIBED" \
+  "$DG/many.tsv" "$DG/one.tsv" "$DG/map-over.tsv"
+
+printf 'a1b2c3\tMERGED\td4e5f6\tраз\na1b2c3\tMOVED\td4e5f6\tдва\n' > "$DG/map-dup.tsv"
+expect_diff "two map rows for one hash are refused" 1 "DUPLICATE MAP ROW" \
+  "$DG/many.tsv" "$DG/one.tsv" "$DG/map-dup.tsv"
+
+# ── check-frozen --print, round trip and refusal ─────────────────────────────
+# --print is documented as the only supported way to regenerate the baseline, and until
+# now nothing ran it. Both directions: it reproduces the committed values exactly, and it
+# refuses rather than recording an absence as the new truth.
+d=$(fresh_copy)
+if "$d/tools/check-frozen.sh" --print "$d" > "$d/printed" 2>"$d/printed.err"; then
+  # a temp file rather than <(…): this script is /bin/sh, and process substitution is a
+  # bash extension that dash on the CI runner does not have
+  /usr/bin/grep -v '^#' "$ROOT/tools/frozen.sha256" | /usr/bin/grep . > "$d/committed"
+  if diff -q "$d/committed" "$d/printed" >/dev/null; then
+    ok "--print reproduces the committed baseline exactly"
+  else
+    bad "--print disagrees with tools/frozen.sha256"
+    diff "$d/committed" "$d/printed" | sed 's/^/        /'
+  fi
+else
+  bad "--print failed on an untouched copy"
+  sed 's/^/        /' < "$d/printed.err"
+fi
+
+d=$(fresh_copy)
+perl -i -pe 's{^является\|тире / перестроить$}{}' "$d/skills/ru-text/references/info-style.md"
+if "$d/tools/check-frozen.sh" --print "$d" >"$d/out" 2>"$d/err"; then
+  bad "--print emitted a baseline from a corpus missing the probe row"
+elif /usr/bin/grep -q 'refusing to emit' "$d/err"; then
+  ok "--print refuses a corpus that has lost the probe row"
+else
+  bad "--print failed, but not with the refusal message"
+  sed 's/^/        /' < "$d/err"
+fi
+
+# ── the case-folding measurement, pinned ─────────────────────────────────────
+# extract-atoms.sh states a number — six collapsed groups, five of them one rule in two
+# files — as the reason case is not folded. A measured number in a comment is a promise;
+# this is the case that keeps it honest. The arbiter made that the rule after two
+# successive commits shipped a different wrong count in this very sentence.
+if command -v python3 >/dev/null 2>&1; then
+  folded=$(python3 - "$ROOT" <<'PYEOF'
+import sys, glob, io, re, collections
+R = sys.argv[1]
+DASH = {'\u2014':'-','\u2013':'-','\u2212':'-','\u2012':'-','\u2015':'-'}
+SP = {'\u00a0':' ','\u202f':' ','\u2009':' ','\t':' '}
+def norm(s):
+    s = s.replace('\u0451','\u0435').replace('\u0401','\u0415')
+    s = ''.join(DASH.get(c, c) for c in s)
+    s = ''.join(SP.get(c, c) for c in s)
+    s = re.sub(r'[\u00ab\u00bb\u201c\u201d\u201e]', '', s)
+    s = re.sub(r'^\|', '', s)
+    s = re.sub(r'^ *[-*+] +', '', s)
+    s = re.sub(r'^ *#+ +', '', s)
+    s = re.sub(r'^ *(R[0-9]+|AD-[0-9]+(\.[0-9]+)?|[0-9]+)[.:)]? +', '', s)
+    s = re.sub(r'[*_`]', '', s)
+    s = re.sub(r'[!"#$%&()+,./:;<=>?@\[\]^{}~]', '', s)
+    return re.sub(r' +', ' ', s).strip()
+groups = collections.defaultdict(set)
+files = sorted(glob.glob(R + '/skills/ru-text/references/*.md')) + [R + '/skills/ru-text/SKILL.md']
+for f in files:
+    for line in io.open(f, encoding='utf-8').read().split('\n'):
+        if line.strip():
+            n = norm(line)
+            groups[n.lower()].add(n)
+print(sum(1 for v in groups.values() if len(v) > 1))
+PYEOF
+)
+  if [ "$folded" = "6" ]; then
+    ok "case folding still collapses exactly 6 groups, as extract-atoms.sh states"
+  else
+    bad "case folding now collapses $folded groups, not the 6 extract-atoms.sh claims"
+  fi
+else
+  bad "python3 is absent, so the folding figure in extract-atoms.sh is unverified here"
+fi
+
 # The interpreter is checked separately from the claim. Folded together, a machine with no
 # python3 exited 127, landed in the else branch, and announced that the CORPUS had changed
 # — a true-sounding sentence about the wrong file, with 2>/dev/null hiding the one line

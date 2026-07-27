@@ -56,11 +56,15 @@
 #   a deficit of one and is reported. The claim was wrong and is withdrawn.
 #
 #   The reason that survives is weaker and about legibility, not safety. Folding merges
-#   five groups, four of which are the same rule living in two files (anti-patterns.md:38
-#   with editorial-grammar.md:298, anti-patterns.md:40 with info-style.md:37, and two
-#   more). Merged, the deficit is still caught but the report names one arbitrary home of
-#   the pair, and whoever has to write the map row is sent to the wrong file. Keeping case
-#   keeps the two homes distinguishable at the moment someone has to account for them.
+#   SIX groups. Five are the same rule living in two files — anti-patterns.md lines 38,
+#   39, 40, 41 and 42 pairing with editorial-grammar.md:298, info-style.md:54,
+#   info-style.md:37, editorial-grammar.md:302 and editorial-grammar.md:311. The sixth is
+#   the table header «Wrong|Correct» in three places, which is not a rule at all.
+#   (Earlier drafts of this note said five groups of which four were rule pairs; both
+#   numbers were wrong. Reproduce with the folding probe in tools/selftest.sh.)
+#   Merged, the deficit is still caught, but the report names one arbitrary home of the
+#   pair and sends whoever must write the map row to the wrong file. Keeping case keeps
+#   both homes distinguishable at the moment someone has to account for them.
 #
 # ⚠ LC_ALL=C everywhere. Byte-wise is what we want: sort order becomes machine-independent,
 # and the multibyte literals below match exact byte sequences, which UTF-8 makes

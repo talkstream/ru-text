@@ -36,8 +36,12 @@
 #   NORMALISED  target = new sha1. Wording touched without changing what the rule says.
 #   MERGED      target = new sha1 of the surviving atom. The one disposition where the
 #               atom count legitimately falls.
-#   DOC         target = path. The atom left the corpus for documentation; the file must
-#               exist and must contain the atom's text.
+#   DOC         target = path. The atom left the corpus for documentation. The file must
+#               exist, must not itself be an atom snapshot, and must contain the atom
+#               text AS NORMALISED — column three of the old snapshot, which is the exact
+#               string the UNACCOUNTED line prints. Prose that says the same thing in the
+#               source spelling will not match, and that is deliberate: a DOC row asserts
+#               the rule was carried over verbatim, not paraphrased.
 
 set -eu
 export LC_ALL=C
@@ -132,6 +136,11 @@ awk -F'\t' -v mapfile="$MAP" -v root="$ROOT" '
             broken++
           } else {
             resolved++
+            # The budget is credited HERE, in the branch that resolves DOC. The first
+            # attempt put `|| d == "DOC"` in the final else, which DOC never reaches
+            # because it returns from this branch — dead code that shipped while the
+            # commit body announced the fix. A clean DOC row still tripped SHORTFALL.
+            merged += deficit
           }
         }
       } else if (!(t in newn)) {
@@ -149,11 +158,9 @@ awk -F'\t' -v mapfile="$MAP" -v root="$ROOT" '
       } else {
         used_target[t] += deficit
         resolved++
-        # DOC and MERGED are the two dispositions under which the corpus legitimately
-        # holds fewer atoms afterwards. DOC was omitted from this budget at first, which
-        # made every correctly written DOC row trip the shortfall check below — the one
-        # disposition for moving a rule into documentation could never pass.
-        if (d == "MERGED" || d == "DOC") merged += deficit
+        # MERGED is the only disposition that reaches here and legitimately shrinks the
+        # corpus. DOC also shrinks it, but is credited in its own branch above.
+        if (d == "MERGED") merged += deficit
       }
       used[h] = 1
     }
