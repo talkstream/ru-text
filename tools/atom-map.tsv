@@ -1,0 +1,8 @@
+# atom-map.tsv — what happened to atoms that left the corpus, one row each.
+#
+# sha1 <TAB> disposition <TAB> target <TAB> rationale
+#
+# Dispositions: MOVED · RENUMBERED · NORMALISED · MERGED · DOC
+# There is deliberately no DELETED. See the header of diff-atoms.sh.
+#
+# Empty on purpose: v2.0 has not moved a rule yet. The first rows arrive with stage 5.
