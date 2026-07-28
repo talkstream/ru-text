@@ -75,16 +75,27 @@ Junie в общий каталог не смотрит вовсе — ему �
 добавляется маркетплейс. Одна установка обслуживает CLI, приложение (локальные и
 SSH-сессии), VS Code и JetBrains.
 
-### Codex CLI
+### Codex и ChatGPT
 
-Сначала подключите маркетплейс, потом ставьте:
+Плагины у них общие: «Plugins are available with ChatGPT Work on the web and with ChatGPT
+Work or Codex in the ChatGPT desktop app. Codex CLI also has a plugin browser»
+([learn.chatgpt.com/docs/plugins](https://learn.chatgpt.com/docs/plugins)). В вебе
+и в десктопном приложении ChatGPT плагины ставятся из интерфейса: переключатель **Work** →
+**Plugins**. Ниже — про Codex CLI.
+
+Сначала подключите маркетплейс, потом ставьте. Обе команды неинтерактивные:
 
 ```bash
 codex plugin marketplace add hashgraph-online/awesome-codex-plugins
+codex plugin add ru-text@awesome-codex-plugins
 ```
 
-Затем `/plugins` в сессии, найти ru-text, установить — и **начать новую сессию**: навыки
-плагина подхватываются при старте.
+Можно и через браузер плагинов: `/plugins` в сессии, найти ru-text, установить. В обоих
+случаях **начните новую сессию**: навыки плагина подхватываются при старте.
+
+Codex из коробки уже подключает маркетплейс `claude-plugins-official`, что видно по
+`codex plugin marketplace list`. ru-text там пока нет: он в community-каталоге Anthropic,
+а не в официальном.
 
 ### Gemini CLI
 
@@ -132,7 +143,7 @@ npx skillsbd add talkstream/ru-text/ru-text
 Четыре факта, которые нельзя открыть перебором, потому что они отрицательные.
 
 **В маркетплейсе Cursor ru-text нет.** Команда `/add-plugin` существует и работает, но
-поиск ничего не найдёт: в каталоге 216 плагинов, нашего среди них нет. Ставьте копированием.
+поиск ничего не найдёт: каталог мы перебрали целиком, нашего плагина в нём нет. Ставьте копированием.
 
 **Облачные сессии Claude Code плагин не наследуют.** Установка на уровне пользователя туда
 не переносится. Объявите плагин в поле `enabledPlugins` файла `.claude/settings.json` в

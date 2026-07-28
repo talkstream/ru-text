@@ -76,16 +76,27 @@ interface: the **+** button next to the prompt box → **Plugins** → **Add plu
 marketplace can be added as well. One install serves the CLI, the app (local and SSH
 sessions), VS Code and JetBrains.
 
-### Codex CLI
+### Codex and ChatGPT
 
-Add the marketplace first, then install:
+They share plugins: "Plugins are available with ChatGPT Work on the web and with ChatGPT Work
+or Codex in the ChatGPT desktop app. Codex CLI also has a plugin browser"
+([learn.chatgpt.com/docs/plugins](https://learn.chatgpt.com/docs/plugins)). On ChatGPT web and
+in the ChatGPT desktop app, plugins install from the interface: the **Work** switcher →
+**Plugins**. What follows is about Codex CLI.
+
+Add the marketplace first, then install. Both commands are non-interactive:
 
 ```bash
 codex plugin marketplace add hashgraph-online/awesome-codex-plugins
+codex plugin add ru-text@awesome-codex-plugins
 ```
 
-Then `/plugins` in a session, find ru-text, install — and **start a new session**: a plugin's
-bundled skills are loaded at session start.
+The plugin browser works too: `/plugins` in a session, find ru-text, install. Either way,
+**start a new session**: a plugin's bundled skills are loaded at session start.
+
+Codex ships with the `claude-plugins-official` marketplace already configured, which
+`codex plugin marketplace list` shows. ru-text is not in it yet: it is listed in Anthropic's
+community catalogue, not the official one.
 
 ### Gemini CLI
 
@@ -132,8 +143,7 @@ pins no version and always installs the current state of `main`.
 Four facts trial and error cannot discover, because they are negative.
 
 **ru-text is not in the Cursor marketplace.** `/add-plugin` exists and works, but the search
-finds nothing: the catalogue lists 216 plugins and ru-text is not among them. Install by
-copying.
+finds nothing: we walked the whole catalogue and ru-text is not in it. Install by copying.
 
 **Claude Code cloud sessions do not inherit the plugin.** A user-scope install does not carry
 over. Declare the plugin under `enabledPlugins` in the repository's `.claude/settings.json`,

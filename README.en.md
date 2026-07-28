@@ -28,7 +28,7 @@ Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copi
 
 **This README.** Every dash, quote, and space you see here follows the plugin's own rules. This document was written with ru-text active.
 
-**UX microcopy.** Writing buttons, errors, empty states for a Russian app. The plugin loads 217 UX rules: "Отмена" not "Нет", error structure (what happened + what to do), placeholders as examples, not instructions.
+**UX microcopy.** Writing buttons, errors, empty states for a Russian app. The plugin loads the UX-writing reference: "Отмена" not "Нет", error structure (what happened + what to do), placeholders as examples, not instructions.
 
 **Business email.** Drafting an email to colleagues or clients. The plugin kills bureaucratic language ("довожу до сведения" → "сообщаю"), structures subject + first sentence + call to action, and suggests respectful tone without being servile.
 
