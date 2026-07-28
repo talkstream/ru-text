@@ -19,7 +19,7 @@ ru-text gives your AI coding assistant a deep understanding of Russian text qual
 
 Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains (Junie), and OpenClaw.
 
-- **2,000+ atoms** across 7 domains, spread over 10 reference files
+- **2,000+ atoms** across nine reference files plus a sources file
 - **Auto-activation** — no need to remember to turn it on
 - **Covers everything** — from em dashes and guillemets to UX microcopy and business email tone
 - **Non-dogmatic** — your explicit style request always overrides default rules
@@ -42,13 +42,9 @@ Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copi
 - preemptive self-praise ("чётко, по делу, без воды");
 - assistant-register filler ("Отличный вопрос!", "Надеюсь, помог");
 - hollow openers ("давайте разберёмся", "погрузимся");
-- declared sincerity ("скажу честно");
-- the mandatory tricolon where two items would have done;
-- hollowed mechanism: the sentence describes a mechanism, but the working part is a placeholder;
-- phantom attribution ("как показывают исследования" with no study behind it);
-- the additive pseudo-pair ("не только X, но и Y" where Y adds nothing to X).
+- phantom attribution ("как показывают исследования" with no study behind it).
 
-Five more: em-dash overuse, parcellation, patronizing explanation, unprovoked rebuttal, and a subject that does not agree with its predicate.
+Nine more are caught the same way: declared sincerity, the mandatory tricolon, hollowed mechanism, the additive pseudo-pair, em-dash overuse, parcellation, patronizing explanation, unprovoked rebuttal, and a subject that does not agree with its predicate.
 
 Two tells are charged to the whole document rather than to a fragment, because no local edit repairs them: a piece that stayed a chat transcript, and a piece written for a search engine instead of a reader.
 
@@ -67,14 +63,15 @@ Hand this sentence to your AI agent:
 It takes it from there: where its own platform keeps skills is something the agent knows
 better than an instruction written a year ago. Verified with Claude Code, Codex CLI, Cursor,
 GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains
-Junie, OpenClaw and Notion.
+Junie and OpenClaw. Notion installs by clicking rather than by agent — the path is in
+[INSTALL.en.md](INSTALL.en.md).
 
 Installing by hand, agent got it wrong, or your platform installs through its own tool —
 [INSTALL.en.md](INSTALL.en.md): every platform's directory with the vendor URL it came from,
 the Claude Desktop and Notion click-paths, four facts no amount of trial can discover, and
 updating.
 
-Start writing Russian text — the plugin takes over automatically. If ru-text makes your
+Start writing Russian text in a NEW session: skills are loaded when a session starts, not in the session that installed them. If ru-text makes your
 products better, consider [sponsoring](https://github.com/sponsors/talkstream) continued
 development.
 
@@ -86,9 +83,9 @@ A one-shot install has no update mechanism: the agent installed the skill and fo
 it. Every few months, ask it to run the install again. Per-platform update commands live in
 [INSTALL.en.md](INSTALL.en.md#updating).
 
-One thing worth knowing up front: the Claude Code community marketplace pins the plugin to a
-specific commit rather than tracking releases, and the pin trails the current version by
-months. `claude plugins list` shows the version you actually have.
+One thing worth knowing up front: the ru-text pin in the Claude Code community marketplace
+trails the current version by months. Why, and what to do about it, is in
+[INSTALL.en.md](INSTALL.en.md#what-an-agent-cannot-work-out-for-itself).
 
 ## The corpus
 

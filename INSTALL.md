@@ -32,6 +32,8 @@ mkdir -p ~/.agents/skills
 cp -r ru-text/skills/ru-text ~/.agents/skills/ru-text
 ```
 
+Навык, скопированный в `~/.agents/skills/`, читают три поверхности Codex: сам CLI, приложение ChatGPT в режиме Codex и IDE-расширение. Плагины в IDE-расширении недоступны, а отдельные навыки — да, так что копирование достаёт дальше, чем установка плагином.
+
 Windows (PowerShell):
 
 ```powershell
@@ -171,8 +173,9 @@ npx skillsbd add talkstream/ru-text/ru-text
 ваши правки, если вы их вносили.
 
 ```bash
-npx skills add talkstream/ru-text -y        # skills CLI, проектная область
+npx skills add talkstream/ru-text -y        # skills CLI, проектная область; ставит три навыка
 npx skills add talkstream/ru-text -y -g     # он же, пользовательская
+codex plugin marketplace upgrade
 gemini extensions update ru-text
 openclaw skills update @talkstream/ru-text
 claude plugins marketplace update claude-community

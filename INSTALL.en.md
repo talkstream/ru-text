@@ -33,6 +33,8 @@ mkdir -p ~/.agents/skills
 cp -r ru-text/skills/ru-text ~/.agents/skills/ru-text
 ```
 
+A skill copied into `~/.agents/skills/` is read by three Codex surfaces: the CLI itself, the ChatGPT desktop app in Codex mode, and the IDE extension. Plugins are not available in the IDE extension but standalone skills are, so copying reaches further than installing as a plugin.
+
 Windows (PowerShell):
 
 ```powershell
@@ -171,8 +173,9 @@ For a copy install, re-run the same command; it overwrites the directory — inc
 edits you made.
 
 ```bash
-npx skills add talkstream/ru-text -y        # skills CLI, project scope
+npx skills add talkstream/ru-text -y        # skills CLI, project scope; installs three skills
 npx skills add talkstream/ru-text -y -g     # the same, user scope
+codex plugin marketplace upgrade
 gemini extensions update ru-text
 openclaw skills update @talkstream/ru-text
 claude plugins marketplace update claude-community
