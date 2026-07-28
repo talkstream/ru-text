@@ -12,11 +12,11 @@ Hand this sentence to your AI agent:
 
 > Установи навык https://github.com/talkstream/ru-text глобально и вызывай его для любых задач с русским текстом: вычитка, типографика, редактура, UX-тексты, деловая переписка.
 
-It takes it from there: where its own platform keeps skills is something the agent knows better than an instruction written a year ago does.
+The agent takes it from there: it knows where its platform keeps skills better than any instruction written a year ago. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
 
 Then start a new session — skills are loaded when a session starts, not in the one that installed them.
 
-Installing by hand, agent got it wrong, or your platform installs through its own tool — all of that is in [INSTALL.en.md](INSTALL.en.md): the directories of twelve platforms with the vendor URL each came from, the click-paths for Claude Desktop and Notion (Notion installs by clicking, not by agent), and four things an agent cannot discover by trying.
+Installing by hand, an agent that got it wrong, or a platform with its own installer — all of that is in [INSTALL.en.md](INSTALL.en.md): the directories of twelve platforms with the vendor URL each came from, the click-paths for Claude Desktop and Notion (Notion installs by clicking, not by agent), and four things an agent cannot discover by trying.
 
 ## What it looks like
 
@@ -28,27 +28,29 @@ After:
 
 > Чтобы отделы работали быстрее, мы упрощаем документооборот. За исполнением поручений следят Иванов и Петрова.
 
-Three things changed: verbal nouns became verbs, the passive named who acts, and "в целях" and "осуществляется" left — both are in the catalogue of 92 stop-words.
+*"To make the departments work faster, we are simplifying our paperwork. Ivanov and Petrova follow up on assignments."*
+
+Three things changed: verbal nouns became verbs, the passive voice named its actor, and "в целях" and "осуществляется" left — both are in the catalogue of 92 stop-words.
 
 ## What it will fix
 
-**Buttons, errors, empty states.** "Отмена" instead of "Нет". An error says what happened and what to do. A placeholder is an example, not an instruction.
+**Buttons, errors, empty states.** "Отмена" ("Cancel") instead of "Нет" ("No"). An error says what happened and what to do. A placeholder is an example, not an instruction.
 
-**Emails and messages.** "Довожу до сведения" becomes "сообщаю". Subject, first sentence and request move into place. The tone stays respectful without being obsequious.
+**Emails and messages.** "Довожу до сведения" ("I hereby bring to your attention") becomes "сообщаю" ("I am letting you know"). Subject, first sentence and request move into place. The tone stays respectful without being obsequious.
 
 **Landing pages and documentation.** "Команда профессионалов" is replaced by something checkable. Typography, inverted-pyramid structure, links that say where they lead.
 
 **Text that came out of a model** — yours or someone else's. ru-text knows sixteen tells of machine writing. Five are visible in the fragment itself:
 
-- manufactured antithesis ("не X, а Y" with no antecedent);
-- preemptive self-praise ("чётко, по делу, без воды");
-- assistant-register filler ("Отличный вопрос!", "Надеюсь, помог");
-- hollow openers ("давайте разберёмся", "погрузимся");
-- phantom attribution ("как показывают исследования" with no study behind it).
+- manufactured antithesis ("не X, а Y" — "not X but Y") with no antecedent;
+- preemptive self-praise ("чётко, по делу, без воды" — "crisp, on point, no fluff");
+- assistant-register filler ("Отличный вопрос!" — "Great question!", "Надеюсь, помог" — "Hope that helped");
+- hollow openers ("давайте разберёмся" — "let us figure this out", "погрузимся" — "let us dive in");
+- phantom attribution ("как показывают исследования" — "studies show") with no study behind it.
 
 Nine more are of the same kind. Two others are charged to the whole document rather than to a fragment, because no local edit repairs them: a piece that stayed a chat transcript, and a piece written for a search engine instead of a reader.
 
-Twelve of the sixteen tells carry a written carve-out naming where the device is legitimate — a quotation, an analysis of someone else's text, a legal formula. The carve-out is read before the finding is raised.
+Where the device is legitimate — a quotation, an analysis of someone else's text, a legal formula, a list that genuinely has three items — is written into the rule itself. The carve-out is read before the finding is raised.
 
 ## Boundaries
 
@@ -56,7 +58,7 @@ Twelve of the sixteen tells carry a written carve-out naming where the device is
 
 **Nothing is rewritten silently.** A check returns the corrected version plus a list of changes; a file is edited in place only when you ask for that.
 
-**Someone else's words stay theirs.** Quoted material, code blocks and third-party text inside your document are reproduced as-is.
+**Someone else's words stay theirs.** Quoted material, code blocks and third-party text inside your document are reproduced as-is: a remark about them, perhaps; an edit to them, never.
 
 **It turns off like any skill.** Through your platform: `/plugin` in Claude Code, or by deleting the skill directory elsewhere.
 
@@ -64,13 +66,15 @@ Twelve of the sixteen tells carry a written carve-out naming where the device is
 
 `/ru-text:ru-score` gives a score from 0 to 10 across five dimensions: typography, clean language, grammar, structure, precision for the reader. Each dimension comes with specific issues and quoted fragments.
 
-The top labels have a floor the arithmetic does not override. A document that turned out to be a chat transcript, or one written for a search engine, is never labelled «Эталонный» or «Хороший» whatever it scores — and the rubric names the rule that capped it. The number itself is printed as it computed.
+The top labels have a floor the arithmetic does not override. A document that turned out to be a chat transcript, or one written for a search engine, is never labelled «Эталонный» (Benchmark) or «Хороший» (Good) whatever it scores — and the rubric names the rule that capped it. The number itself is printed as it computed.
 
 `/ru-text:ru-check` does the analysis without a score: findings, the rule behind each, and a proposed replacement.
 
+Both are Claude Code's slash syntax. Elsewhere, just ask: "score this text with ru-text", "proofread this" — the rubric loads on demand.
+
 ## The corpus
 
-Over 2,000 linguistic atoms: rules, wrong → right pairs, dictionary entries and carve-outs. That is a floor rather than a figure, and it is counted by a command:
+Over 2,000 linguistic atoms: rules, wrong → right pairs, dictionary entries and carve-outs. That is a floor, not an exact count, and a command produces it:
 
 ```bash
 tools/extract-atoms.sh skills/ru-text | wc -l
@@ -123,6 +127,6 @@ A Telegram bot, a browser extension, a WordPress plugin. Ideas and corrections g
 
 Arseniy Kamyshev — [nafigator@gmail.com](mailto:nafigator@gmail.com) · [Telegram](https://t.me/nafigator) · [GitHub](https://github.com/talkstream)
 
-I work on social projects, and the work on ru-text rests on support from the people it turned out to be useful to. If it makes your products better — [GitHub Sponsors](https://github.com/sponsors/talkstream).
+I work on social projects, and the work on ru-text is sustained by the people it has proven useful to. If it makes your products better — [GitHub Sponsors](https://github.com/sponsors/talkstream).
 
 [MIT](LICENSE) · [Privacy policy](PRIVACY_POLICY.md) · the plugin makes no network calls and collects no data.
