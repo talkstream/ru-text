@@ -149,6 +149,21 @@ is a deliberate choice and not an omission — a cap keyed to a soft, judgement-
 dimension would put a hard ceiling on a score behind a call a reader could reasonably
 dispute, which is the failure mode the five orthogonal dimensions exist to avoid.
 
+**But the label has a floor, and it is not the same thing as a cap.** A document charged
+with AD-14 or AD-15 is never labelled «Эталонный» or «Хороший», whatever the arithmetic
+returns. Report the number as computed and the label as capped at «Средний», with one line
+saying which rule capped it.
+
+The number is not touched, so nothing about the five dimensions is overridden: this
+constrains only the word a reader takes away. It exists because the arithmetic can be
+right and the summary still false. Measured: a search-engine stub — grammatical,
+typographically clean, and of no use to anyone — scored 6.7 on Typography 9.5 and Grammar
+9.5, because the two hard dimensions carry 0.35 of the weight and the whole harm sits in
+Reader precision, which was already at 3.0 with nowhere left to fall. A flawless chat
+transcript is the same shape and worse: with nothing wrong in any sentence it reaches 9.2,
+«Эталонный», for a genre that platforms remove on sight. No rule about words can lower
+either one, because neither has a defect in its words.
+
 ## Score interpretation
 
 | Score | Label (RU) | Label (EN) | Meaning |
@@ -160,6 +175,11 @@ dispute, which is the failure mode the five orthogonal dimensions exist to avoid
 | 0.0–2.9 | Критический | Critical | Full rewrite required |
 
 A score of 8+ is a strong result. 10.0 is a theoretical ideal, not a practical target.
+
+The two top labels have a floor above them: a document charged with AD-14 or AD-15 does not
+receive them (see «Non-compensatory rules»). Say so in one line — «ярлык ограничен: AD-15» —
+so the reader learns which rule capped it rather than wondering why the number and the word
+disagree.
 
 ## Output format
 
@@ -176,6 +196,7 @@ A score of 8+ is a strong result. 10.0 is a theoretical ideal, not a practical t
 
 **Формула:** T×0.15 + Ч×0.25 + Г×0.20 + С×0.20 + Ц×0.20 = X.X
 [Non-compensatory cap note, if triggered]
+[Label floor note, if triggered: «Ярлык ограничен до «Средний»: AD-14» / «: AD-15»]
 
 ### Что оценка не измеряет
 [Limitations list]
