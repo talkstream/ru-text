@@ -185,6 +185,81 @@ else
   ok "Russian trigger phrases are inside the first $FIRST_N characters"
 fi
 
+# ── 4. Both READMEs state the true size of SKILL.md ────────────────────────────────────
+# «Техническое качество» quotes the word and line count as evidence that the always-on half
+# of the skill is small. Nobody re-measured it: the line said 587 words for three releases
+# while the file held 583. A claim offered as proof has to be measured, or it is the exact
+# opposite of what it claims to be.
+#
+# The numbers are compared, not the sentence. Russian inflects the noun with the numeral --
+# 583 slova, 587 slov, 581 slovo -- so a literal-string check would fail on a correct line
+# whenever the count crossed a declension boundary, and the fix would be to edit the checker.
+# Reading the numbers off the line is form-agnostic and survives translation; the trailing
+# budget figures are ignored because only the first two are the claim.
+#
+# Exactly ONE line per README may state the size, which is the rule section 1 above already
+# lives by: a second copy is where the first goes stale. A review proved the cost of not
+# applying it here -- with two "SKILL.md:" lines the checker read the first, vouched for it,
+# and passed while both files were wrong.
+#
+# Grouped thousands are glued before the digits are read. re.findall for digit runs never
+# matches a separator, so replacing one cannot change the result: an earlier version replaced
+# NBSP and comma and was a provable no-op, which read "1 083 words" as the pair (1, 083) and
+# failed a correct README with a nonsense diagnostic.
+skill_size_ok=$(python3 - "$SKILL" README.md README.en.md <<'PY'
+import io, re, sys
+
+path, readmes = sys.argv[1], sys.argv[2:]
+text = io.open(path, encoding='utf-8').read()
+# Defined to match `LC_ALL=C wc -w` and `wc -l`, which is what a maintainer checking this by
+# hand will run -- and this script exports LC_ALL=C. NOT text.split(): python treats U+00A0 as
+# whitespace and byte-wise wc does not, so on a file carrying the non-breaking spaces R16/R44
+# require the two would disagree, and the README would be "corrected" into a false failure.
+words = len(re.findall(r'[^ \t\n\r\f\v]+', text))
+lines = text.count('\n')
+
+bad = []
+for r in readmes:
+    try:
+        content = io.open(r, encoding='utf-8').read()
+    except OSError as e:
+        bad.append('%s: unreadable (%s)' % (r, e))
+        continue
+    hit = [ln for ln in content.split('\n') if 'SKILL.md:' in ln]
+    if len(hit) != 1:
+        bad.append('%s: %d lines state the size of SKILL.md, want exactly 1' % (r, len(hit)))
+        continue
+    glued = re.sub(r'(?<=\d)[ \t  ,](?=\d\d\d(?!\d))', '', hit[0])
+    nums = re.findall(r'\d+', glued)
+    if len(nums) < 2:
+        bad.append('%s: %r carries no pair of numbers to check' % (r, hit[0].strip()))
+        continue
+    got_w, got_l = int(nums[0]), int(nums[1])
+    if (got_w, got_l) != (words, lines):
+        bad.append('%s: says %d words / %d lines, file has %d / %d'
+                   % (r, got_w, got_l, words, lines))
+
+# US (unit separator), not "; ": a README line quoted back into a diagnostic can contain a
+# semicolon, and splitting on one tore a message in half mid-quote.
+print('%d\t%d\t%s' % (words, lines, '\x1f'.join(bad)))
+PY
+)
+sz_words=$(printf '%s' "$skill_size_ok" | cut -f1)
+sz_lines=$(printf '%s' "$skill_size_ok" | cut -f2)
+sz_bad=$(printf '%s' "$skill_size_ok" | cut -f3-)
+# An empty measurement must not read as agreement. The heredoc always reaches its print, so
+# this needs a broken interpreter -- but the ok branch below is keyed on "no complaints", and
+# "no output at all" is indistinguishable from it without this line.
+case "$sz_words$sz_lines" in
+  ''|*[!0-9]*) sz_bad="the SKILL.md measurement produced nothing -- is python3 usable?" ;;
+esac
+if [ -z "$sz_bad" ]; then
+  ok "both READMEs state the size of SKILL.md correctly ($sz_words words, $sz_lines lines)"
+else
+  bad "a README states the size of SKILL.md wrongly:"
+  printf '%s\n' "$sz_bad" | tr '\037' '\n' | sed 's/^ */        /'
+fi
+
 [ "$fail" -eq 0 ] && { echo "check-version: PASS"; exit 0; }
 echo "check-version: FAIL — $fail check(s)"
 exit 1

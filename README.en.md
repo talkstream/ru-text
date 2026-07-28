@@ -19,7 +19,7 @@ ru-text gives your AI coding assistant a deep understanding of Russian text qual
 
 Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains (Junie), and OpenClaw.
 
-- **2,000+ atoms** across 7 domains, packed into 9 reference files + addenda
+- **2,000+ atoms** across 7 domains, spread over 10 reference files
 - **Auto-activation** — no need to remember to turn it on
 - **Covers everything** — from em dashes and guillemets to UX microcopy and business email tone
 - **Non-dogmatic** — your explicit style request always overrides default rules
@@ -36,9 +36,25 @@ Works with Claude Code (CLI and Desktop), Codex CLI, Notion, Cursor, GitHub Copi
 
 **README and documentation.** Writing docs for an open-source project in Russian. Proper typography (guillemets, em dashes, non-breaking spaces), clear inverted-pyramid structure.
 
-**Cleaning up AI-slop.** Text reads as machine-generated. The plugin catches the tells: manufactured antithesis ("не X, а Y" with no antecedent), preemptive self-praise ("чётко, по делу, без воды"), assistant-register filler ("Отличный вопрос!", "Надеюсь, помог"), and hollow openers ("давайте разберёмся", "погрузимся").
+**Cleaning up AI-slop.** Text reads as machine-generated. The plugin catches sixteen tells. Nine of them are visible in the fragment itself:
 
-**Text quality scoring.** Want to know how your text measures up? `/ru-text:ru-score` evaluates text across 5 dimensions (typography, clarity, grammar, structure, reader precision) and returns a 0.0–10.0 score with specific issues per dimension.
+- manufactured antithesis ("не X, а Y" with no antecedent);
+- preemptive self-praise ("чётко, по делу, без воды");
+- assistant-register filler ("Отличный вопрос!", "Надеюсь, помог");
+- hollow openers ("давайте разберёмся", "погрузимся");
+- declared sincerity ("скажу честно");
+- the mandatory tricolon where two items would have done;
+- hollowed mechanism: the sentence describes a mechanism, but the working part is a placeholder;
+- phantom attribution ("как показывают исследования" with no study behind it);
+- the additive pseudo-pair ("не только X, но и Y" where Y adds nothing to X).
+
+Five more: em-dash overuse, parcellation, patronizing explanation, unprovoked rebuttal, and a subject that does not agree with its predicate.
+
+Two tells are charged to the whole document rather than to a fragment, because no local edit repairs them: a piece that stayed a chat transcript, and a piece written for a search engine instead of a reader.
+
+Every tell carries a carve-out naming where the device is legitimate: a quotation, an analysis of someone else's text, a legal formula, a list with nowhere for a fourth item to come from. The plugin reads the carve-out before it raises the finding.
+
+**Text quality scoring.** Want to know how your text measures up? `/ru-text:ru-score` evaluates text across 5 dimensions (typography, clarity, grammar, structure, reader precision) and returns a 0.0–10.0 score with specific issues per dimension. The number is printed as it computed, but the top labels have a floor under them: a document that turned out to be a chat transcript, or one written for a search engine, is never labelled "Эталонный" or "Хороший" whatever the arithmetic — and the rubric names the rule that capped the label.
 
 **AI agent quality.** Building AI features in your product? Uncertain how the agent will phrase responses in Russian? ru-text ensures predictable, high-quality Russian text from any Claude-powered agent: consistent typography, no bureaucratic language, reader-first structure.
 
@@ -247,7 +263,9 @@ claude plugins marketplace update claude-community
 claude plugins update ru-text@claude-community
 ```
 
-Restart Claude Code (or run `/reload-plugins`) to apply the change. You can also do this from the `/plugin` menu, "Installed" tab. Note: the community marketplace pins the plugin to a specific version and advances the pin automatically with up to a day's lag — if the version doesn't change right after a release, that's expected; give the marketplace time to re-pin.
+Restart Claude Code (or run `/reload-plugins`) to apply the change. You can also do this from the `/plugin` menu, "Installed" tab.
+
+Worth knowing before you install: the community marketplace pins the plugin to a specific commit rather than tracking releases. Only the marketplace's nightly sweep advances the pin, and one run updates at most thirty plugins against a catalogue of more than two thousand entries. The sweep works alphabetically, so the ru-text pin can trail the current version by months. `claude plugins list` shows the version you actually have. If you need the current one right away, install the skill with `npx skills add talkstream/ru-text` or from source — both give you what is on `main` today.
 
 **Gemini CLI:**
 
@@ -265,17 +283,21 @@ openclaw skills update ru-text
 
 **Manual copy.** If you installed the skill manually (`git clone` + `cp`), repeat your platform's install steps — they overwrite the skill with the latest version.
 
-## Domains
+## The corpus
 
-| Domain | Rules | What it covers |
+Each section is a separate reference file, loaded on demand. Open any of them and count the rules yourself — that is more reliable than a number maintained by hand.
+
+| Section | Reference file | What it covers |
 |---|---|---|
-| Typography | 96 | Quotes (guillemets, lapki), dashes, non-breaking spaces, digit grouping, special characters, abbreviations |
-| Information style | 197 | Stop-words (92 entries), text structure, facts over adjectives, register, T-Zh editorial principles |
-| Editorial: punctuation | 88 | Complex sentences, 56 comma-trap constructions, introductory words, semicolons |
-| Editorial: grammar | 171 | Capitalization, agreement, 50+ pleonasms, list formatting, clean language principles |
-| UX writing | 217 | 58 button labels, error messages, empty states, forms, notifications, dialogs, onboarding |
-| Business writing | 128 | Email structure, messenger etiquette, tone, 41 clean phrase patterns, meeting notes |
-| Anti-patterns | 138 | Wrong-to-right pairs organized by severity: bureaucratic language, passive voice, bloat |
+| Typography | [`typography.md`](skills/ru-text/references/typography.md) | Quotes (guillemets, lapki), dashes, non-breaking spaces, digit grouping, special characters, abbreviations |
+| Information style | [`info-style.md`](skills/ru-text/references/info-style.md) | Stop-words (92 entries), text structure, facts over adjectives, register, T-Zh editorial principles |
+| Editorial: punctuation | [`editorial-punctuation.md`](skills/ru-text/references/editorial-punctuation.md) | Complex sentences, comma traps, introductory words, semicolons |
+| Editorial: grammar | [`editorial-grammar.md`](skills/ru-text/references/editorial-grammar.md) | Capitalization, agreement, pleonasms, verb government, gerund phrases with a mismatched subject, context-dependent homophones, list formatting |
+| UX writing | [`ux-writing.md`](skills/ru-text/references/ux-writing.md) | Button labels, error messages, empty states, forms, notifications, dialogs, onboarding |
+| Business writing | [`business-writing.md`](skills/ru-text/references/business-writing.md) | Email structure, messenger etiquette, tone, clean phrasing, meeting notes |
+| Anti-patterns | [`anti-patterns.md`](skills/ru-text/references/anti-patterns.md) | Wrong-to-right pairs organized by severity: bureaucratic language, passive voice, bloat |
+| Tells of machine-written text | [`addenda.md`](skills/ru-text/references/addenda.md) | Sixteen tells, AD-1 through AD-16, each with carve-outs naming where the device is legitimate |
+| Scoring rubric | [`scoring.md`](skills/ru-text/references/scoring.md) | The five `/ru-score` dimensions, their weights, per-dimension floors and the floor under the label |
 
 ## Commands
 
@@ -292,8 +314,8 @@ If you explicitly request a specific style — casual, academic, SEO, literary, 
 ## Technical quality
 
 Built to Anthropic's Claude Code plugin specs:
-- SKILL.md: 587 words, 90 lines (guideline: under 2,000 words, under 500 lines)
-- 9 reference files load on demand, never at session start
+- SKILL.md: 583 words, 90 lines (guideline: under 2,000 words, under 500 lines)
+- 10 reference files load on demand, never at session start
 - 2,000+ atoms organized into 7 thematic areas with progressive disclosure
 
 ## Intellectual property notice

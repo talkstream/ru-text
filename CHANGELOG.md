@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking changes
+
+The same text can now come back with a different verdict. Nothing was removed and no command
+changed its interface, but four changes move findings and labels, and anyone who pinned a
+score or wrote a test against `/ru-score` output should re-run it before upgrading.
+
+- **A document can be held below «Хороший» by a single rule.** AD-14 (the piece is a chat
+  transcript) and AD-15 (the piece is addressed to a search engine) are charged to the whole
+  document and put a floor under the top two labels. A text that scored 8.4 and was called
+  «Хороший» in 1.10.1 keeps the 8.4 and loses the word.
+- **The AD-7 register carve-out no longer covers an author writing about their own text.**
+  It protects a speaker *inside* the text — dialogue, quotation, a character. Conversational
+  self-description that passed under the old wording is now a finding.
+- **Nine new tells and three new grammar sections mean more findings on unchanged text.**
+  AD-10…AD-16, plus §I verb government, §J gerund phrases with a mismatched subject and §K
+  context-dependent homophones. Text that was clean against 1.10.1 can be clean against 2.0.0
+  and still score lower, because the Structure and Precision dimensions now see more.
+- **The per-domain rule counts are gone from both READMEs.** If you quoted «96 typography
+  rules» from this project, there is no longer a number there to quote — see «Changed» for
+  why, and quote `tools/extract-atoms.sh skills/ru-text | wc -l` instead.
+
 ### Added
 - **Seven tells of machine-written Russian**, measured against the golden set before they
   shipped: AD-10 declared sincerity · AD-11 mandatory tricolon · AD-12 hollowed mechanism ·
@@ -17,16 +38,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   two of those rejections matter most, because even sentence rhythm and vocabulary poverty
   are what detectors mistake for machine text and also what dry regulatory prose and
   non-native Russian look like.
-- **Six golden cases for the new rules, and a second carve-out control** (#29). The set
-  grew from 13 texts to 19. Case 19 is built entirely from constructions the seven rules
-  exempt, and it is the case that would catch them firing on honest writing.
-- **`tools/gates.sh`** — the CI sequence as one command, which is what lets the pre-push
-  hook run it: with no `package.json` and no `pyproject`, this repository looked to that
-  hook like a project with no tests. The selftest now fails when the two copies of that
-  sequence drift.
-- **`tools/atom-map.tsv` gains its first eleven rows.** Nine record the `scoring.md` lines
-  whose scope the new rules extend; one records AD-7.5, whose rationale says in plain words
-  that the meaning was changed on purpose.
+- **A grammar layer the corpus had been missing**, in `editorial-grammar.md`: §I verb
+  government from a **closed list** of the verbs and prepositions that are actually confused,
+  plus mismatched government across coordinated members · §J the gerund phrase whose subject
+  is not the subject of the sentence · §K context-dependent homophones. An **open** case
+  check was written first and then deliberately rejected: over a whole text it flags the
+  ordinary variation of a fluent writer, which makes it a detector of non-native Russian
+  rather than a grammar rule.
+- **Nine golden cases for the new rules, and four carve-out controls** (#29). The set grew
+  from 13 texts to 22. Cases 12, 13, 19 and 22 assert **zero** findings and are built only
+  from constructions the rules exempt — clean prose, the AD-1…AD-9 carve-outs, the 2026
+  carve-outs, and the grammar ones. They are what would catch the rules firing on honest
+  writing, and all four now measure zero.
+- **A floor under the label in `scoring.md`.** A document charged with AD-14 or AD-15 is
+  never labelled «Эталонный» or «Хороший», whatever the arithmetic says. This is not a cap:
+  the number is still printed as it computed, and the report names the rule that held the
+  label down. The arithmetic can be right and the word on top of it still false.
+- **Four checkers and a release builder.** `tools/gates.sh` runs CI's sequence as one
+  command, which is what lets the pre-push hook run it at all: with no `package.json` and no
+  `pyproject`, this repository looked to that hook like a project with no tests, and the
+  selftest now fails when the two copies of that sequence drift. `check-version.sh` holds the
+  version at ten points, the skill description inside its budget, the six Russian trigger
+  phrases inside the head of it, and the size SKILL.md is advertised at. `check-dogfood.sh`
+  holds the numbers this product states about itself against the corpus, with a completeness
+  guard that names any file stating one that nobody registered. `build-release.sh` builds the
+  two release assets from tracked files only, refuses a dirty tree, and proves each asset by
+  unpacking it. The selftest grew from 45 cases to 72.
+- **`tools/atom-map.tsv` gains its first sixteen rows** — the first in the repository's
+  history. Nine record the `scoring.md` lines whose scope the new rules extend; one records
+  AD-7.5, whose rationale says in plain words that the meaning was changed on purpose.
 
 ### Changed
 - **AD-7.5 narrowed.** The register carve-out now protects a speaker *inside* the text —
@@ -38,8 +78,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hand-maintained figure nobody could reproduce; it is replaced in eleven files by «over
   2,000 linguistic atoms» / «более 2 000 лингвистических атомов» — the unit this
   repository's own no-loss gate counts, reproducible with
-  `tools/extract-atoms.sh skills/ru-text | wc -l` (2089 at this point). A floor rather than
+  `tools/extract-atoms.sh skills/ru-text | wc -l` (2219 at this release). A floor rather than
   a figure, so that adding a rule does not oblige anyone to re-stamp eleven files.
+- **The per-domain rule counts are gone from both READMEs.** The «Домены» table quoted seven
+  figures — 96, 197, 88, 171, 217, 128, 138 — which sum to 1035: the retired «~1 044 rules»,
+  split up. v1.10.1 recounted them by hand and corrected four; one release later three of
+  the recounted ones were wrong again (57 comma traps against a stated 56, 59 button labels
+  against a stated 58), and four of the seven domain figures appear nowhere in the corpus at
+  all. The table now names the reference file for each section instead, so a reader who wants
+  a number can open the file and count. The one number that stayed — «Стоп-слова (92 записи)»
+  — is the one `check-dogfood.sh` verifies against §B on every run.
 
 ### Fixed
 - **Both control texts of the golden set asserted zero findings and had never been run.**
@@ -53,6 +101,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   than before the rule against it existed. All three are now rules in their own right, the
   last of them stating the general principle: a new rule must never make its target score
   better.
+- **The «Техническое качество» section advertised a SKILL.md that no longer existed.** It
+  claimed 587 words where the file holds 583, and 9 reference files where `references/`
+  holds 10. A claim offered as evidence has to be measured, so `check-version.sh` now reads
+  the file and compares both READMEs against it. It compares the numbers rather than the
+  sentence: Russian inflects the noun with the numeral — 583 слова, 587 слов, 581 слово —
+  and a literal-string check would go red on a correct line the day the count crossed a
+  declension boundary.
+- **The note about the community marketplace was wrong, and wrong in the direction that
+  costs users the release.** Since #19 both READMEs have said the pin «advances automatically
+  with up to a day's lag». It does not. The pin is moved by a nightly sweep that opens at
+  most thirty pull requests per run against a catalogue of more than two thousand entries,
+  walking it roughly in alphabetical order; ru-text sits about 72% of the way down that list
+  and has not been bumped once in the marketplace's last 300 commits to its manifest. Both
+  READMEs now describe the mechanism, tell the reader that `claude plugins list` shows what
+  they actually have, and point at `npx skills add talkstream/ru-text` or a source install
+  for anyone who needs the current version today.
 
 ## [1.10.1] - 2026-07-25
 

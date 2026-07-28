@@ -535,6 +535,50 @@ io.open(p, 'w', encoding='utf-8').write(s)
 PY
 expect_version "a description over the budget is caught" "over our budget" "$d"
 
+# The size line in «Техническое качество» drifted for three releases: it advertised 587
+# words while SKILL.md held 583, and nothing read the file to notice. The claim is in both
+# READMEs, so corrupting one must be enough.
+d=$(fresh_copy)
+sed 's/SKILL.md: 583 слова/SKILL.md: 587 слов/' "$d/README.md" > "$d/v" && mv "$d/v" "$d/README.md"
+expect_version "a stale SKILL.md word count in the RU README is caught" "states the size of SKILL.md wrongly" "$d"
+
+# The other direction: the file grows and the READMEs, which are correct today, become wrong.
+# Same failure, opposite cause — and the one that will actually happen, since SKILL.md is
+# edited far more often than the sentence describing it.
+d=$(fresh_copy)
+printf '\n- A line added to SKILL.md long after the README stopped being re-read.\n' >> "$d/skills/ru-text/SKILL.md"
+expect_version "SKILL.md growing past its stated size is caught" "states the size of SKILL.md wrongly" "$d"
+
+# Each hand of the guard is weakened on its own; loosening the whole thing is the weakest
+# mutation there is. A review proved both of these escapes were open: dropping README.en.md
+# from the checker's argv, and comparing only the word count, each left the selftest 72/72.
+#
+# The EN README, which neither case above touches. The needle names the file, because
+# «states the size of SKILL.md wrongly» fires for either one and so cannot tell them apart.
+d=$(fresh_copy)
+sed 's/SKILL.md: 583 words, 90 lines/SKILL.md: 587 words, 90 lines/' "$d/README.en.md" > "$d/v" && mv "$d/v" "$d/README.en.md"
+expect_version "a stale SKILL.md line in the EN README is caught" "README.en.md: says" "$d"
+
+# The line count alone. The word-count case leaves lines equal and the growth case moves
+# both, so without this one half of the comparison is asserted by nothing.
+d=$(fresh_copy)
+sed 's/SKILL.md: 583 слова, 90 строк/SKILL.md: 583 слова, 95 строк/' "$d/README.md" > "$d/v" && mv "$d/v" "$d/README.md"
+expect_version "a stale SKILL.md line count is caught" "says 583 words / 95 lines" "$d"
+
+# Two lines stating the size, both wrong. The checker used to read the first and vouch for
+# it; section 1 of check-version.sh has lived by «exactly once» since v1.10.1 and section 4
+# did not inherit it.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PY'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = s.replace('- SKILL.md: 583 слова, 90 строк',
+              '- SKILL.md: 999 слов, 42 строки — всегда в контексте.\n- SKILL.md: 583 слова, 90 строк')
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+expect_version "a second line stating the size is caught, not silently ignored" "want exactly 1" "$d"
+
 printf 'selftest: check-dogfood.sh\n'
 
 expect_dogfood() { # $1=case-name $2=needle $3=dir
