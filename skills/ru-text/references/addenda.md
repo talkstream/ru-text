@@ -8,6 +8,8 @@ additions.
 
 ## Table of Contents
 
+- [Neuroslop index](#neuroslop-index)
+- [Two rules that govern all the others](#two-rules-that-govern-all-the-others)
 - [AD-1. Excessive em dashes](#ad-1-excessive-em-dashes-избыточные-тире)
 - [AD-2. Excessive parcellation](#ad-2-excessive-parcellation-избыточная-парцелляция)
 - [AD-3. Patronizing explanation](#ad-3-patronizing-explanation-разжёвывание-очевидного)
@@ -24,8 +26,6 @@ additions.
 - [AD-14. Chat transcript as the artifact](#ad-14-chat-transcript-as-the-artifact-диалог-с-нейросетью-вместо-текста)
 - [AD-15. Search-engine addressee](#ad-15-search-engine-addressee-адресат--поисковик-а-не-читатель)
 - [AD-16. Additive pseudo-pair](#ad-16-additive-pseudo-pair-не-только-x-но-и-y)
-- [Neuroslop index](#neuroslop-index)
-- [Two rules that govern all the others](#two-rules-that-govern-all-the-others)
 
 ## Neuroslop index
 
@@ -68,7 +68,7 @@ density into the flag condition itself, so an isolated triple or an isolated pai
 finding at all; that is their own text and it stands. The rule here governs what happens
 after a rule has decided to fire, never before.
 
-**Reporting every instance is not a limit on the score card.** `scoring.md` asks for one to
+Nor is the score card a limit on what the check reports: `scoring.md` asks for one to
 three issues per dimension in the scored output; that is the size of a table cell, not the
 size of the check. `/ru-text:ru-check` lists what it found; `/ru-text:ru-score` quotes the
 most telling of them per dimension. Neither number licenses dropping a finding.
@@ -77,8 +77,8 @@ most telling of them per dimension. Neither number licenses dropping a finding.
 piece as a whole. Each absorbs only its own evidence — the repetitions that demonstrate it
 — and absorbs nothing else. Every ordinary finding in that text stands: stop-words,
 unproven claims, passive voice, punctuation, typography. Both statements exist because a
-measured run did the opposite: on 27.07.2026 it replaced ten ordinary findings with three
-document-level ones, and the text came out looking better for it.
+measured run did the opposite: it replaced ten ordinary findings with three document-level
+ones, and the text came out looking better for it.
 
 ---
 
@@ -313,7 +313,7 @@ AD-6.6. Single-count with neighbours. A phantom contrast can also read as AD-4 (
 
 AD-6.7 (scope of strengthening). The trigger set now includes «не просто X, а Y» and «вопрос/суть не в X, а в Y». Two look-alikes are NOT auto-flagged: «не столько X, сколько Y» (a degree-narrowing, cf. AD-6.4) and «важно не X, а Y» without an antecedent (often a real reader priority). A cluster of manufactured pairs bites harder in **С — Structure** (see `scoring.md`); the carve-outs hold — asymmetric self-correction (AD-6.4) and the 0–2 legitimate antecedent-backed body pairs (AD-6.5) are never penalised, and the construction is never banned outright.
 
-AD-6.8 (the quota is not a finding). AD-6.5 sets how many pairs a text may carry; it is not a line to report in place of them. Report each manufactured pair with its own fragment and let the count raise the weight in **С — Structure**. Measured on 27.07.2026: a run reported «два и более на ~150 слов» and dropped one of the pairs it was counting.
+AD-6.8 (the quota is not a finding). AD-6.5 sets how many pairs a text may carry; it is not a line to report in place of them. Report each manufactured pair with its own fragment and let the count raise the weight in **С — Structure**. In a measured run a checker reported «два и более на ~150 слов» and dropped one of the pairs it was counting.
 
 **Examples:**
 
@@ -374,7 +374,7 @@ AD-7.3. Allow informative «без»: «кофе без сахара», «раб
 
 AD-7.4. Allow a genuine epistemic qualifier that carries information: «строго говоря, это аппроксимация», «по сути» when it narrows the claim (cf. AD-6.4). These calibrate meaning; they do not advertise sincerity.
 
-AD-7.5 (register — whose voice it is). The carve-out holds when the construction belongs to a **speaker inside the text**: a line of dialogue, a quotation, an interviewee, a character. «— Скажу честно, я не знаю, — ответил инженер» is speech and is not flagged. It does **not** hold when the author says it about their own text, in any register — an author addressing the reader in a conversational tone is still the author, and «скажу честно» in a lead is the self-promotional flourish AD-7.1 describes, not spoken connective tissue. This is the narrowing of 27.07.2026: the earlier wording exempted the conversational register as such, and the assistant register — a monologue written to sound like speech — fell straight through it, which is how a construction listed among the triggers went unflagged for a year. The same boundary is written once, at AD-10.4, and governs both rules.
+AD-7.5 (register — whose voice it is). The carve-out holds when the construction belongs to a **speaker inside the text**: a line of dialogue, a quotation, an interviewee, a character. «— Скажу честно, я не знаю, — ответил инженер» is speech and is not flagged. It does **not** hold when the author says it about their own text, in any register — an author addressing the reader in a conversational tone is still the author, and «скажу честно» in a lead is the self-promotional flourish AD-7.1 describes, not spoken connective tissue. This is a deliberate narrowing: the earlier wording exempted the conversational register as such, and the assistant register — a monologue written to sound like speech — fell straight through it, which is how a construction listed among the triggers went unflagged for a year. AD-10.4 is the canonical statement of this boundary; it governs both rules, and is stated there in full because a rule read on its own must decide on its own.
 
 AD-7.6. Single-count with neighbours. A «без [vice]» flourish can also be caught by AD-2 (parcellation / filler rhythm in Structure) — the «без воды» tail in «Расскажу последовательно, доступно, без воды» is one fragment, not two faults. Count one violation per fragment: charge it to AD-7 (**Ч — Clarity**) when the defect is the empty self-virtue, to AD-2 (**С — Structure**) when the defect is the staccato or filler rhythm. Never double-charge the same fragment across Ч and С.
 
@@ -554,7 +554,7 @@ AD-10.2. Rewrite by deleting the label and letting the inconvenient fact do the 
 
 AD-10.3. Honesty is demonstrated specifically: an admitted mistake, a number that costs the author something, a stated limit of what is known. Where the demonstration is present the label is redundant; where it is absent the label is false.
 
-AD-10.4 (carve-out — the speaker inside the text). Not flagged when the construction belongs to a speaker inside the text: a line of dialogue, a quotation, an interviewee, a character. «— Скажу честно, я не знаю, — ответил инженер» is speech, not a label. This is the same boundary the narrowed AD-7.5 draws, and it is written here once for both: the carve-out protects a voice inside the text, never the author speaking about their own text.
+AD-10.4 (carve-out — the speaker inside the text). Not flagged when the construction belongs to a speaker inside the text: a line of dialogue, a quotation, an interviewee, a character. «— Скажу честно, я не знаю, — ответил инженер» is speech, not a label. This is the canonical statement of the boundary the narrowed AD-7.5 applies: the carve-out protects a voice inside the text, never the author speaking about their own text.
 
 AD-10.5 (carve-out — informative «честный»). «Честная цена» meaning a price with no hidden fees, «честный вес», «честный тест» meaning one whose method is published — here «честный» names a checkable property of the object, not a virtue of the prose (compare AD-7.3).
 
@@ -609,9 +609,9 @@ AD-11.1. Flag a triple when all three hold: (1) the subject does not have exactl
 
 AD-11.2. Rewrite by keeping what carries information: two members with distinct content, or one member with a number behind it.
 
-AD-11.3 (density raises severity; it never replaces the findings). When a text carries several forced triples, report **each** of them and let the cluster raise the weight in **С — Structure**. A single line saying «два и более на текст» in place of the individual triples is a loss of coverage dressed as a summary: the writer fixing the text needs to know which lines to rewrite.
+AD-11.3 (density raises severity; it never replaces the findings). Report **each** forced triple with its own fragment and let the cluster raise the weight in **С — Structure**. See «Two rules that govern all the others» for why.
 
-AD-11.4 (carve-out — the subject has three). An exhaustive enumeration — «рожковые, капсульные и автоматические» — three real steps, three measurements, three named parties: not flagged. The test is whether a fourth member could exist. If it could not, the three belong to the subject rather than to the form.
+AD-11.4 (carve-out — the subject has three). An exhaustive enumeration — «рожковые, капсульные и автоматические» — three real steps, three measurements, three named parties: not flagged. This is AD-11.1's first test decided the other way: no fourth member could exist, so the three belong to the subject rather than to the form.
 
 AD-11.5 (single-count with AD-7). A triple that praises the author's own product or delivery — «быстро, надёжно, красиво» — is AD-7's self-praise tricolon and is charged there, in **Ч — Clarity**. AD-11 takes the forced triple that is not self-praise, in **С — Structure**. Never both for one fragment.
 
@@ -778,7 +778,7 @@ AD-14.1. Charge the document when both hold: (1) its structure is a sequence of 
 
 AD-14.2. Rewrite by writing the piece: state what you learned, in the order a reader needs it, and keep from the transcript only what a reader must see in order to check you.
 
-AD-14.3 (level — the document charge ADDS, it never replaces). AD-14 is a property of the whole document: attach it once, not to an individual line, and a single quoted exchange inside an ordinary article is not this rule at all. Charging it changes nothing about the rest of the check — every stop-word, every assistant flourish, every punctuation error inside the transcript is reported as it would be otherwise. A document-level finding is one more finding, never a replacement for the list.
+AD-14.3 (level — the document charge ADDS, it never replaces). AD-14 is a property of the whole document: attach it once, not to an individual line, and a single quoted exchange inside an ordinary article is not this rule at all. The charge adds one finding and replaces none: every defect inside the transcript is reported as it would be otherwise (see «Two rules that govern all the others»).
 
 AD-14.4 (carve-out — the transcript as evidence). A log published as evidence for the author's own finding, with the finding stated and the log subordinate to it, is not flagged: a prompt-engineering write-up, a documented experiment, a bug report, a reproduction. The test is one deletion: remove the log — does a claim of the author's remain? If yes, the log was evidence.
 
@@ -834,7 +834,7 @@ AD-14.7 (carve-out — the transcript was what was asked for). Where the user's 
 
 AD-15.1. Charge the document when all three hold: (1) a query phrase is repeated where the language would use a pronoun or a short form; (2) sections are variants of one question rather than steps of an argument; (3) after reading, a reader cannot do the thing the piece is about — no number, no criterion, no named option.
 
-AD-15.2. Rewrite by answering the question once and with specifics: name the options, the prices, the criterion by which one is chosen.
+AD-15.2. Rewrite by answering the question once and with specifics: name the options and the criterion by which one is chosen, with prices where they decide it.
 
 AD-15.3 (carve-out — the user's explicit brief). Where the user asks for SEO copy, the style priority stated in `SKILL.md` applies: their request overrides these defaults. State what the trade-off costs and write what was asked.
 
@@ -842,7 +842,7 @@ AD-15.4 (carve-out — functional repetition). Technical writing repeats an iden
 
 AD-15.5 (carve-out — optimisation that still serves the reader). Keyword research legitimately shapes what a useful text covers. A piece that answers the query with facts is not flagged for having the query in its title.
 
-AD-15.6 (level — the document charge ADDS, it never replaces). A note on what the repetition is and is not: `editorial-grammar.md` §E defines tautology as ADJACENT cognates and pleonasm as words duplicating each other's meaning, so a query phrase repeated across four paragraphs is neither, and the corpus has no separate rule for distant lexical repetition. That repetition is AD-15's own evidence and belongs to AD-15 alone — do not borrow a Г finding the corpus does not carry. Like AD-14, this rule is charged to the document, and the repetitions are the evidence for that one charge rather than one AD-15 finding each. That is the **only** thing it absorbs. Every other defect in the same text is reported exactly as it would be without this rule: the stop-words and unproven claims in **Ч**, any pleonasm or tautology the corpus already catalogues in **Г** (`editorial-grammar.md` §E), the passive constructions, the missing полезное действие, the headings that are not theses. Measured on 27.07.2026, a run that read the earlier wording of this clause replaced ten ordinary findings with three document-level ones and reported the text as improved. A summary that costs the writer the list of lines to fix is not a summary.
+AD-15.6 (level — the document charge ADDS, it never replaces). A note on what the repetition is and is not: `editorial-grammar.md` §E defines tautology as ADJACENT cognates and pleonasm as words duplicating each other's meaning, so a query phrase repeated across four paragraphs is neither, and the corpus has no separate rule for distant lexical repetition. That repetition is AD-15's own evidence and belongs to AD-15 alone — do not borrow a Г finding the corpus does not carry. Like AD-14, this rule is charged to the document, and the repetitions are the evidence for that one charge rather than one AD-15 finding each. That is the **only** thing it absorbs. Every other defect in the same text is reported exactly as it would be without this rule: the stop-words and unproven claims in **Ч**, any pleonasm or tautology the corpus already catalogues in **Г** (`editorial-grammar.md` §E), the passive constructions, the missing полезное действие, the headings that are not theses. A summary that costs the writer the list of lines to fix is not a summary (see «Two rules that govern all the others»).
 
 **Examples:**
 
@@ -890,7 +890,7 @@ AD-16.1. Flag a pair when all three hold: (1) **no increment** — Y states noth
 
 AD-16.2. Rewrite as the single claim that survives, and give it something to stand on: «не только удобный, но и комфортный» → name what the interface does, in one step, with a number if there is one.
 
-AD-16.3 (carve-out — a real pair). Both poles carry distinct facts and deleting either loses one: «не только в Москве, но и в Новосибирске: 12 мс и 47 мс».
+AD-16.3 (carve-out — a real pair). «Не только в Москве, но и в Новосибирске: 12 мс и 47 мс» — AD-16.1's increment test decided the other way: each pole carries its own number, and deleting either loses it.
 
 AD-16.4 (carve-out — scope). «Не только для физлиц, но и для ИП» defines who is covered. Scope-widening is operative content, frequently legal, and is never flagged.
 
@@ -898,9 +898,9 @@ AD-16.5 (single-count with AD-6). A fragment is charged once. AD-6 takes a symme
 
 AD-16.6 (single-count with info-style §B — the SAME fragment only). Where both poles are §B unproven adjectives, count that fragment once: §B for the missing evidence, AD-16 for the empty pair. An unproven adjective outside the pair stays its own finding; single-count is per fragment, never per sentence.
 
-AD-16.7 (density raises severity; it never replaces the findings). Report **each** pair and let the count raise the weight. Replacing four pairs with one line about density loses exactly what the writer needs in order to fix them.
+AD-16.7 (density raises severity; it never replaces the findings). Report **each** pair with its own fragment and let the count raise the weight. See «Two rules that govern all the others».
 
-AD-16.8 (the pair and the synonymy are two defects, not one). «Не только удобный, но и комфортный» carries both: the poles are synonyms, which is a pleonasm and belongs where pleonasms have always belonged — `editorial-grammar.md` §E, in **Г — Grammar** — and the frame adds nothing, which is AD-16, in **С — Structure**. They are separable, and that is the test: «Сервис удобный и комфортный» is the pleonasm with no pair; «не только быстрее, но и дешевле» with two real numbers behind it is neither. Where both hold, report both. Measured on 27.07.2026: a run that folded the pleonasm into AD-16 scored the same text **1.1 higher than before the rule existed** — Grammar recovered 4.5 points because its finding had moved to a Low signal in another dimension. A new rule against a text must never make that text score better.
+AD-16.8 (the pair and the synonymy are two defects, not one). «Не только удобный, но и комфортный» carries both: the poles are synonyms, which is a pleonasm and belongs where pleonasms have always belonged — `editorial-grammar.md` §E, in **Г — Grammar** — and the frame adds nothing, which is AD-16, in **С — Structure**. They are separable, and that is the test: «Сервис удобный и комфортный» is the pleonasm with no pair; «не только быстрее, но и дешевле» with two real numbers behind it is neither. Where both hold, report both. In a measured run, folding the pleonasm into AD-16 scored the same text **higher than before the rule against it existed** — Grammar recovered its points because the finding had moved to a Low signal in another dimension. A new rule against a text must never make that text score better.
 
 **Examples:**
 
