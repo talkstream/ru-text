@@ -78,17 +78,25 @@ ru-text даёт вашему ИИ-ассистенту глубокое пон�
 
 ### Claude Code (Desktop)
 
-Команды установки те же, что и для CLI: откройте поле `/plugin` в приложении Claude Desktop и выполните две команды выше. Одна установка работает сразу в CLI, Desktop, VS Code, JetBrains и Web.
+В приложении установите плагин из интерфейса, без терминала: кнопка **+** рядом с полем ввода → **Plugins** → **Add plugin**. Откроется браузер плагинов с подключёнными маркетплейсами; там же добавьте community-маркетплейс. Команда `/plugin` работает только в терминальном CLI.
+
+Одна установка обслуживает CLI, приложение Claude Desktop (локальные и SSH-сессии), VS Code и JetBrains. Облачные сессии на claude.ai/code — исключение: пользовательская установка туда не переносится. Объявите плагин в поле `enabledPlugins` файла `.claude/settings.json` в репозитории — тогда он ставится при старте сессии. В WSL-сессиях плагины недоступны.
 
 ### Codex CLI
 
-В сессии Codex используйте интерактивный браузер плагинов:
+Сначала подключите маркетплейс, в котором лежит ru-text:
+
+```bash
+codex plugin marketplace add hashgraph-online/awesome-codex-plugins
+```
+
+Затем в сессии Codex откройте браузер плагинов, найдите «ru-text» и установите:
 
 ```
 /plugins
 ```
 
-Найдите «ru-text» и установите. Или используйте универсальный skills CLI (см. ниже).
+После установки начните новую сессию — навыки из плагина подхватываются при старте. Или используйте универсальный skills CLI (см. ниже).
 
 ### Notion
 
@@ -106,13 +114,7 @@ ru-text даёт вашему ИИ-ассистенту глубокое пон�
 
 ### Cursor
 
-Используйте команду плагинов в чате Cursor Agent:
-
-```
-/add-plugin
-```
-
-Найдите «ru-text» и установите. Если плагин не найден в маркетплейсе, скопируйте вручную:
+Скопируйте навык вручную — в маркетплейсе Cursor плагин пока не опубликован:
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
@@ -155,23 +157,21 @@ Antigravity читает формат SKILL.md нативно. Скопируй�
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text ~/.gemini/antigravity/skills/ru-text
+cp -r ru-text/skills/ru-text ~/.gemini/config/skills/ru-text
 ```
 
-Для конкретного проекта скопируйте навык в `<проект>/.agent/skills/ru-text`. Antigravity молод, и путь к навыкам зависит от версии — актуальный смотрите в [официальном codelab по навыкам Antigravity](https://codelabs.developers.google.com/getting-started-with-antigravity-skills).
+Этот путь читают и Antigravity, и Antigravity IDE, и Antigravity CLI. Для конкретного проекта скопируйте навык в `<проект>/.agents/skills/ru-text` — каталог во множественном числе, это текущее умолчание; прежний `.agent/skills` пока принимается для совместимости. Antigravity молод, и пути зависят от продукта и версии — актуальные смотрите в [документации по навыкам Antigravity](https://antigravity.google/docs/skills).
 
 ### Windsurf
 
-```bash
-npx skills add talkstream/ru-text
-```
-
-Или скопируйте вручную:
+Скопируйте навык вручную:
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text .windsurf/skills/ru-text
 ```
+
+`npx skills add talkstream/ru-text -y` тоже умеет обслуживать Windsurf, но пишет в `.windsurf/skills`, только если каталог `.windsurf/` в проекте уже есть — сам он его не создаёт.
 
 Вызов через `@ru-text` в чате Cascade. Также доступен через панель Cascade > Customizations > Skills.
 
@@ -189,6 +189,8 @@ npx skills add talkstream/ru-text
 git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text .continue/skills/ru-text
 ```
+
+`npx skills add` обслуживает Continue, только если каталог `.continue/` уже есть в проекте или `~/.continue` есть на машине.
 
 Работает в расширениях для VS Code и JetBrains.
 
@@ -211,23 +213,21 @@ cp -r ru-text/skills/ru-text .cline/skills/ru-text
 
 ### JetBrains (Junie)
 
-```bash
-npx skills add talkstream/ru-text
-```
-
-Или скопируйте вручную:
+Скопируйте навык вручную:
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text .junie/skills/ru-text
 ```
 
+`npx skills add talkstream/ru-text -y` пишет в `.junie/skills`, только если каталог `.junie/` в проекте уже есть.
+
 Работает в IntelliJ IDEA, PyCharm, WebStorm, GoLand, PhpStorm, RubyMine, RustRover, Rider, CLion и Android Studio.
 
 ### OpenClaw
 
 ```bash
-openclaw skills install ru-text
+openclaw skills install @talkstream/ru-text
 ```
 
 Доступен на [ClawHub](https://clawhub.ai/talkstream/ru-text). Работает с любым LLM-провайдером и каналом, который поддерживает OpenClaw.
@@ -235,8 +235,14 @@ openclaw skills install ru-text
 ### Любая платформа через skills CLI
 
 ```bash
-npx skills add talkstream/ru-text
+npx skills add talkstream/ru-text -y
 ```
+
+Три вещи о команде `npx skills add`:
+
+- **Ставит три навыка** — `ru-text`, `ru-check` и `ru-score`. В Claude Code последние два — слэш-команды, на остальных площадках они приходят отдельными навыками. Три записи в списке — это норма, а не ошибка.
+- **Без флага `-y`** в обычном терминале команда открывает интерактивный выбор навыков и агентов и ждёт ответа: скопированная в скрипт, она не поставит ничего.
+- **По умолчанию установка проектная.** Для установки на уровне пользователя добавьте `-g`.
 
 ### Из исходников
 
@@ -252,11 +258,13 @@ git clone https://github.com/talkstream/ru-text.git
 
 Свежая версия — **v1.10.1** (что нового — в [CHANGELOG](CHANGELOG.md)). Узнать свою версию в Claude Code: `claude plugins list`.
 
-**Основной способ** — для платформ на основе навыков (GitHub Copilot, Windsurf, Continue.dev, Cline, JetBrains Junie, Google Antigravity, ручная установка в Cursor). Повторите установку — команда подтянет последнюю версию из репозитория и перезапишет навык:
+**Основной способ** — для платформ на основе навыков (GitHub Copilot, Cline, Cursor, Google Antigravity; для Windsurf, Junie и Continue.dev смотрите оговорки в их разделах). Повторите установку — команда подтянет последнюю версию из репозитория и перезапишет навыки, включая файлы, которые вы правили руками:
 
 ```bash
-npx skills add talkstream/ru-text
+npx skills add talkstream/ru-text -y
 ```
+
+Обновление идёт в ту же область, что и установка. Если вы ставили навык на уровень пользователя (`-g`), обновляйте тоже с `-g` — иначе проектный запуск отчитается об успехе, а пользовательская копия останется старой.
 
 **Claude Code (CLI и Desktop).** Сначала обновите кэш маркетплейса, затем плагин:
 
@@ -278,7 +286,7 @@ gemini extensions update ru-text
 **OpenClaw:**
 
 ```bash
-openclaw skills update ru-text
+openclaw skills update @talkstream/ru-text
 ```
 
 **Codex CLI.** Откройте `/plugins`, найдите ru-text и обновите.

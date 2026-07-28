@@ -76,17 +76,25 @@ Listed in the [Claude Code community marketplace](https://github.com/anthropics/
 
 ### Claude Code (Desktop)
 
-Same install commands as the CLI — open the in-app `/plugin` prompt in the Claude Desktop app and run the two commands above. A single install is shared across CLI, Desktop, VS Code, JetBrains, and Web.
+In the app, install the plugin from the interface, with no terminal: the **+** button next to the prompt box → **Plugins** → **Add plugin**. That opens the plugin browser over your configured marketplaces; add the community marketplace there too. The `/plugin` command works only in the terminal CLI.
+
+A single install is shared across the CLI, the Claude Desktop app (local and SSH sessions), VS Code, and JetBrains. Cloud sessions at claude.ai/code are the exception: a user-scope install does not carry over. Declare the plugin under `enabledPlugins` in the repository's `.claude/settings.json`, and it is installed at session start. Plugins are not available in WSL sessions.
 
 ### Codex CLI
 
-Inside a Codex session, use the interactive plugin browser:
+First add the marketplace that carries ru-text:
+
+```bash
+codex plugin marketplace add hashgraph-online/awesome-codex-plugins
+```
+
+Then open the plugin browser in a Codex session, find “ru-text” and install it:
 
 ```
 /plugins
 ```
 
-Search for “ru-text” and install. Alternatively, use the universal skills CLI (see below).
+Start a new session afterwards — a plugin's bundled skills are loaded at session start. Alternatively, use the universal skills CLI (see below).
 
 ### Notion
 
@@ -104,13 +112,7 @@ Two integration paths — see [notion/README.md](notion/README.md) for details:
 
 ### Cursor
 
-Use the plugin command in Cursor Agent chat:
-
-```
-/add-plugin
-```
-
-Search for “ru-text” and install. If not listed in the marketplace, copy manually:
+Copy the skill manually — ru-text is not published in the Cursor marketplace yet:
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
@@ -153,23 +155,21 @@ Antigravity reads the SKILL.md format natively. Copy the skill into the global s
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text ~/.gemini/antigravity/skills/ru-text
+cp -r ru-text/skills/ru-text ~/.gemini/config/skills/ru-text
 ```
 
-For a single project, copy the skill into `<project>/.agent/skills/ru-text` instead. Antigravity is young and the skills path varies by version — check the [official Antigravity Skills codelab](https://codelabs.developers.google.com/getting-started-with-antigravity-skills) for the current location.
+That path is read by Antigravity, Antigravity IDE and Antigravity CLI alike. For a single project, copy the skill into `<project>/.agents/skills/ru-text` — plural, which is the current default; the older `.agent/skills` is still accepted for backward compatibility. Antigravity is young and the paths vary by product and version — check the [Antigravity skills documentation](https://antigravity.google/docs/skills) for the current location.
 
 ### Windsurf
 
-```bash
-npx skills add talkstream/ru-text
-```
-
-Or copy manually to the Windsurf skills directory:
+Copy the skill manually:
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text .windsurf/skills/ru-text
 ```
+
+`npx skills add talkstream/ru-text -y` can serve Windsurf too, but it writes `.windsurf/skills` only when a `.windsurf/` directory already exists in the project — it never creates one.
 
 Invoke with `@ru-text` in Cascade chat. Also available via Cascade panel > Customizations > Skills.
 
@@ -187,6 +187,8 @@ Or copy manually:
 git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text .continue/skills/ru-text
 ```
+
+`npx skills add` serves Continue only when a `.continue/` directory already exists in the project, or `~/.continue` exists on the machine.
 
 Works in both VS Code and JetBrains extensions.
 
@@ -209,23 +211,21 @@ Enable skills in Cline settings: Features > Enable Skills.
 
 ### JetBrains (Junie)
 
-```bash
-npx skills add talkstream/ru-text
-```
-
-Or copy manually:
+Copy the skill manually:
 
 ```bash
 git clone https://github.com/talkstream/ru-text.git
 cp -r ru-text/skills/ru-text .junie/skills/ru-text
 ```
 
+`npx skills add talkstream/ru-text -y` writes `.junie/skills` only when a `.junie/` directory already exists in the project.
+
 Works in IntelliJ IDEA, PyCharm, WebStorm, GoLand, PhpStorm, RubyMine, RustRover, Rider, CLion, and Android Studio.
 
 ### OpenClaw
 
 ```bash
-openclaw skills install ru-text
+openclaw skills install @talkstream/ru-text
 ```
 
 Available on [ClawHub](https://clawhub.ai/talkstream/ru-text). Works with any LLM provider and messaging channel OpenClaw supports.
@@ -233,8 +233,14 @@ Available on [ClawHub](https://clawhub.ai/talkstream/ru-text). Works with any LL
 ### Any platform via skills CLI
 
 ```bash
-npx skills add talkstream/ru-text
+npx skills add talkstream/ru-text -y
 ```
+
+Three things about `npx skills add`:
+
+- **It installs three skills** — `ru-text`, `ru-check` and `ru-score`. In Claude Code the latter two are slash commands; on the other platforms they arrive as standalone skills. Three entries in the list is expected, not a fault.
+- **Without `-y`**, in an ordinary terminal the command opens an interactive picker for skills and agents and waits for an answer — pasted into a script, it installs nothing.
+- **The install is project-scoped by default.** Add `-g` for a user-level install.
 
 ### From source
 
@@ -250,11 +256,13 @@ Start writing Russian text — the plugin takes over automatically. If ru-text m
 
 Latest version — **v1.10.1** (see the [CHANGELOG](CHANGELOG.md)). Check your installed version in Claude Code with `claude plugins list`.
 
-**Primary method** — for skill-based platforms (GitHub Copilot, Windsurf, Continue.dev, Cline, JetBrains Junie, Google Antigravity, manual Cursor install). Re-run the install — the command pulls the latest version from the repository and overwrites the skill:
+**Primary method** — for skill-based platforms (GitHub Copilot, Cline, Cursor, Google Antigravity; for Windsurf, Junie and Continue.dev see the caveats in their sections). Re-run the install — the command pulls the latest version from the repository and overwrites the skills, including any file you edited by hand:
 
 ```bash
-npx skills add talkstream/ru-text
+npx skills add talkstream/ru-text -y
 ```
+
+The update goes to the same scope as the install. If you installed at user level (`-g`), update with `-g` too — otherwise a project-scoped run reports success while the user-level copy stays old.
 
 **Claude Code (CLI and Desktop).** Refresh the marketplace cache first, then update the plugin:
 
@@ -276,7 +284,7 @@ gemini extensions update ru-text
 **OpenClaw:**
 
 ```bash
-openclaw skills update ru-text
+openclaw skills update @talkstream/ru-text
 ```
 
 **Codex CLI.** Open `/plugins`, find ru-text, and update.

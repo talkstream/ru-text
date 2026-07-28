@@ -117,6 +117,49 @@ score or wrote a test against `/ru-score` output should re-run it before upgradi
   READMEs now describe the mechanism, tell the reader that `claude plugins list` shows what
   they actually have, and point at `npx skills add talkstream/ru-text` or a source install
   for anyone who needs the current version today.
+- **Every install channel the README advertises was run against its vendor's current
+  documentation, and eight of them had drifted.** The instructions were written once and
+  never re-checked; the platforms moved.
+  - **Claude Desktop does not take the CLI's commands.** `/plugin` is terminal-only; in the
+    app the path is the **+** button → **Plugins** → **Add plugin**. And «one install works
+    in CLI, Desktop, VS Code, JetBrains and Web» was false on Web: a user-scope install does
+    not reach a cloud session, which needs `enabledPlugins` in the repository's
+    `.claude/settings.json`. WSL sessions have no plugins at all.
+  - **Codex needs a marketplace added before `/plugins` shows anything** — `codex plugin
+    marketplace add <owner>/<repo>` — and a new session before the bundled skills load.
+    Neither step was in the README.
+  - **ru-text is not in the Cursor marketplace.** The README told users to search for it
+    there; the catalogue lists 216 plugins and none of them is ru-text. The manual copy,
+    previously the fallback, is now the instruction.
+  - **Both Antigravity paths had moved.** Global is `~/.gemini/config/skills/`, which all
+    three Antigravity products read; per-project is `.agents/skills/` — plural — with the
+    old singular still accepted for compatibility.
+  - **OpenClaw refs are owner-qualified**: `@talkstream/ru-text`, as ClawHub's own page
+    instructs. Bare slugs are tolerated only for already-installed or unambiguous skills.
+  - **`npx skills add` does less than the README implied.** It installs three skills, not
+    one. Without `-y` it opens an interactive picker and, pasted into a script, installs
+    nothing. It writes `.windsurf/skills`, `.junie/skills` and `.continue/skills` only when
+    those directories already exist, so on a fresh project it leaves those three platforms
+    unserved — their sections now lead with the manual copy. And it is project-scoped: a
+    user-level install (`-g`) has to be updated with `-g`, or the update reports success
+    while the old copy stays.
+- **`.codex-plugin/plugin.json` put `logo` at the top level**, where the Codex manifest
+  schema does not define it; it belongs inside `interface`. Moved.
+- **The Notion template inventory was missing a section and quoting a stale word count.**
+  The template grew an «AI-Text Tells (Neuroslop)» section in June that the «What's included»
+  list never mentioned, and the «~1,450 words» figure had drifted to 1,865. The list now
+  names the section, and the word count is gone rather than re-stamped — same reasoning as
+  the domain table.
+- **The convention file's own claim about the corpus floor was wrong in the way it warns
+  against.** It said the floor is stated «in eleven files». Nine files state it, and
+  `.codex-plugin/plugin.json` on `main` was still advertising «~1,044 rules» while the
+  sentence claimed the sweep was complete. The count is replaced by the `grep` that
+  reproduces it.
+- **The ClawHub publish note was false in the direction that ships the wrong version.** It
+  said `--version` is required and that omitting it fails. On clawhub 0.23.1 the guard fires
+  only when the flag is present and malformed; omitted, the flag defaults to the registry's
+  next patch. A dry run without it printed «Would publish ru-text@1.10.2» and exited 0 — so
+  publishing 2.0.0 without `--version 2.0.0` would have silently shipped a patch release.
 
 ## [1.10.1] - 2026-07-25
 
