@@ -96,4 +96,10 @@ tools/extract-atoms.sh skills/ru-text > "$NOW" || fail "extract-atoms"
 # copies of this sequence that the parity case cannot see.
 tools/diff-atoms.sh "$BASELINE" "$NOW" || fail "no-loss gate"
 
+# ── 7. The release assets can still be built ────────────────────────────────────────
+# Writes nothing. Catches the failure with no symptom: a renamed or dropped reference
+# file that leaves the skill installing, activating, and answering from what it still has.
+tools/build-release.sh --check >/dev/null || fail "build-release"
+echo "gates: ok    both release assets build and round-trip"
+
 echo "gates: PASS"

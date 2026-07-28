@@ -584,6 +584,50 @@ io.open(p, 'w', encoding='utf-8').write(s)
 PY
 expect_dogfood "the corpus growing past its claims is caught" "and these do not" "$d"
 
+printf 'selftest: build-release.sh\n'
+
+expect_build() { # $1=case-name $2=needle $3=dir [$4=mode: check|build]
+  # NOT `${4:---check}`: that substitutes the default for an EMPTY fourth argument too, so
+  # the «dirty tree» case silently ran in --check mode and passed. A named mode cannot do
+  # that, and the mistake is invisible in the output when it happens.
+  name=$1; needle=$2; d=$3
+  if [ "${4:-check}" = "build" ]; then flag=""; else flag="--check"; fi
+  out=$(cd "$d" && ./tools/build-release.sh $flag 2>&1) && status=0 || status=$?
+  if [ "$status" -eq 0 ]; then
+    bad "$name — build-release PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | tail -3 | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if (cd "$d" && ./tools/build-release.sh --check >/dev/null 2>&1); then
+  ok "an untouched copy builds both assets and round-trips"
+else
+  bad "an untouched copy FAILS build-release — the cases below mean nothing"
+  (cd "$d" && ./tools/build-release.sh --check 2>&1) | tail -4 | sed 's/^/        /'
+fi
+
+# A reference file dropped from the index. This is the failure with no symptom: the skill
+# still installs, still activates, and answers from whatever corpus it has left.
+d=$(fresh_copy)
+( cd "$d" && git rm -q --cached skills/ru-text/references/ux-writing.md ) >/dev/null 2>&1
+expect_build "a reference file missing from the asset is caught" "in the asset" "$d"
+
+# The build must not run at all without the skill it is named after.
+d=$(fresh_copy)
+( cd "$d" && git rm -q --cached skills/ru-text/SKILL.md ) >/dev/null 2>&1
+expect_build "a staged tree with no ru-text/SKILL.md is caught" "no ru-text/SKILL.md" "$d"
+
+# Without --check the tree must be clean: an artefact built from a dirty tree matches no
+# commit, and the version inside it is then a claim about code that does not exist.
+d=$(fresh_copy)
+printf 'scratch\n' > "$d/skills/ru-text/references/scratch.md"
+expect_build "a dirty tree refuses a real build" "working tree is dirty" "$d" build
+
 printf 'selftest: gates.sh\n'
 
 # gates.sh calls this file, so a case that ran it unmodified would re-enter the selftest

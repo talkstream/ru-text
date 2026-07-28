@@ -7,3 +7,4 @@ scratchpad/
 .playwright-mcp/
 ru-text-landing-*.png
 warn-callout.png
+dist/

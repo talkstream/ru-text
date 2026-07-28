@@ -76,3 +76,8 @@ jobs:
           PIN
           tools/extract-atoms.sh skills/ru-text > /tmp/atoms-now.tsv
           tools/diff-atoms.sh tools/baseline/atoms-v1.10.1.tsv /tmp/atoms-now.tsv
+
+      - name: The release assets can still be built
+        # Writes nothing. A renamed reference file leaves the skill installing and
+        # answering from whatever it still has — a failure with no symptom.
+        run: tools/build-release.sh --check
