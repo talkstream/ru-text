@@ -36,6 +36,7 @@
 # ── what is checked ──────────────────────────────────────────────────────────────────
 #
 # R16/R44  the space before an em dash is non-breaking, so the dash cannot open a line
+# R32/R53  digit groups take a non-breaking space, never a comma, a period or a plain space
 # R30      a single-letter preposition does not end a line
 # R1/R2    guillemets, not straight quotes, around Russian text
 # R-ellipsis a single … character, not three periods
@@ -116,6 +117,17 @@ for path in sys.argv[1:]:
             out.append('%s\t%d\tR1/R2\tstraight quote around Russian text\t%s'
                        % (path, n, s[max(0, m.start() - 30):m.start() + 30].strip()))
 
+        # R32/R53 — digit groups are separated by a non-breaking space, thin or ordinary, and
+        # never by a comma or a period. An ordinary space here is the defect that walked
+        # straight through the first version of this checker: «более 2 000 атомов» read as
+        # correct because nothing looked at digit grouping at all. R35 permits a bare
+        # four-digit number, so a group is only sought where one already exists.
+        for m in re.finditer(r'(?<![\d.,])(\d{1,3})([ .,])(\d{3})(?![\d])', s):
+            sep = m.group(2)
+            what = 'a comma' if sep == ',' else ('a period' if sep == '.' else 'an ordinary space')
+            out.append('%s\t%d\tR32/R53\t%s between digit groups, not a non-breaking space\t%s'
+                       % (path, n, what, s[max(0, m.start() - 30):m.start() + 30].strip()))
+
         for m in re.finditer(r'\.\.\.', s):
             out.append('%s\t%d\tellipsis\tthree periods instead of …\t%s'
                        % (path, n, s[max(0, m.start() - 30):m.start() + 20].strip()))
@@ -132,7 +144,7 @@ PY
 
 if [ -z "$report" ]; then
   n=$(printf '%s\n' "$FILES" | grep -c .)
-  ok "$n file(s) of Russian prose obey R16/R44, R30, R1/R2 and the ellipsis rule"
+  ok "$n file(s) of Russian prose obey R16/R44, R30, R32/R53, R1/R2 and the ellipsis rule"
 else
   count=$(printf '%s\n' "$report" | grep -c .)
   bad "$count typographic defect(s) in the project's own prose:"

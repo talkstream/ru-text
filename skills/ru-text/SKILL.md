@@ -21,6 +21,8 @@ Credits and recommended reading: `references/sources.md`
 
 **Reviewing vs. rewriting**: when *checking* or proofreading existing text or a file, return the corrected version plus a list of changes — do not silently overwrite the source file. Rewrite a file in place only when the user explicitly asks.
 
+**Someone else's words stay theirs**: quoted material, code blocks and third-party text inside the user's document are reproduced as-is. Report an issue you see in them if it matters; never rewrite them.
+
 ## Always-On: Typography
 
 Apply these rules to ALL Russian text output without exception.

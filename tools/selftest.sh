@@ -499,10 +499,13 @@ d=$(fresh_copy)
 sed 's/"version": "[0-9.]*"/"version": "9.9.9"/' "$d/gemini-extension.json" > "$d/v" && mv "$d/v" "$d/gemini-extension.json"
 expect_version "one manifest out of step is caught" "version points disagree" "$d"
 
-# The prose copy is the half that actually went stale last time.
+# The prose copy is the half that actually went stale last time. Both READMEs dropped their
+# prose version in favour of a badge that renders live from the releases API, so the one
+# prose point left is the convention file — which is the one that went stale SECOND, after
+# the READMEs were fixed.
 d=$(fresh_copy)
-sed 's/Свежая версия/Прошлая версия/' "$d/README.md" > "$d/v" && mv "$d/v" "$d/README.md"
-expect_version "a version line missing from the RU README is caught" "missing or duplicated" "$d"
+sed 's/\*\*Version:\*\*/**Versionn:**/' "$d/.claude/CLAUDE.md" > "$d/v" && mv "$d/v" "$d/.claude/CLAUDE.md"
+expect_version "a version line missing from the convention file is caught" "missing or duplicated" "$d"
 
 # A trigger phrase dropped from the description. This is the failure the file exists for:
 # on a host with no instruction file the description IS the trigger, so losing a phrase
@@ -535,49 +538,51 @@ io.open(p, 'w', encoding='utf-8').write(s)
 PY
 expect_version "a description over the budget is caught" "over our budget" "$d"
 
-# The size line in «Техническое качество» drifted for three releases: it advertised 587
-# words while SKILL.md held 583, and nothing read the file to notice. The claim is in both
-# READMEs, so corrupting one must be enough.
-d=$(fresh_copy)
-sed 's/SKILL.md: 583 слова/SKILL.md: 587 слов/' "$d/README.md" > "$d/v" && mv "$d/v" "$d/README.md"
-expect_version "a stale SKILL.md word count in the RU README is caught" "states the size of SKILL.md wrongly" "$d"
+# Neither README states the size of SKILL.md any more: the rewrite dropped it, because a
+# manifest's word count answers «did the author follow the spec», which is not a question a
+# reader has. §4 of check-version stays and is self-activating — if a size claim ever returns,
+# it is checked — so these cases BUILD the claim in the sandbox before corrupting it. Testing
+# a checker against a claim the product no longer makes would be testing nothing at all.
+add_size_claim() { # $1=dir  $2=words  $3=lines
+  python3 - "$1/README.md" "$2" "$3" <<'PY'
+import io, sys
+p, w, l = sys.argv[1], sys.argv[2], sys.argv[3]
+s = io.open(p, encoding='utf-8').read()
+anchor = '## Обновление'
+assert s.count(anchor) == 1, 'anchor moved; fix the fixture'
+s = s.replace(anchor, '## Технические детали\n\n- SKILL.md: %s слов, %s строк\n\n' % (w, l) + anchor, 1)
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+}
 
-# The other direction: the file grows and the READMEs, which are correct today, become wrong.
-# Same failure, opposite cause — and the one that will actually happen, since SKILL.md is
-# edited far more often than the sentence describing it.
+skill_words() { python3 -c "import io,re,sys;print(len(re.findall(r'[^ \t\n\r\f\v]+', io.open(sys.argv[1], encoding='utf-8').read())))" "$1/skills/ru-text/SKILL.md"; }
+skill_lines() { grep -c '' "$1/skills/ru-text/SKILL.md"; }
+
+# Word count wrong, line count right.
 d=$(fresh_copy)
+add_size_claim "$d" 999 "$(skill_lines "$d")"
+expect_version "a stale SKILL.md word count is caught" "states the size of SKILL.md wrongly" "$d"
+
+# Line count wrong, word count right — pinned separately, because a comparison that looked
+# only at words passed this and left the selftest green.
+d=$(fresh_copy)
+add_size_claim "$d" "$(skill_words "$d")" 42
+expect_version "a stale SKILL.md line count is caught" "states the size of SKILL.md wrongly" "$d"
+
+# Two lines stating the size. §1 of this file has lived by «exactly once» since v1.10.1 and
+# §4 did not inherit it; it now allows none or one and refuses two.
+d=$(fresh_copy)
+add_size_claim "$d" 999 42
+add_size_claim "$d" 888 41
+expect_version "a second line stating the size is caught, not silently ignored" "want at most 1" "$d"
+
+# The file grows and a claim that was correct when written stops being true. This is the
+# failure that will actually happen: SKILL.md is edited far more often than the sentence.
+d=$(fresh_copy)
+add_size_claim "$d" "$(skill_words "$d")" "$(skill_lines "$d")"
 printf '\n- A line added to SKILL.md long after the README stopped being re-read.\n' >> "$d/skills/ru-text/SKILL.md"
 expect_version "SKILL.md growing past its stated size is caught" "states the size of SKILL.md wrongly" "$d"
 
-# Each hand of the guard is weakened on its own; loosening the whole thing is the weakest
-# mutation there is. A review proved both of these escapes were open: dropping README.en.md
-# from the checker's argv, and comparing only the word count, each left the selftest 72/72.
-#
-# The EN README, which neither case above touches. The needle names the file, because
-# «states the size of SKILL.md wrongly» fires for either one and so cannot tell them apart.
-d=$(fresh_copy)
-sed 's/SKILL.md: 583 words, 90 lines/SKILL.md: 587 words, 90 lines/' "$d/README.en.md" > "$d/v" && mv "$d/v" "$d/README.en.md"
-expect_version "a stale SKILL.md line in the EN README is caught" "README.en.md: says" "$d"
-
-# The line count alone. The word-count case leaves lines equal and the growth case moves
-# both, so without this one half of the comparison is asserted by nothing.
-d=$(fresh_copy)
-sed 's/SKILL.md: 583 слова, 90 строк/SKILL.md: 583 слова, 95 строк/' "$d/README.md" > "$d/v" && mv "$d/v" "$d/README.md"
-expect_version "a stale SKILL.md line count is caught" "says 583 words / 95 lines" "$d"
-
-# Two lines stating the size, both wrong. The checker used to read the first and vouch for
-# it; section 1 of check-version.sh has lived by «exactly once» since v1.10.1 and section 4
-# did not inherit it.
-d=$(fresh_copy)
-python3 - "$d/README.md" <<'PY'
-import io, sys
-p = sys.argv[1]
-s = io.open(p, encoding='utf-8').read()
-s = s.replace('- SKILL.md: 583 слова, 90 строк',
-              '- SKILL.md: 999 слов, 42 строки — всегда в контексте.\n- SKILL.md: 583 слова, 90 строк')
-io.open(p, 'w', encoding='utf-8').write(s)
-PY
-expect_version "a second line stating the size is caught, not silently ignored" "want exactly 1" "$d"
 
 printf 'selftest: check-dogfood.sh\n'
 
@@ -911,6 +916,18 @@ s = io.open(p, encoding='utf-8').read()
 io.open(p, 'w', encoding='utf-8').write(s.replace('\u00a0\u2014', ' \u2014', 1))
 PYEOF
 expect_typo "an ordinary space before an em dash is caught" "before an em dash" "$d"
+
+# Digit grouping. This case exists because it ESCAPED: the checker was green over «более
+# 2 000 атомов» set with an ordinary space, since nothing looked at digit groups at all, and
+# a judge found it by reading the file rather than by running the gate.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PY'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('2\u00a0000', '2 000', 1))
+PY
+expect_typo "an ordinary space between digit groups is caught" "between digit groups" "$d"
 
 printf 'selftest: probe-install.sh\n'
 

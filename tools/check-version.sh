@@ -66,12 +66,14 @@ for m in MANIFESTS:
             print('%s%s\t%s' % (m, p, v))
 
 # Prose. Each pattern must match exactly once: a second copy is where the first goes stale.
+# Both READMEs used to state the version in prose, and both are gone from this list on
+# purpose. The version badge at the top of each renders live from the releases API, so the
+# page states the current version without anyone maintaining a number by hand — and a fact
+# with two sources, one of which decays, is the defect this whole file exists to prevent.
+# The v1.10.1 gate caught exactly that: manifests current, prose advertising the release
+# before. Removing the second source removes the class.
 PROSE = [
     ('.claude/CLAUDE.md', r'\*\*Version:\*\*\s*([0-9]+\.[0-9]+\.[0-9]+)'),
-    # The space before the em dash is a NON-BREAKING one — this repository obeys its own
-    # R16/R44 — so the pattern has to accept either, or it reports the line as missing.
-    ('README.md',         r'Свежая версия[\s\u00a0]*—[\s\u00a0]*\*\*v([0-9]+\.[0-9]+\.[0-9]+)\*\*'),
-    ('README.en.md',      r'Latest version[\s\u00a0]*—[\s\u00a0]*\*\*v([0-9]+\.[0-9]+\.[0-9]+)\*\*'),
 ]
 for path, pat in PROSE:
     s = io.open(path, encoding='utf-8').read()
@@ -226,8 +228,15 @@ for r in readmes:
         bad.append('%s: unreadable (%s)' % (r, e))
         continue
     hit = [ln for ln in content.split('\n') if 'SKILL.md:' in ln]
-    if len(hit) != 1:
-        bad.append('%s: %d lines state the size of SKILL.md, want exactly 1' % (r, len(hit)))
+    # Nought is allowed and one is allowed; two is not. The size claim is optional — the
+    # rewritten Russian README drops it, because a manifest's word count answers «did the
+    # author follow the spec», which is not a question any reader has. What this section
+    # forbids is stating it WRONGLY, and a file that says nothing states nothing wrongly.
+    # Two lines is still a defect: that is where the first goes stale unnoticed.
+    if len(hit) == 0:
+        continue
+    if len(hit) > 1:
+        bad.append('%s: %d lines state the size of SKILL.md, want at most 1' % (r, len(hit)))
         continue
     glued = re.sub(r'(?<=\d)[ \t  ,](?=\d\d\d(?!\d))', '', hit[0])
     nums = re.findall(r'\d+', glued)

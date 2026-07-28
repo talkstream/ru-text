@@ -69,7 +69,7 @@ claude plugins marketplace update ru-text   # refresh marketplace cache
 - NEVER add `tags`, `category`, `source` — these belong in marketplace.json only (issue #26555)
 - `repository` must be a string, NOT an object — `"https://..."` not `{"type":"git","url":"..."}`
 - After editing plugin.json: `claude plugins validate /path/to/ru-text` before committing
-- Keep versions in sync across ALL manifests: .claude-plugin (plugin.json AND marketplace.json — two fields there), .codex-plugin, .cursor-plugin, gemini-extension.json, openclaw.plugin.json — **the hardcoded «Latest version» line in README.md and README.en.md**, and **the `**Version:**` header of this file**. The v1.10.1 gate caught the READMEs still advertising the previous release, and then caught this file doing the same
+- Keep versions in sync across ALL manifests: .claude-plugin (plugin.json AND marketplace.json — two fields there), .codex-plugin, .cursor-plugin, gemini-extension.json, openclaw.plugin.json — and **the `**Version:**` header of this file** — eight points, and `tools/check-version.sh --print` lists them. The READMEs no longer state the version in prose: they carry a badge that renders it live from the releases API, so there is nothing there to go stale. The v1.10.1 gate caught those two prose lines advertising the previous release, and then caught this file doing the same; the badge removes the first failure mode rather than re-checking it
 - Codex CLI is pre-1.0 and moves fast: 0.144.0 locally, 0.145.0 on npm as `@openai/codex` (28.07.2026). The note here said v0.118.0 for months. The plugin.json schema may change between minor versions, so re-check it at each release rather than trusting this line
 
 ### Dev workflow (local plugin testing)

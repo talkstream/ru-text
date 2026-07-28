@@ -62,8 +62,8 @@ category_count() {
 # listed once per claim. Adding a claim to the product means adding a row here — and if you
 # forget, the completeness guard below says so by name.
 CATALOG_CLAIMS='skills/ru-text/SKILL.md|Full stop-word catalog (%s entries)
-README.md|Стоп-слова (%s записи)
-README.en.md|Stop-words (%s entries)
+README.md|каталог из %s стоп-слов
+README.en.md|the catalogue of %s stop-words
 notion/README.md|- %s stop-words across
 notion/README.md|- %s стоп-слова в
 skills/ru-text/references/editorial-grammar.md|%s in §B
