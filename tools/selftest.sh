@@ -836,6 +836,82 @@ if [ -f "$CI" ]; then
   fi
 fi
 
+printf 'selftest: check-typography.sh\n'
+
+# The checker shipped green over eight real defects, because both halves of its R30 pattern
+# were narrower than the rule: the letter set held lowercase only, and the follower class
+# demanded a Cyrillic letter or a digit next.
+#
+# The two cases below pin one half EACH, and their shapes are chosen for that and nothing else.
+# The first pair written here failed this requirement — «В WSL-сессиях» and «В [README]» both
+# combine a capital preposition with a non-Cyrillic follower, so either mutation killed both
+# and neither hand was actually guarded. Verified by mutation: restoring the lowercase-only set
+# must break the FIRST case only, and restoring the narrow follower class the SECOND only.
+#   capital + Cyrillic follower  -> isolates the letter set
+#   lowercase + non-letter       -> isolates the follower class
+expect_typo() { # $1=case-name  $2=needle  $3=dir
+  name=$1; needle=$2; d=$3
+  out=$(cd "$d" && ./tools/check-typography.sh 2>&1) && st=0 || st=$?
+  if [ "$st" -eq 0 ]; then
+    bad "$name — check-typography PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if (cd "$d" && ./tools/check-typography.sh >/dev/null 2>&1); then
+  ok "an untouched copy passes check-typography"
+else
+  bad "an untouched copy FAILS check-typography — the cases below mean nothing"
+  (cd "$d" && ./tools/check-typography.sh 2>&1) | sed 's/^/        /'
+fi
+
+# A CAPITAL preposition, which the first pattern never tested — and which is where a Russian
+# sentence most often starts one.
+d=$(fresh_copy)
+python3 - "$d/INSTALL.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('В\u00a0приложении', 'В приложении', 1))
+PYEOF
+expect_typo "a capital single-letter preposition is caught" "single-letter «В»" "$d"
+
+# A preposition followed by something that is not a Cyrillic letter — a markdown link. The
+# first pattern required a letter or digit next and let every one of these through.
+d=$(fresh_copy)
+python3 - "$d/INSTALL.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('и\u00a0**`.agents/skills/`**', 'и **`.agents/skills/`**', 1))
+PYEOF
+expect_typo "a preposition before a non-letter is caught" "single-letter «и»" "$d"
+
+# The two defects that actually shipped, kept as regression cases.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = s.replace('машинного текста', 'машинного~текста', 1)
+io.open(p, 'w', encoding='utf-8').write(s)
+PYEOF
+expect_typo "a literal tilde standing in for a non-breaking space is caught" "literal ~" "$d"
+
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('\u00a0\u2014', ' \u2014', 1))
+PYEOF
+expect_typo "an ordinary space before an em dash is caught" "before an em dash" "$d"
+
 printf 'selftest: probe-install.sh\n'
 
 # The probe judges what an agent did to a sandbox. These cases judge the probe, by building

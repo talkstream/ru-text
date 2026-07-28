@@ -70,8 +70,11 @@ printf 'check-typography: the product obeys its own typography\n'
 report=$(python3 - $FILES <<'PY'
 import io, re, sys
 
-NB = ' '
-PREP = 'вкосуиая'
+NB = '\u00a0'
+# BOTH cases. The first version listed lowercase only, and a check that never tests «В» or
+# «У» at the start of a sentence is not strict — it is blind exactly where a sentence most
+# often begins. It reported INSTALL.md clean while the file held six of them.
+PREP = 'вкосуиаяВКОСУИАЯ'
 out = []
 
 for path in sys.argv[1:]:
@@ -100,7 +103,12 @@ for path in sys.argv[1:]:
                 out.append('%s\t%d\tR16/R44\tordinary space before an em dash\t%s'
                            % (path, n, s[max(0, m.start() - 40):m.start() + 20].strip()))
 
-        for m in re.finditer(r'(?<![^\s(«„])([' + PREP + r']) (?=[«„А-Яа-яЁё0-9])', s):
+        # What may FOLLOW the space is deliberately broad. The first version required a
+        # Cyrillic letter or a digit next, so «в [README]», «и **`.agents/skills/`**» and
+        # «и /ru-score» all escaped — a preposition is no less stranded for being followed
+        # by a bracket, an asterisk or a slash. Excluded: another space (already a break)
+        # and end of line (nothing left to bind to).
+        for m in re.finditer(r'(?<![^\s(«„])([' + PREP + r']) (?=[^\s])', s):
             out.append('%s\t%d\tR30\tordinary space after the single-letter «%s»\t%s'
                        % (path, n, m.group(1), s[max(0, m.start() - 30):m.start() + 30].strip()))
 
