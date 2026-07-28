@@ -38,6 +38,36 @@ score or wrote a test against `/ru-score` output should re-run it before upgradi
   two of those rejections matter most, because even sentence rhythm and vocabulary poverty
   are what detectors mistake for machine text and also what dry regulatory prose and
   non-native Russian look like.
+- **The README asks the agent to install the skill, instead of teaching the human to.** The
+  «Быстрый старт» section was thirteen platform-by-platform recipes, 195 of the file's 411
+  lines. It is now one sentence to hand to an AI agent — «Установи навык
+  https://github.com/talkstream/ru-text глобально и вызывай его для любых задач с русским
+  текстом» — because an agent knows where its own platform keeps skills better than an
+  instruction written a year ago does. The README lost half its length.
+  The decision was tested rather than argued: three fresh agents were handed nothing but that
+  sentence, in sandboxes, role-framed as three different platforms' agents. Two installed
+  correctly; one put Codex's copy in `~/.codex/skills` on the strength of a December-2025
+  blog post, while OpenAI's current documentation says user skills live in
+  `$HOME/.agents/skills`. All three read this repository's README as their first source —
+  which is why the per-platform material was moved rather than deleted.
+- **`INSTALL.md` / `INSTALL.en.md`** — everything the one-liner does not carry, organised
+  around the fact the audit turned up: `~/.agents/skills/` is read by Codex, Cursor, Windsurf
+  AND GitHub Copilot, so this is one shared path plus exceptions rather than thirteen silos.
+  Also there: the Claude Desktop and Notion click-paths, which no agent can drive; the four
+  negative facts trial cannot discover (ru-text is absent from the Cursor marketplace, cloud
+  sessions do not inherit the plugin, the community pin trails by months, `npx skills add`
+  installs three skills); and the update story a one-shot install does not have.
+- **`tools/install-paths.tsv`** — where each platform loads a skill from, with the vendor URL
+  and the date it was read. One source for the INSTALL tables and for the probe's assertions,
+  so the two cannot drift apart.
+- **`tools/probe-install.sh`** — the gate that replaces reading prose against vendor docs. It
+  builds a sandbox, prints the one-line prompt, and afterwards judges the disk: did the skill
+  land at a path this platform documents, did a copy land anywhere it does not, are the bytes
+  this corpus, did all ten reference files arrive. The second of those is the one that
+  matters — an agent usually writes several copies, so a check that only looked for a hit
+  would have blessed the `~/.codex/skills` failure. The script deliberately does not run the
+  agent: a shell cannot start another vendor's agent, and one that pretended to would be a
+  gate testing itself. Five selftest cases, one per outcome.
 - **A grammar layer the corpus had been missing**, in `editorial-grammar.md`: §I verb
   government from a **closed list** of the verbs and prepositions that are actually confused,
   plus mismatched government across coordinated members · §J the gerund phrase whose subject
@@ -63,7 +93,7 @@ score or wrote a test against `/ru-score` output should re-run it before upgradi
   holds the numbers this product states about itself against the corpus, with a completeness
   guard that names any file stating one that nobody registered. `build-release.sh` builds the
   two release assets from tracked files only, refuses a dirty tree, and proves each asset by
-  unpacking it. The selftest grew from 45 cases to 72.
+  unpacking it. The selftest grew from 45 cases to 81.
 - **`tools/atom-map.tsv` gains its first sixteen rows** — the first in the repository's
   history. Nine record the `scoring.md` lines whose scope the new rules extend; one records
   AD-7.5, whose rationale says in plain words that the meaning was changed on purpose.

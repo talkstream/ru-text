@@ -836,5 +836,74 @@ if [ -f "$CI" ]; then
   fi
 fi
 
+printf 'selftest: probe-install.sh\n'
+
+# The probe judges what an agent did to a sandbox. These cases judge the probe, by building
+# the three outcomes by hand — because the one thing a gate must never do is pass on an
+# install that did not happen, and that is exactly what an «is there a SKILL.md anywhere»
+# check would do.
+probe_case() { # $1=case-name  $2=want(PASS|FAIL)  $3=needle  $4=sandbox
+  name=$1; want=$2; needle=$3; sb=$4
+  out=$("$ROOT/tools/probe-install.sh" check "$sb" 'Codex CLI' 2>&1) && st=PASS || st=FAIL
+  if [ "$st" != "$want" ]; then
+    bad "$name — probe said $st, wanted $want"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  elif [ -z "$needle" ] || printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — $st, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+PB=$(mktemp -d)
+
+# Nobody ran the agent. An empty sandbox must never read as a clean install.
+"$ROOT/tools/probe-install.sh" setup "$PB/empty" 'Codex CLI' >/dev/null 2>&1
+probe_case "an empty sandbox is not a pass" FAIL "holds no SKILL.md" "$PB/empty"
+
+# The documented user path. This is the only shape that may pass.
+"$ROOT/tools/probe-install.sh" setup "$PB/good" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/good/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/good/home/.agents/skills/ru-text"
+probe_case "an install at the documented path passes" PASS "documented path" "$PB/good"
+
+# The failure this file was written from: a real agent installed Codex's copy into
+# ~/.codex/skills on the strength of a December-2025 blog post. The path exists, the skill
+# is intact, and Codex never looks there.
+"$ROOT/tools/probe-install.sh" setup "$PB/stray" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/stray/home/.codex/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/stray/home/.codex/skills/ru-text"
+probe_case "an install at an undocumented path is caught" FAIL "does not look" "$PB/stray"
+
+# Right path, wrong corpus. An agent that fetched an old tag or a fork passes every path
+# test above; only the bytes catch it.
+"$ROOT/tools/probe-install.sh" setup "$PB/stale" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/stale/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/stale/home/.agents/skills/ru-text"
+printf '\nA line no released ru-text ever carried.\n' >> "$PB/stale/home/.agents/skills/ru-text/SKILL.md"
+probe_case "a stale or forked copy at the right path is caught" FAIL "differs from this checkout" "$PB/stale"
+
+# Right path, right SKILL.md, half the corpus. The reference files are the product; a probe
+# that stopped at SKILL.md would bless a skill with no rules in it.
+"$ROOT/tools/probe-install.sh" setup "$PB/partial" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/partial/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/partial/home/.agents/skills/ru-text"
+rm -f "$PB/partial/home/.agents/skills/ru-text/references/typography.md"
+probe_case "a truncated corpus at the right path is caught" FAIL "truncated" "$PB/partial"
+
+# Every platform named in the table is either given paths or declared to own its installer.
+# A row typo silently produces a platform this probe can never judge.
+missing=$(awk -F'\t' '!/^#/ && $1 != "platform" && NF > 1 { print $1 "\t" $3 }' "$ROOT/tools/install-paths.tsv" \
+  | awk -F'\t' '{ if ($2 == "-") own[$1]=1; else has[$1]=1 }
+                END { for (p in own) if (p in has) print p }')
+if [ -z "$missing" ]; then
+  ok "no platform is both path-served and self-installing"
+else
+  bad "a platform claims both a path and its own installer: $missing"
+fi
+
+rm -rf "$PB"
+
 printf 'selftest: %d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

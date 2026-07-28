@@ -60,236 +60,35 @@ Every tell carries a carve-out naming where the device is legitimate: a quotatio
 
 ## Quick start
 
-Sections are ordered by April 2026 platform popularity among developers using AI assistants.
-
-### Claude Code (CLI)
-
-```bash
-# Add the community marketplace (one-time setup)
-/plugin marketplace add anthropics/claude-plugins-community
-
-# Install the plugin
-/plugin install ru-text@claude-community
-```
-
-Listed in the [Claude Code community marketplace](https://github.com/anthropics/claude-plugins-community). A listing in the [official Anthropic marketplace](https://claude.com/plugins) is planned.
-
-### Claude Code (Desktop)
-
-In the app, install the plugin from the interface, with no terminal: the **+** button next to the prompt box → **Plugins** → **Add plugin**. That opens the plugin browser over your configured marketplaces; add the community marketplace there too. The `/plugin` command works only in the terminal CLI.
-
-A single install is shared across the CLI, the Claude Desktop app (local and SSH sessions), VS Code, and JetBrains. Cloud sessions at claude.ai/code are the exception: a user-scope install does not carry over. Declare the plugin under `enabledPlugins` in the repository's `.claude/settings.json`, and it is installed at session start. Plugins are not available in WSL sessions.
-
-### Codex CLI
-
-First add the marketplace that carries ru-text:
-
-```bash
-codex plugin marketplace add hashgraph-online/awesome-codex-plugins
-```
-
-Then open the plugin browser in a Codex session, find “ru-text” and install it:
-
-```
-/plugins
-```
-
-Start a new session afterwards — a plugin's bundled skills are loaded at session start. Alternatively, use the universal skills CLI (see below).
-
-### Notion
-
-Two integration paths — see [notion/README.md](notion/README.md) for details:
-
-**Notion AI Custom Skill** (standalone, Business/Enterprise plan):
-1. Copy [the template page](notion/ru-text-notion-skill.md) into a Notion page
-2. Designate the page as an AI skill
-3. Select text and invoke “ru-text” from the AI menu
-
-**Notion via MCP** (with Claude Code, any plan):
-1. Install ru-text in Claude Code
-2. Connect the [Notion MCP server](https://developers.notion.com/guides/mcp/get-started-with-mcp)
-3. Ask Claude Code to read, check, and update your Notion pages
-
-### Cursor
-
-Copy the skill manually — ru-text is not published in the Cursor marketplace yet:
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text ~/.cursor/skills/ru-text
-```
-
-Windows (PowerShell):
-
-```powershell
-git clone https://github.com/talkstream/ru-text.git
-Copy-Item -Recurse ru-text\skills\ru-text "$env:USERPROFILE\.cursor\skills\ru-text"
-```
-
-### GitHub Copilot
-
-If ru-text is already installed for Claude Code in your project, Copilot detects it automatically. Otherwise:
-
-```bash
-npx skills add talkstream/ru-text
-```
-
-Or copy manually:
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text .github/skills/ru-text
-```
-
-Works in VS Code, Visual Studio, and JetBrains IDEs with Copilot.
-
-### Gemini CLI
-
-```bash
-gemini extensions install https://github.com/talkstream/ru-text
-```
-
-### Google Antigravity
-
-Antigravity reads the SKILL.md format natively. Copy the skill into the global skills folder to make it available across all projects:
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text ~/.gemini/config/skills/ru-text
-```
-
-That path is read by Antigravity, Antigravity IDE and Antigravity CLI alike. For a single project, copy the skill into `<project>/.agents/skills/ru-text` — plural, which is the current default; the older `.agent/skills` is still accepted for backward compatibility. Antigravity is young and the paths vary by product and version — check the [Antigravity skills documentation](https://antigravity.google/docs/skills) for the current location.
-
-### Windsurf
-
-Copy the skill manually:
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text .windsurf/skills/ru-text
-```
-
-`npx skills add talkstream/ru-text -y` can serve Windsurf too, but it writes `.windsurf/skills` only when a `.windsurf/` directory already exists in the project — it never creates one.
-
-Invoke with `@ru-text` in Cascade chat. Also available via Cascade panel > Customizations > Skills.
-
-### Continue.dev
-
-If ru-text is already installed for Claude Code in your project, Continue detects it automatically. Otherwise:
-
-```bash
-npx skills add talkstream/ru-text
-```
-
-Or copy manually:
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text .continue/skills/ru-text
-```
-
-`npx skills add` serves Continue only when a `.continue/` directory already exists in the project, or `~/.continue` exists on the machine.
-
-Works in both VS Code and JetBrains extensions.
-
-### Cline
-
-If ru-text is already installed for Claude Code in your project, Cline detects it automatically. Otherwise:
-
-```bash
-npx skills add talkstream/ru-text
-```
-
-Or copy manually:
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text .cline/skills/ru-text
-```
-
-Enable skills in Cline settings: Features > Enable Skills.
-
-### JetBrains (Junie)
-
-Copy the skill manually:
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-cp -r ru-text/skills/ru-text .junie/skills/ru-text
-```
-
-`npx skills add talkstream/ru-text -y` writes `.junie/skills` only when a `.junie/` directory already exists in the project.
-
-Works in IntelliJ IDEA, PyCharm, WebStorm, GoLand, PhpStorm, RubyMine, RustRover, Rider, CLion, and Android Studio.
-
-### OpenClaw
-
-```bash
-openclaw skills install @talkstream/ru-text
-```
-
-Available on [ClawHub](https://clawhub.ai/talkstream/ru-text). Works with any LLM provider and messaging channel OpenClaw supports.
-
-### Any platform via skills CLI
-
-```bash
-npx skills add talkstream/ru-text -y
-```
-
-Three things about `npx skills add`:
-
-- **It installs three skills** — `ru-text`, `ru-check` and `ru-score`. In Claude Code the latter two are slash commands; on the other platforms they arrive as standalone skills. Three entries in the list is expected, not a fault.
-- **Without `-y`**, in an ordinary terminal the command opens an interactive picker for skills and agents and waits for an answer — pasted into a script, it installs nothing.
-- **The install is project-scoped by default.** Add `-g` for a user-level install.
-
-### From source
-
-```bash
-git clone https://github.com/talkstream/ru-text.git
-```
-
-Then add the repo as a plugin source per your platform's docs.
-
-Start writing Russian text — the plugin takes over automatically. If ru-text makes your products better, consider [sponsoring](https://github.com/sponsors/talkstream) continued development.
+Hand this sentence to your AI agent:
+
+> Install the skill https://github.com/talkstream/ru-text globally and use it for any task involving Russian text: proofreading, typography, editorial work, UX copy, business correspondence.
+
+It takes it from there: where its own platform keeps skills is something the agent knows
+better than an instruction written a year ago. Verified with Claude Code, Codex CLI, Cursor,
+GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains
+Junie, OpenClaw and Notion.
+
+Installing by hand, agent got it wrong, or your platform installs through its own tool —
+[INSTALL.en.md](INSTALL.en.md): every platform's directory with the vendor URL it came from,
+the Claude Desktop and Notion click-paths, four facts no amount of trial can discover, and
+updating.
+
+Start writing Russian text — the plugin takes over automatically. If ru-text makes your
+products better, consider [sponsoring](https://github.com/sponsors/talkstream) continued
+development.
 
 ## Updating ru-text
 
-Latest version — **v1.10.1** (see the [CHANGELOG](CHANGELOG.md)). Check your installed version in Claude Code with `claude plugins list`.
+Latest version — **v1.10.1**, see the [CHANGELOG](CHANGELOG.md) for what changed.
 
-**Primary method** — for skill-based platforms (GitHub Copilot, Cline, Cursor, Google Antigravity; for Windsurf, Junie and Continue.dev see the caveats in their sections). Re-run the install — the command pulls the latest version from the repository and overwrites the skills, including any file you edited by hand:
+A one-shot install has no update mechanism: the agent installed the skill and forgot about
+it. Every few months, ask it to run the install again. Per-platform update commands live in
+[INSTALL.en.md](INSTALL.en.md#updating).
 
-```bash
-npx skills add talkstream/ru-text -y
-```
-
-The update goes to the same scope as the install. If you installed at user level (`-g`), update with `-g` too — otherwise a project-scoped run reports success while the user-level copy stays old.
-
-**Claude Code (CLI and Desktop).** Refresh the marketplace cache first, then update the plugin:
-
-```bash
-claude plugins marketplace update claude-community
-claude plugins update ru-text@claude-community
-```
-
-Restart Claude Code (or run `/reload-plugins`) to apply the change. You can also do this from the `/plugin` menu, "Installed" tab.
-
-Worth knowing before you install: the community marketplace pins the plugin to a specific commit rather than tracking releases. Only the marketplace's nightly sweep advances the pin, and one run updates at most thirty plugins against a catalogue of more than two thousand entries. The sweep works alphabetically, so the ru-text pin can trail the current version by months. `claude plugins list` shows the version you actually have. If you need the current one right away, install the skill with `npx skills add talkstream/ru-text` or from source — both give you what is on `main` today.
-
-**Gemini CLI:**
-
-```bash
-gemini extensions update ru-text
-```
-
-**OpenClaw:**
-
-```bash
-openclaw skills update @talkstream/ru-text
-```
-
-**Codex CLI.** Open `/plugins`, find ru-text, and update.
-
-**Manual copy.** If you installed the skill manually (`git clone` + `cp`), repeat your platform's install steps — they overwrite the skill with the latest version.
+One thing worth knowing up front: the Claude Code community marketplace pins the plugin to a
+specific commit rather than tracking releases, and the pin trails the current version by
+months. `claude plugins list` shows the version you actually have.
 
 ## The corpus
 
