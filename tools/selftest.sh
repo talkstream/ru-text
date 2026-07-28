@@ -905,11 +905,43 @@ probe_case "a symlinked install at the documented path passes" PASS "documented 
 # The clone an agent makes before linking or copying. It is an intermediate, not a rogue
 # install, and the same live run had the probe report the source tree as four of them.
 "$ROOT/tools/probe-install.sh" setup "$PB/clone" 'Codex CLI' >/dev/null 2>&1
-mkdir -p "$PB/clone/home/src/ru-text" "$PB/clone/home/.agents/skills"
+mkdir -p "$PB/clone/home/src/ru-text/.claude-plugin" "$PB/clone/home/.agents/skills"
 cp -R "$ROOT/skills" "$PB/clone/home/src/ru-text/skills"
+# The manifest is what makes a tree this repository rather than any directory with a .git —
+# see the decoy case below, which is why the marker had to become this specific.
+cp "$ROOT/.claude-plugin/plugin.json" "$PB/clone/home/src/ru-text/.claude-plugin/plugin.json"
 ( cd "$PB/clone/home/src/ru-text" && git init -q . ) >/dev/null 2>&1
 cp -R "$ROOT/skills/ru-text" "$PB/clone/home/.agents/skills/ru-text"
 probe_case "the source clone is not reported as a rogue install" PASS "no copy landed outside" "$PB/clone"
+
+# The bypass a security review found and reproduced in one command: an empty `.git` beside a
+# rogue install disarmed the clone exclusion, and the probe printed PASS over an install at
+# the stale-blog path. A gate that a `mkdir` switches off is worse than no gate.
+#
+# The decoy is built exactly as the review built it, at ~/.codex/skills — which also pins the
+# SECOND attempt at the fix. That one required the tree to hold `skills/ru-text/SKILL.md`, and
+# `~/.codex/skills/ru-text` has that shape with no decoy at all, so any platform whose skills
+# directory is named `skills` would have excused itself. Only the plugin manifest separates a
+# checkout from an install.
+"$ROOT/tools/probe-install.sh" setup "$PB/decoy" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/decoy/home/.agents/skills" "$PB/decoy/home/.codex/skills/.git"
+cp -R "$ROOT/skills/ru-text" "$PB/decoy/home/.agents/skills/ru-text"
+cp -R "$ROOT/skills/ru-text" "$PB/decoy/home/.codex/skills/ru-text"
+mkdir -p "$PB/decoy/home/.codex/.git"
+probe_case "a decoy .git does not excuse an install at an undocumented path" FAIL "does not look" "$PB/decoy"
+
+# The repository's own test fixture lives at tools/testdata/corpus/SKILL.md, outside skills/.
+# The first clone rule excused only files under the root's `skills/`, so a genuine clone was
+# reported as a rogue install on the strength of a fixture. Everything under a verified root
+# is source.
+"$ROOT/tools/probe-install.sh" setup "$PB/fixture" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/fixture/home/src/ru-text/.claude-plugin" "$PB/fixture/home/.agents/skills"
+cp -R "$ROOT/skills" "$PB/fixture/home/src/ru-text/skills"
+cp -R "$ROOT/tools" "$PB/fixture/home/src/ru-text/tools"
+cp "$ROOT/.claude-plugin/plugin.json" "$PB/fixture/home/src/ru-text/.claude-plugin/plugin.json"
+( cd "$PB/fixture/home/src/ru-text" && git init -q . ) >/dev/null 2>&1
+cp -R "$ROOT/skills/ru-text" "$PB/fixture/home/.agents/skills/ru-text"
+probe_case "a fixture outside skills/ does not make a clone look rogue" PASS "no copy landed outside" "$PB/fixture"
 
 # Every platform named in the table is either given paths or declared to own its installer.
 # A row typo silently produces a platform this probe can never judge.

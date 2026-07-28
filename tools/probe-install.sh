@@ -141,16 +141,40 @@ TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT INT TERM
 # report the source tree as four rogue installs, which is what the same live run did.
 find -L "$dir" -type f -name SKILL.md 2>/dev/null | sort > "$TMP/all"
 
-# A SKILL.md inside a git working tree is a checkout, not an install. Agents clone first and
+# A SKILL.md inside the SOURCE CLONE is a checkout, not an install. Agents clone first and
 # link or copy second, so the clone is a normal intermediate and flagging it is noise of the
-# crying-wolf kind this project keeps refusing to ship. Detected by walking up to a .git,
-# stopping at the sandbox root so a .git ABOVE the sandbox cannot silently excuse everything.
+# crying-wolf kind this project keeps refusing to ship.
+#
+# ⚠ «Inside a git working tree» is NOT the test, though it was the first one written here. A
+# security review reproduced the bypass in one command: drop an empty `.git` beside a rogue
+# install — `mkdir ~/.codex/skills/../.git` — and the probe excused it and printed PASS. A
+# gate that is disarmed by creating a directory is worse than no gate, because it reports
+# success.
+#
+# So a clone must LOOK LIKE THIS REPOSITORY, and the marker has to be something an install
+# directory cannot have. `skills/ru-text/SKILL.md` was tried and is NOT such a marker: the
+# second attempt at this fix still passed the bypass, because `~/.codex/skills/ru-text` has
+# exactly that shape — any platform whose skills directory is literally named `skills` looks
+# like a repository root by that test, with no decoy needed. The marker used instead is
+# `.claude-plugin/plugin.json`: the plugin manifest, which lives only at the root of this
+# repository and has no reason to exist inside an installed skill.
+#
+# Two conditions, both required: a `.git` and the manifest beside it. Everything under such a
+# root is source — including `tools/testdata/corpus/SKILL.md`, the fixture this repository
+# ships, which an earlier `skills/`-only restriction reported as a rogue install.
+#
+# Cloning INTO a stale path is not excused by this, and does not need a special case: the
+# repository has no SKILL.md at its root — check-frozen.sh enforces that — so a clone placed
+# at `~/.codex/skills/ru-text` produces no skill the platform can load, and check 1 fails for
+# the plain reason that nothing landed at a documented path.
+#
+# Walking stops at the sandbox root, so a `.git` above the sandbox cannot excuse anything.
 : > "$TMP/found"
 while IFS= read -r f; do
   [ -n "$f" ] || continue
   d=$(dirname "$f"); clone=0
   while [ "$d" != "$dir" ] && [ "$d" != "/" ]; do
-    [ -e "$d/.git" ] && { clone=1; break; }
+    if [ -e "$d/.git" ] && [ -f "$d/.claude-plugin/plugin.json" ]; then clone=1; break; fi
     d=$(dirname "$d")
   done
   [ "$clone" -eq 0 ] && printf '%s\n' "$f" >> "$TMP/found"
