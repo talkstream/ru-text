@@ -275,6 +275,17 @@ Do not mix words and digits for same-type values within one sentence/paragraph.
 
 ### H.2. Dead constructions -> live replacements
 
+Six of the entries below also stand in the stop-word catalogue of `info-style.md` §B — «в
+настоящее время», «вышеуказанный», «на сегодняшний день», «надлежащий», «нижеследующий»,
+«принять решение». §B is their canonical home: it is the list a checker walks, and it is
+the block frozen by the corpus contract. Count such a fragment once, in **Ч — Clarity**,
+and do not report it twice because it appears in two files.
+
+The other thirty-six are here and nowhere else. Measured on 28.07.2026 with the same parser
+`check-frozen.sh` uses: 42 entries here, 92 in §B, 6 in both. A plan step that would have
+replaced this section with a pointer to §B was written on the assumption that it mostly
+duplicated the catalogue; it does not, and following it would have deleted thirty-six rules.
+
 dead|live
 произвести ремонт|отремонтировать
 осуществить доставку|доставить
