@@ -59,6 +59,12 @@ jobs:
         # the last time it moved, which is why the completeness guard exists.
         run: tools/check-dogfood.sh
 
+      - name: check-typography — the product obeys its own typography
+        # The README claims every dash, quote and space in it follows the plugin's own
+        # rules. Until this step that claim rested on someone remembering to ask a model,
+        # and in one afternoon a literal ~ and a missing non-breaking space both shipped.
+        run: tools/check-typography.sh
+
       - name: No-loss gate — every atom of the pinned baseline still accounted for
         # The baseline is the v1.10.1 corpus, frozen as a historical artefact: it is NOT
         # regenerated when the corpus changes. That is the whole point — it is the "before"

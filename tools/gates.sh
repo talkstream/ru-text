@@ -71,6 +71,12 @@ tools/check-version.sh || fail "check-version"
 # ── 5. The numbers the product states about itself ──────────────────────────────────
 tools/check-dogfood.sh || fail "check-dogfood"
 
+# ── 5b. The product obeys its own typography ────────────────────────────────────────
+# The mechanical subset only, over the two files that speak in the project's own voice.
+# It exists because the README claims its every dash and space follows the plugin's rules,
+# and that claim was checked by remembering to ask a model — which failed twice in one day.
+tools/check-typography.sh || fail "check-typography"
+
 # ── 6. No-loss gate against the pinned baseline ─────────────────────────────────────
 # GNU coreutils names it sha256sum; macOS ships shasum and no sha256sum. Checking for
 # both, rather than assuming either, is why this script runs on the author's machine and

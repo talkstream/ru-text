@@ -42,7 +42,7 @@ fresh_copy() {
   # silently rather than fatally — a case may deliberately be run against a partial tree.
   cp -R "$ROOT/.claude-plugin" "$ROOT/.codex-plugin" "$ROOT/.cursor-plugin" "$d/" 2>/dev/null || true
   mkdir -p "$d/.claude"
-  for f in gemini-extension.json openclaw.plugin.json README.md README.en.md .claude/CLAUDE.md; do
+  for f in gemini-extension.json openclaw.plugin.json README.md README.en.md INSTALL.md INSTALL.en.md .claude/CLAUDE.md; do
     [ -f "$ROOT/$f" ] && cp "$ROOT/$f" "$d/$f" 2>/dev/null
   done
   cp -R "$ROOT/notion" "$d/notion" 2>/dev/null || true
