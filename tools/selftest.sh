@@ -45,6 +45,10 @@ fresh_copy() {
   for f in gemini-extension.json openclaw.plugin.json README.md README.en.md .claude/CLAUDE.md; do
     [ -f "$ROOT/$f" ] && cp "$ROOT/$f" "$d/$f" 2>/dev/null
   done
+  cp -R "$ROOT/notion" "$d/notion" 2>/dev/null || true
+  # A repository, not just a directory: check-dogfood walks `git ls-files`, so a copy that
+  # is not one fails inside every case for a reason no case is about.
+  ( cd "$d" && git init -q . && git add -A ) >/dev/null 2>&1 || true
   printf '%s' "$d"
 }
 
@@ -530,6 +534,55 @@ s = s.replace('  причеши, ru-text.', '  причеши, ru-text. ' + ('pa
 io.open(p, 'w', encoding='utf-8').write(s)
 PY
 expect_version "a description over the budget is caught" "over our budget" "$d"
+
+printf 'selftest: check-dogfood.sh\n'
+
+expect_dogfood() { # $1=case-name $2=needle $3=dir
+  name=$1; needle=$2; d=$3
+  out=$(cd "$d" && ./tools/check-dogfood.sh 2>&1) && status=0 || status=$?
+  if [ "$status" -eq 0 ]; then
+    bad "$name — check-dogfood PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
+  ok "an untouched copy passes check-dogfood"
+else
+  bad "an untouched copy FAILS check-dogfood — the cases below mean nothing"
+  (cd "$d" && ./tools/check-dogfood.sh 2>&1) | sed 's/^/        /'
+fi
+
+# A consumer left behind when the catalogue moves. This is the defect the checker exists
+# for: four files went stale unnoticed the last time the number changed.
+d=$(fresh_copy)
+sed 's/Full stop-word catalog (92 entries)/Full stop-word catalog (91 entries)/' \
+  "$d/skills/ru-text/SKILL.md" > "$d/v" && mv "$d/v" "$d/skills/ru-text/SKILL.md"
+expect_dogfood "a consumer left behind is caught" "and these do not" "$d"
+
+# A claim nobody registered. The explicit list is only safe because this guard exists.
+d=$(fresh_copy)
+# A file NOT on the list: appending to README.md would prove nothing, because the guard
+# skips listed files by design.
+printf 'The catalogue holds 92 entries.\n' > "$d/CONTRIBUTING.md"
+( cd "$d" && git add -A ) >/dev/null 2>&1
+expect_dogfood "an unregistered claim is caught" "no claim is registered" "$d"
+
+# The corpus itself moving, with every claim left at the old number.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/references/info-style.md" <<'PY'
+import io, re, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = re.sub(r'(?m)^(## B\. Каталог стоп-слов.*\n)', r'\1\nвыдуманное|заменённое\n', s, count=1)
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+expect_dogfood "the corpus growing past its claims is caught" "and these do not" "$d"
 
 printf 'selftest: gates.sh\n'
 

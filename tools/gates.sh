@@ -68,7 +68,10 @@ tools/check-frozen.sh || fail "check-frozen"
 # ── 4. One version, one description budget, one set of triggers ─────────────────────
 tools/check-version.sh || fail "check-version"
 
-# ── 5. No-loss gate against the pinned baseline ─────────────────────────────────────
+# ── 5. The numbers the product states about itself ──────────────────────────────────
+tools/check-dogfood.sh || fail "check-dogfood"
+
+# ── 6. No-loss gate against the pinned baseline ─────────────────────────────────────
 # GNU coreutils names it sha256sum; macOS ships shasum and no sha256sum. Checking for
 # both, rather than assuming either, is why this script runs on the author's machine and
 # on the Linux runner.

@@ -54,6 +54,11 @@ jobs:
         # silently, with every other gate still green.
         run: tools/check-version.sh
 
+      - name: check-dogfood — the numbers the product states about itself
+        # The catalogue size lives in seven files. Four of them went stale unnoticed
+        # the last time it moved, which is why the completeness guard exists.
+        run: tools/check-dogfood.sh
+
       - name: No-loss gate — every atom of the pinned baseline still accounted for
         # The baseline is the v1.10.1 corpus, frozen as a historical artefact: it is NOT
         # regenerated when the corpus changes. That is the whole point — it is the "before"
