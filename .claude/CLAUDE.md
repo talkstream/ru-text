@@ -6,7 +6,7 @@
 **Sponsors:** https://github.com/sponsors/talkstream
 **Version:** 1.10.1 | **License:** MIT | **Platforms:** Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, Google Antigravity, OpenClaw, Notion
 
-~1,044 independently formulated rules across 7 thematic areas. No verbatim quotes, full source attribution.
+Over 2,000 independently formulated linguistic atoms across 7 thematic areas. No verbatim quotes, full source attribution.
 
 ## Priorities
 
@@ -62,6 +62,7 @@ claude plugins marketplace update ru-text   # refresh marketplace cache
 - Reference files >100 lines must have Table of Contents
 - SKILL.md description must stay under 250 chars (Claude truncates beyond that)
 - Plugin must follow its own typography rules (dogfooding)
+- **The corpus size is quoted as a floor, in atoms, and the floor is machine-counted.** «Over 2,000 linguistic atoms» / «более 2 000 лингвистических атомов» in eleven files; reproduce with `tools/extract-atoms.sh skills/ru-text | wc -l` (2089 on 28.07.2026). It replaced «~1 044 rules», a hand-maintained figure nobody could reproduce, which drifted and then had to be corrected in eleven places at once. A floor is chosen on purpose: it survives the corpus growing, so adding a rule does not oblige anyone to re-stamp eleven files. Raise it only when the count clears the next thousand, and raise it everywhere in one commit
 
 ### plugin.json (Zod strict mode — unknown fields break the plugin silently)
 - Valid fields: `name`, `version`, `description`, `author` (object: name, email, url), `homepage`, `repository` (string URL), `license`, `keywords` (array)

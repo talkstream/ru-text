@@ -24,7 +24,7 @@
   "interface": {
     "composerIcon": "./assets/icon.png",
     "displayName": "ru-text",
-    "shortDescription": "Russian text quality — ~1,044 rules for typography, info-style, editorial, UX writing",
+    "shortDescription": "Russian text quality — 2,000+ linguistic atoms for typography, info-style, editorial, UX writing",
     "developerName": "Arseniy Kamyshev",
     "category": "Productivity",
     "websiteURL": "https://ru-text.org",

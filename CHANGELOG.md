@@ -5,6 +5,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Seven tells of machine-written Russian**, measured against the golden set before they
+  shipped: AD-10 declared sincerity · AD-11 mandatory tricolon · AD-12 hollowed mechanism ·
+  AD-13 phantom attribution · AD-14 chat transcript as the artifact · AD-15 search-engine
+  addressee · AD-16 additive pseudo-pair. AD-14 and AD-15 are the first rules in this set
+  charged to the **document** rather than to a fragment — the defect is the shape of the
+  piece, and no local edit removes it. Nine further candidates were rejected on the record;
+  two of those rejections matter most, because even sentence rhythm and vocabulary poverty
+  are what detectors mistake for machine text and also what dry regulatory prose and
+  non-native Russian look like.
+- **Six golden cases for the new rules, and a second carve-out control** (#29). The set
+  grew from 13 texts to 19. Case 19 is built entirely from constructions the seven rules
+  exempt, and it is the case that would catch them firing on honest writing.
+- **`tools/gates.sh`** — the CI sequence as one command, which is what lets the pre-push
+  hook run it: with no `package.json` and no `pyproject`, this repository looked to that
+  hook like a project with no tests. The selftest now fails when the two copies of that
+  sequence drift.
+- **`tools/atom-map.tsv` gains its first eleven rows.** Nine record the `scoring.md` lines
+  whose scope the new rules extend; one records AD-7.5, whose rationale says in plain words
+  that the meaning was changed on purpose.
+
+### Changed
+- **AD-7.5 narrowed.** The register carve-out now protects a speaker *inside* the text —
+  dialogue, quotation, a character — and not an author writing about their own text in a
+  conversational tone. The assistant register is a monologue written to sound like speech,
+  and it fell straight through the old wording. AD-7 also gains the trigger forms a model
+  actually reaches for: «скажу честно», «если честно», «не буду врать».
+- **The corpus size is now quoted as a machine-counted floor.** «~1 044 rules» was a
+  hand-maintained figure nobody could reproduce; it is replaced in eleven files by «over
+  2,000 linguistic atoms» / «более 2 000 лингвистических атомов» — the unit this
+  repository's own no-loss gate counts, reproducible with
+  `tools/extract-atoms.sh skills/ru-text | wc -l` (2089 at this point). A floor rather than
+  a figure, so that adding a rule does not oblige anyone to re-stamp eleven files.
+
+### Fixed
+- **Both control texts of the golden set asserted zero findings and had never been run.**
+  Both failed on their first run — seven findings and six, every one a real typographic
+  defect in the fixture, which contained no non-breaking spaces at all while claiming to be
+  written by the rules of the corpus.
+- **Three defects in the new rules, caught by the measurement rather than by reading.** A
+  document-level charge replaced ten ordinary findings with three and the text came out
+  looking cleaner; density replaced the per-instance findings with a line about density;
+  and AD-16 absorbed a pleonasm that lived in Grammar, scoring its target text 1.1 **higher**
+  than before the rule against it existed. All three are now rules in their own right, the
+  last of them stating the general principle: a new rule must never make its target score
+  better.
+
 ## [1.10.1] - 2026-07-25
 
 Corrects a safety claim that was never enforced, and folds in the documentation and distribution work
