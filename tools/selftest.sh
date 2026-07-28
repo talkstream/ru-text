@@ -892,6 +892,25 @@ cp -R "$ROOT/skills/ru-text" "$PB/partial/home/.agents/skills/ru-text"
 rm -f "$PB/partial/home/.agents/skills/ru-text/references/typography.md"
 probe_case "a truncated corpus at the right path is caught" FAIL "truncated" "$PB/partial"
 
+# A symlinked install. The first version of the probe called this «a different thing from an
+# installed one» and would have failed it; a live run refuted that in one shot, with OpenAI's
+# own page: «Codex supports symlinked skill folders and follows the symlink target». The agent
+# had linked deliberately, so that a pull on the clone updates the install.
+"$ROOT/tools/probe-install.sh" setup "$PB/link" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/link/home/src" "$PB/link/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/link/home/src/ru-text"
+ln -s "$PB/link/home/src/ru-text" "$PB/link/home/.agents/skills/ru-text"
+probe_case "a symlinked install at the documented path passes" PASS "documented path" "$PB/link"
+
+# The clone an agent makes before linking or copying. It is an intermediate, not a rogue
+# install, and the same live run had the probe report the source tree as four of them.
+"$ROOT/tools/probe-install.sh" setup "$PB/clone" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/clone/home/src/ru-text" "$PB/clone/home/.agents/skills"
+cp -R "$ROOT/skills" "$PB/clone/home/src/ru-text/skills"
+( cd "$PB/clone/home/src/ru-text" && git init -q . ) >/dev/null 2>&1
+cp -R "$ROOT/skills/ru-text" "$PB/clone/home/.agents/skills/ru-text"
+probe_case "the source clone is not reported as a rogue install" PASS "no copy landed outside" "$PB/clone"
+
 # Every platform named in the table is either given paths or declared to own its installer.
 # A row typo silently produces a platform this probe can never judge.
 missing=$(awk -F'\t' '!/^#/ && $1 != "platform" && NF > 1 { print $1 "\t" $3 }' "$ROOT/tools/install-paths.tsv" \

@@ -127,9 +127,34 @@ fi
 
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT INT TERM
 
-# Every SKILL.md the agent left anywhere in the sandbox. `-type f` and not `-name` alone:
-# a symlinked skill is a different thing from an installed one and must not read as a pass.
-find "$dir" -type f -name SKILL.md 2>/dev/null | sort > "$TMP/found"
+# Every SKILL.md the agent left anywhere in the sandbox.
+#
+# -L, so symlinks are followed. The first version did not, on the stated reasoning that «a
+# symlinked skill is a different thing from an installed one». A live probe refuted that in
+# one run: the agent symlinked ~/.agents/skills/ru-text at a clone under ~/src and cited
+# OpenAI's own page for it — «Codex supports symlinked skill folders and follows the symlink
+# target when scanning these locations» (learn.chatgpt.com/docs/build-skills.md). It is not
+# merely allowed, it is the better install: git pull on the clone updates it. A gate that
+# fails the vendor's documented shape is wrong about the product, not strict about it.
+#
+# The clone itself is then excluded below. Following symlinks without excluding it would
+# report the source tree as four rogue installs, which is what the same live run did.
+find -L "$dir" -type f -name SKILL.md 2>/dev/null | sort > "$TMP/all"
+
+# A SKILL.md inside a git working tree is a checkout, not an install. Agents clone first and
+# link or copy second, so the clone is a normal intermediate and flagging it is noise of the
+# crying-wolf kind this project keeps refusing to ship. Detected by walking up to a .git,
+# stopping at the sandbox root so a .git ABOVE the sandbox cannot silently excuse everything.
+: > "$TMP/found"
+while IFS= read -r f; do
+  [ -n "$f" ] || continue
+  d=$(dirname "$f"); clone=0
+  while [ "$d" != "$dir" ] && [ "$d" != "/" ]; do
+    [ -e "$d/.git" ] && { clone=1; break; }
+    d=$(dirname "$d")
+  done
+  [ "$clone" -eq 0 ] && printf '%s\n' "$f" >> "$TMP/found"
+done < "$TMP/all"
 n=$(grep -c . "$TMP/found" || true)
 
 if [ "$n" -eq 0 ]; then
@@ -169,14 +194,26 @@ fi
 #    produced a directory the platform never scans. A probe that only looked for a hit
 #    would have called that a pass, because the agent usually writes several copies.
 stray=''
+# The set of skill directories reachable THROUGH a documented path, as physical locations.
+# Comparing directory names was not enough: an agent that links ~/.agents/skills/ru-text at a
+# copy under ~/src has one install, reachable two ways, and a name comparison calls the target
+# a second rogue copy. Resolving both sides collapses them into the one install they are.
+: > "$TMP/legit"
+while IFS= read -r want; do
+  [ -n "$want" ] || continue
+  [ -d "$want" ] || continue
+  for entry in "$want"/*; do
+    [ -e "$entry/SKILL.md" ] || continue
+    (cd "$entry" 2>/dev/null && pwd -P) >> "$TMP/legit" || true
+  done
+done < "$TMP/expected"
+
 while IFS= read -r got; do
-  d=$(dirname "$(dirname "$got")")
-  known=0
-  while IFS= read -r want; do
-    [ -n "$want" ] || continue
-    [ "$d" = "$want" ] && { known=1; break; }
-  done < "$TMP/expected"
-  [ "$known" -eq 0 ] && stray="$stray${stray:+
+  [ -n "$got" ] || continue
+  sd=$(dirname "$got")
+  sdreal=$(cd "$sd" 2>/dev/null && pwd -P || printf '%s' "$sd")
+  if grep -qxF "$sdreal" "$TMP/legit" 2>/dev/null; then continue; fi
+  stray="$stray${stray:+
 }$got"
 done < "$TMP/found"
 
@@ -193,7 +230,16 @@ if [ -n "$hit" ]; then
   if cmp -s "$hit/SKILL.md" "$SRC/SKILL.md"; then
     ok "SKILL.md is byte-identical to this checkout"
   else
-    bad "SKILL.md differs from this checkout — a stale ref, a fork, or a partial copy"
+    # Name what the agent actually fetched. Without it the line reads as a mystery, and the
+    # commonest cause is not a fork at all — it is probing before the work is on the default
+    # branch, so the agent clones an older release and the diff is correct and expected.
+    at=''
+    src_repo=$(find "$dir" -type d -name .git -maxdepth 6 2>/dev/null | head -1)
+    if [ -n "$src_repo" ]; then
+      at=$(git --git-dir="$src_repo" rev-parse --short HEAD 2>/dev/null || true)
+      [ -n "$at" ] && at=" — it fetched $at"
+    fi
+    bad "SKILL.md differs from this checkout$at (a stale ref, a fork, or a partial copy; if you are probing before the branch is merged, this is expected)"
   fi
   want_refs=$(find "$SRC/references" -name '*.md' -type f | wc -l | tr -d ' ')
   got_refs=$(find "$hit/references" -name '*.md' -type f 2>/dev/null | wc -l | tr -d ' ')
