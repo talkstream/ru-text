@@ -929,6 +929,18 @@ io.open(p, 'w', encoding='utf-8').write(s.replace('2\u00a0000', '2 000', 1))
 PY
 expect_typo "an ordinary space between digit groups is caught" "between digit groups" "$d"
 
+# Initials. Found by a judge reading the sources list after three green gates had run over
+# it — the fourth rule this checker did not name. The pattern of the misses is worth stating:
+# every one was a rule the corpus has and the checker did not, never a rule it got wrong.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('А.\u00a0Э.\u00a0Мильчин', 'А. Э. Мильчин', 1))
+PYEOF
+expect_typo "an ordinary space after an initial is caught" "after an initial" "$d"
+
 printf 'selftest: probe-install.sh\n'
 
 # The probe judges what an agent did to a sandbox. These cases judge the probe, by building

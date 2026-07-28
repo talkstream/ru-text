@@ -37,6 +37,7 @@
 #
 # R16/R44  the space before an em dash is non-breaking, so the dash cannot open a line
 # R32/R53  digit groups take a non-breaking space, never a comma, a period or a plain space
+# R31      initials bind to the surname they belong to
 # R30      a single-letter preposition does not end a line
 # R1/R2    guillemets, not straight quotes, around Russian text
 # R-ellipsis a single … character, not three periods
@@ -113,6 +114,14 @@ for path in sys.argv[1:]:
             out.append('%s\t%d\tR30\tordinary space after the single-letter «%s»\t%s'
                        % (path, n, m.group(1), s[max(0, m.start() - 30):m.start() + 30].strip()))
 
+        # R31 — initials bind to the surname, so «А. С.» never ends a line away from
+        # «Пушкин». Found by a judge reading the sources list, after three gates had passed
+        # over it: the fourth rule this checker did not name. One initial is enough to match,
+        # since «Д. Розенталь» is as breakable as «Д. Э. Розенталь».
+        for m in re.finditer(r'\b[А-ЯЁ]\. (?=[А-ЯЁ])', s):
+            out.append('%s\t%d\tR31\tordinary space after an initial\t%s'
+                       % (path, n, s[max(0, m.start() - 30):m.start() + 30].strip()))
+
         for m in re.finditer(r'"[А-Яа-яЁё]|[А-Яа-яЁё]"', s):
             out.append('%s\t%d\tR1/R2\tstraight quote around Russian text\t%s'
                        % (path, n, s[max(0, m.start() - 30):m.start() + 30].strip()))
@@ -144,7 +153,7 @@ PY
 
 if [ -z "$report" ]; then
   n=$(printf '%s\n' "$FILES" | grep -c .)
-  ok "$n file(s) of Russian prose obey R16/R44, R30, R32/R53, R1/R2 and the ellipsis rule"
+  ok "$n file(s) of Russian prose obey R16/R44, R30, R31, R32/R53, R1/R2 and the ellipsis rule"
 else
   count=$(printf '%s\n' "$report" | grep -c .)
   bad "$count typographic defect(s) in the project's own prose:"

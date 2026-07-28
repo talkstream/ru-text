@@ -86,7 +86,7 @@ The corpus is spread over ten reference files, and they load on demand rather th
 - [`info-style.md`](skills/ru-text/references/info-style.md) — the catalogue of 92 stop-words, text structure, facts over adjectives
 - [`editorial-punctuation.md`](skills/ru-text/references/editorial-punctuation.md) — complex sentences, comma traps, introductory words
 - [`editorial-grammar.md`](skills/ru-text/references/editorial-grammar.md) — agreement, pleonasms, verb government, gerunds, homophones
-- [`ux-writing.md`](skills/ru-text/references/ux-writing.md) — buttons, errors, empty states, forms, notifications, onboarding
+- [`ux-writing.md`](skills/ru-text/references/ux-writing.md) — buttons, errors, empty states, forms, notifications, confirmation dialogs
 - [`business-writing.md`](skills/ru-text/references/business-writing.md) — emails, messengers, tone, meeting notes
 - [`anti-patterns.md`](skills/ru-text/references/anti-patterns.md) — wrong-to-right pairs, grouped by severity
 - [`addenda.md`](skills/ru-text/references/addenda.md) — sixteen tells of machine writing, with their carve-outs
