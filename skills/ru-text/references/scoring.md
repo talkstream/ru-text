@@ -50,7 +50,7 @@ The only way to raise the score is to write better.
 
 ### T — Typography (weight 0.15)
 
-Type: hard (objective). Rule source: [typography.md](typography.md) (96 rules).
+Type: hard (objective). Rule source: [typography.md](typography.md).
 
 | Score | Criteria |
 |---|---|
@@ -62,7 +62,7 @@ Type: hard (objective). Rule source: [typography.md](typography.md) (96 rules).
 
 ### Ч — Clarity (weight 0.25)
 
-Type: soft (expert). Rule sources: [info-style.md](info-style.md) (197 rules), [anti-patterns.md](anti-patterns.md) (138 rules). Primary signal from [addenda.md](addenda.md): AD-10 (declared sincerity — **Medium**: honesty predicated of the text itself. A label in a heading, or two instances in one text, lands this dimension in the 5–6 band or lower; a single instance in the body does not). Secondary signals (low weight): AD-3 (patronizing explanation), AD-5 (subject-predicate mismatch, with technical-context exception), AD-6 (manufactured antithesis), AD-7 (preemptive virtue qualifier), AD-8 (assistant-register meta-commentary), AD-11 (mandatory tricolon — a supporting signal here; its home is С, and a triple that praises the author's own delivery goes to AD-7, never to both — AD-11.5).
+Type: soft (expert). Rule sources: [info-style.md](info-style.md), [anti-patterns.md](anti-patterns.md). Primary signal from [addenda.md](addenda.md): AD-10 (declared sincerity — **Medium**: honesty predicated of the text itself. A label in a heading, or two instances in one text, lands this dimension in the 5–6 band or lower; a single instance in the body does not). Secondary signals (low weight): AD-3 (patronizing explanation), AD-5 (subject-predicate mismatch, with technical-context exception), AD-6 (manufactured antithesis), AD-7 (preemptive virtue qualifier), AD-8 (assistant-register meta-commentary), AD-11 (mandatory tricolon — a supporting signal here; its home is С, and a triple that praises the author's own delivery goes to AD-7, never to both — AD-11.5).
 
 | Score | Criteria |
 |---|---|
@@ -74,7 +74,7 @@ Type: soft (expert). Rule sources: [info-style.md](info-style.md) (197 rules), [
 
 ### Г — Grammar (weight 0.20)
 
-Type: hard (objective). Rule sources: [editorial-grammar.md](editorial-grammar.md) (171 rules), [editorial-punctuation.md](editorial-punctuation.md) (88 rules).
+Type: hard (objective). Rule sources: [editorial-grammar.md](editorial-grammar.md) — including §I government, §J gerund phrases and §K contextual homophones — and [editorial-punctuation.md](editorial-punctuation.md).
 
 | Score | Criteria |
 |---|---|
