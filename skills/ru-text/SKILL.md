@@ -1,9 +1,9 @@
 ---
 name: ru-text
 description: >
-  Use when writing, editing, or reviewing Russian-language text, or when user
-  mentions ru-text. Covers typography, info-style, editorial, UX writing, business
-  correspondence, AI-text cleanup. Auto-activates on Russian text output.
+  Russian text quality. Triggers: вычитай, проверь текст, поправь, отредактируй,
+  причеши, ru-text. Also any Russian output. Typography, info-style, editorial,
+  UX writing, business correspondence, AI-text cleanup.
 metadata:
   openclaw:
     always: true

@@ -36,6 +36,15 @@ fresh_copy() {
   # any no-loss gate run against it fails for a reason that has nothing to do with the case.
   cp -R "$ROOT/skills" "$d/skills"
   cp -R "$ROOT/tools" "$d/tools"
+  # Everything a checker reads has to be in the copy, or gates.sh fails inside a case for a
+  # reason the case is not about. This list grows when a checker learns to read a new file:
+  # check-version.sh added the manifests and the two READMEs. Missing files are copied
+  # silently rather than fatally — a case may deliberately be run against a partial tree.
+  cp -R "$ROOT/.claude-plugin" "$ROOT/.codex-plugin" "$ROOT/.cursor-plugin" "$d/" 2>/dev/null || true
+  mkdir -p "$d/.claude"
+  for f in gemini-extension.json openclaw.plugin.json README.md README.en.md .claude/CLAUDE.md; do
+    [ -f "$ROOT/$f" ] && cp "$ROOT/$f" "$d/$f" 2>/dev/null
+  done
   printf '%s' "$d"
 }
 
@@ -455,6 +464,72 @@ PYEOF
 else
   bad "the corpus is no longer NFC — extract-atoms must normalise, or comparisons will drift"
 fi
+
+printf 'selftest: check-version.sh\n'
+
+# expect_version <case-name> <substring the output must contain> <dir>
+expect_version() {
+  name=$1; needle=$2; d=$3
+  out=$("$d/tools/check-version.sh" 2>&1) && status=0 || status=$?
+  if [ "$status" -eq 0 ]; then
+    bad "$name — check-version PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if "$d/tools/check-version.sh" >/dev/null 2>&1; then
+  ok "an untouched copy passes check-version"
+else
+  bad "an untouched copy FAILS check-version — the cases below mean nothing"
+  "$d/tools/check-version.sh" 2>&1 | sed 's/^/        /'
+fi
+
+# One manifest moved and the rest did not: the exact shape of the v1.10.1 slip, where both
+# READMEs advertised the previous release while the manifests were current.
+d=$(fresh_copy)
+sed 's/"version": "[0-9.]*"/"version": "9.9.9"/' "$d/gemini-extension.json" > "$d/v" && mv "$d/v" "$d/gemini-extension.json"
+expect_version "one manifest out of step is caught" "version points disagree" "$d"
+
+# The prose copy is the half that actually went stale last time.
+d=$(fresh_copy)
+sed 's/Свежая версия/Прошлая версия/' "$d/README.md" > "$d/v" && mv "$d/v" "$d/README.md"
+expect_version "a version line missing from the RU README is caught" "missing or duplicated" "$d"
+
+# A trigger phrase dropped from the description. This is the failure the file exists for:
+# on a host with no instruction file the description IS the trigger, so losing a phrase
+# stops the skill firing for Russian-speaking users while every other gate stays green.
+d=$(fresh_copy)
+sed 's/вычитай, //' "$d/skills/ru-text/SKILL.md" > "$d/v" && mv "$d/v" "$d/skills/ru-text/SKILL.md"
+expect_version "a lost trigger phrase is caught" "lost a trigger phrase" "$d"
+
+# Present but pushed out of the head, where a truncating picker stops showing them.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/SKILL.md" <<'PY'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = s.replace('  Russian text quality. Triggers: ',
+              '  Russian text quality for typography, info-style, editorial, UX writing and\n'
+              '  business correspondence, plus AI-text cleanup. Triggers: ')
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+expect_version "Russian phrases pushed past the head are caught" "past character" "$d"
+
+# Over our own style budget.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/SKILL.md" <<'PY'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = s.replace('  причеши, ru-text.', '  причеши, ru-text. ' + ('padding words to overflow the budget ' * 3))
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+expect_version "a description over the budget is caught" "over our budget" "$d"
 
 printf 'selftest: gates.sh\n'
 
