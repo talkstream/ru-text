@@ -52,6 +52,29 @@ Nine more are of the same kind. Two others are charged to the whole document rat
 
 Where the device is legitimate — a quotation, an analysis of someone else's text, a legal formula, a list that genuinely has three items — is written into the rule itself. The carve-out is read before the finding is raised.
 
+## What it costs you in context
+
+The corpus is large — roughly 86,000 tokens, and nearly half of that is the single reference
+on machine-written text. Running all of it over every paragraph would be wasteful at your
+expense, so ru-text does not.
+
+What stays in context permanently is only the always-on skill, about 1,700 tokens: the
+typography table and the top stop-words. Everything else loads when it is needed.
+
+The full check runs when you ask for it — «вычитай», «прогони ru-text», or a gate in your own
+discipline that names ru-text. Then the whole corpus is read, because that is what you asked
+for.
+
+When the agent checks itself, unprompted, it starts with a fast pass instead: the index of
+tells and the stop-word catalogue, about 3,000 tokens rather than 51,000. It catches
+typography and stop-words — the things a single line decides. If it finds a trace of machine
+writing, or five findings accumulate, it expands into the full check on its own. The fast
+pass always labels itself as fast and never passes for the full one.
+
+The fast pass does **not** judge the tells of machine writing. Each of them carries carve-outs
+naming where the device is legitimate, and those live only in the full reference. Spotting a
+trace is a reason to expand, not a reason to raise a finding.
+
 ## Boundaries
 
 **Your request outranks the rules.** Ask for a casual, academic, legal, SEO or literary style and ru-text adapts. These are quality defaults, not requirements.
