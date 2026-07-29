@@ -72,8 +72,11 @@ for m in MANIFESTS:
 # with two sources, one of which decays, is the defect this whole file exists to prevent.
 # The v1.10.1 gate caught exactly that: manifests current, prose advertising the release
 # before. Removing the second source removes the class.
+# The capture admits a semver pre-release suffix. The v2.0.0-rc.1 bump found the bare
+# triple truncating it: the file said 2.0.0-rc.1, the pattern read 2.0.0, and a correct
+# tree failed as an eight-way disagreement.
 PROSE = [
-    ('.claude/CLAUDE.md', r'\*\*Version:\*\*\s*([0-9]+\.[0-9]+\.[0-9]+)'),
+    ('.claude/CLAUDE.md', r'\*\*Version:\*\*\s*([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)'),
 ]
 for path, pat in PROSE:
     s = io.open(path, encoding='utf-8').read()

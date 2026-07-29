@@ -496,8 +496,27 @@ fi
 # One manifest moved and the rest did not: the exact shape of the v1.10.1 slip, where both
 # READMEs advertised the previous release while the manifests were current.
 d=$(fresh_copy)
-sed 's/"version": "[0-9.]*"/"version": "9.9.9"/' "$d/gemini-extension.json" > "$d/v" && mv "$d/v" "$d/gemini-extension.json"
+# [^"]*, not [0-9.]*: on a pre-release tree the narrow class matches nothing, the sed
+# no-ops, and this case passes or fails on whatever else is wrong with the copy.
+sed 's/"version": "[^"]*"/"version": "9.9.9"/' "$d/gemini-extension.json" > "$d/v" && mv "$d/v" "$d/gemini-extension.json"
 expect_version "one manifest out of step is caught" "version points disagree" "$d"
+
+# A pre-release is a version like any other. The v2.0.0-rc.1 bump caught the prose pattern
+# truncating the suffix — 2.0.0-rc.1 read as 2.0.0 — so a correct tree failed as an
+# eight-way disagreement. This copy pins the fix after the release strips the suffix from
+# the tree itself.
+d=$(fresh_copy)
+for m in .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json \
+         .cursor-plugin/plugin.json gemini-extension.json openclaw.plugin.json; do
+  sed 's/"version": "[^"]*"/"version": "9.9.9-rc.1"/' "$d/$m" > "$d/v" && mv "$d/v" "$d/$m"
+done
+sed 's/\*\*Version:\*\* [^ ]*/**Version:** 9.9.9-rc.1/' "$d/.claude/CLAUDE.md" > "$d/v" && mv "$d/v" "$d/.claude/CLAUDE.md"
+if "$d/tools/check-version.sh" >/dev/null 2>&1; then
+  ok "a pre-release version agreeing at every point passes"
+else
+  bad "a pre-release version agreeing at every point FAILS — the prose pattern is truncating the suffix again"
+  "$d/tools/check-version.sh" 2>&1 | grep -A9 'FAIL' | sed 's/^/        /'
+fi
 
 # The prose copy is the half that actually went stale last time. Both READMEs dropped their
 # prose version in favour of a badge that renders live from the releases API, so the one
