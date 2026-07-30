@@ -1,5 +1,5 @@
 {
   "name": "ru-text",
-  "version": "2.0.0-rc.3",
-  "description": "Russian text quality — 2,000+ linguistic atoms for typography, info-style, editorial, UX writing, business correspondence, and AI-text cleanup"
+  "version": "2.0.0",
+  "description": "Russian text quality for AI agents — neuroslop cleanup, typography, information style, editorial standards, UX writing, business correspondence. 2,000+ linguistic atoms, loaded on demand."
 }

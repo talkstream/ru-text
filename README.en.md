@@ -10,7 +10,7 @@ Your AI agent already writes Russian. ru-text takes care of how that text looks 
 
 Hand this sentence to your AI agent:
 
-> Установи навык https://github.com/talkstream/ru-text глобально и вызывай его для любых задач с русским текстом: вычитка, типографика, редактура, UX-тексты, деловая переписка.
+> Установи навык https://github.com/talkstream/ru-text глобально и вызывай его для любых задач с русским текстом: вычитка, типографика, очистка от нейрослопа, редактура, UX-тексты, деловая переписка.
 
 The agent takes it from there: it knows where its platform keeps skills better than any instruction written a year ago. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
 

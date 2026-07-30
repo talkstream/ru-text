@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2026-07-30
 
 ### Breaking changes
 
@@ -68,6 +68,27 @@ score or wrote a test against `/ru-score` output should re-run it before upgradi
   would have blessed the `~/.codex/skills` failure. The script deliberately does not run the
   agent: a shell cannot start another vendor's agent, and one that pretended to would be a
   gate testing itself. Five selftest cases, one per outcome.
+- **AD-17, a comma welded to a dash.** Raised by the director on reading a junction in this
+  project's own README: «люди так не пишут в живой жизни, даже профессионалы языка». The rule is
+  honest about its footing — Rozental §64 PERMITS the junction, Lebedev's Ководство §143 does not
+  discuss combining marks, and nothing was found from Ilyakhov, so the rule claims no source
+  forbids it. It observes that living prose avoids what the norm allows, which is what `addenda.md`
+  is for. Five carve-outs, and the first is load-bearing: the trigger is a JUNCTION, not the
+  character pair, so direct speech («„Хороший вопрос“, — ответил инженер») is two constructions and
+  never flagged.
+- **§A.1 of `editorial-punctuation.md` gains the particle rule.** A restrictive particle in front
+  of a conjunction moves the comma left rather than removing it: «вызывай ru-text, только когда я
+  прошу». The gap was found by a check that had to reach outside the corpus to catch it (ПАС
+  §116–117, Розенталь §33.6) — nothing in the corpus could have.
+- **A model may call the check again, and it now starts cheap.** `ru-check` and `ru-score` carried
+  `disable-model-invocation: true`, which solved a real cost problem — a 15–20k-token check firing
+  on any Russian text in sight — by making the tool unreachable to the agent that was supposed to
+  run it. The flag is gone, the descriptions now carry the Russian phrases a person actually says
+  («вычитай», «прогони ru-text», «оцени текст»), and the cost problem is solved where it lives:
+  an explicit request reads the whole corpus, while a self-initiated run starts with triage — the
+  neuroslop index plus the stop-word catalogue, ~3k tokens against ~51k — and escalates on
+  evidence. Triage may report only what a single line decides; a neuroslop tell is never a triage
+  finding, because every AD rule's carve-outs live in the full file.
 - **A grammar layer the corpus had been missing**, in `editorial-grammar.md`: §I verb
   government from a **closed list** of the verbs and prepositions that are actually confused,
   plus mismatched government across coordinated members · §J the gerund phrase whose subject
