@@ -945,9 +945,18 @@ it is the fingerprint of rule-following without an ear.
   two correct rules applied together, which is why nothing caught it
 - Independently formulated from the 2026 review of AI-generated Russian prose
 
-**Trigger construction:** a comma immediately followed by an em dash, `, —`, inside a sentence,
-where the comma closes a subordinate clause, a participial phrase or an aside, and the dash
-opens a predicate, an aside or a summary.
+**Trigger construction:** `U+002C` followed by any run of horizontal whitespace — none, an
+ordinary space, `U+00A0` or `U+202F` — and then `U+2014`, inside a sentence, where the comma
+closes a subordinate clause, a participial phrase or an aside, and the dash opens what follows:
+a predicate, an aside, a summary, or a second independent clause.
+
+Two things in that sentence were wrong when this rule shipped, and a measurement found both.
+«Immediately followed» excluded the non-breaking space R16/R44 REQUIRE before an em dash — so
+the rule, as first written, could not fire on a single correctly typeset junction. And the
+dash-side list omitted the independent clause, which the Wrong table below has carried from the
+start («…только если они уже существуют, — сама она их не создаёт»): the trigger excluded an
+example of itself. The list is illustrative; the test is that both marks are demanded by ONE
+construction rather than by two, which is what separates this from direct speech (AD-17.1).
 
 **What to do:** remove the need for one of the marks. Split the sentence, or reorder it so the
 junction never forms. Do not break the norm by deleting the comma and keeping the dash — that
@@ -957,7 +966,7 @@ AD-17.1 (the trigger is a JUNCTION, not the pair of characters). Two marks that 
 different construction are not this rule. Direct speech is the case that matters: in «„Хороший
 вопрос“, — ответил инженер» the comma closes the quoted reply and the dash introduces the
 author's words. That is the punctuation of direct speech, prescribed and universal, and it is
-**never** flagged. Every occurrence of `, —` in this corpus outside this rule's own examples is of that kind — direct speech, in AD-7.5 and AD-10.4 and their tables.
+**never** flagged. Every occurrence of `, —` in this corpus outside this rule's own examples is of that kind — direct speech, in AD-7.5, AD-8.4, AD-10.4, AD-14.6 and their tables.
 
 AD-17.2 (carve-out — homogeneous subordinate clauses before a main clause). Rozental §40 and §46
 describe a construction where comma-plus-dash works as a single mark: a run of homogeneous
