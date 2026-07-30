@@ -65,6 +65,9 @@ jobs:
         # and in one afternoon a literal ~ and a missing non-breaking space both shipped.
         run: tools/check-typography.sh
 
+      - name: check-assets — manifest images exist, are square, and fit the limit
+        run: tools/check-assets.sh
+
       - name: No-loss gate — every atom of the pinned baseline still accounted for
         # The baseline is the v1.10.1 corpus, frozen as a historical artefact: it is NOT
         # regenerated when the corpus changes. That is the whole point — it is the "before"

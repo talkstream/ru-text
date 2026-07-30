@@ -77,6 +77,11 @@ tools/check-dogfood.sh || fail "check-dogfood"
 # and that claim was checked by remembering to ask a model — which failed twice in one day.
 tools/check-typography.sh || fail "check-typography"
 
+# ── 5c. The images a manifest points at ─────────────────────────────────────────────
+# Added the day the OpenAI plugin portal refused an upload over a 981x993 logo that had
+# shipped in five releases. Nothing in the repository had ever looked at an image file.
+tools/check-assets.sh || fail "check-assets"
+
 # ── 6. No-loss gate against the pinned baseline ─────────────────────────────────────
 # GNU coreutils names it sha256sum; macOS ships shasum and no sha256sum. Checking for
 # both, rather than assuming either, is why this script runs on the author's machine and

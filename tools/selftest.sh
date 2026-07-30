@@ -46,6 +46,10 @@ fresh_copy() {
     [ -f "$ROOT/$f" ] && cp "$ROOT/$f" "$d/$f" 2>/dev/null
   done
   cp -R "$ROOT/notion" "$d/notion" 2>/dev/null || true
+  # The images the manifests point at. check-assets.sh reads them, and a copy without them
+  # reports every reference as missing — a failure about the fixture, not about the case.
+  cp -R "$ROOT/assets" "$d/assets" 2>/dev/null || true
+  cp "$ROOT/logo-round.png" "$d/logo-round.png" 2>/dev/null || true
   # A repository, not just a directory: check-dogfood walks `git ls-files`, so a copy that
   # is not one fails inside every case for a reason no case is about.
   ( cd "$d" && git init -q . && git add -A ) >/dev/null 2>&1 || true
@@ -986,6 +990,76 @@ s = io.open(p, encoding='utf-8').read()
 io.open(p, 'w', encoding='utf-8').write(s.replace('2\u00a0000', '2 000', 1))
 PY
 expect_typo "an ordinary space between digit groups is caught" "between digit groups" "$d"
+
+printf 'selftest: check-assets.sh\n'
+
+# The checker was written the day the OpenAI portal refused our upload \u2014 \u00abImage must be
+# square; provided image is 981x993\u00bb \u2014 on a file that had been that shape since it was drawn.
+# Its three assertions are mutated one at a time below, because a fixture that breaks two at
+# once proves neither.
+expect_assets() { # $1=case-name  $2=needle  $3=dir
+  name=$1; needle=$2; d=$3
+  out=$(cd "$d" && ./tools/check-assets.sh 2>&1) && st=0 || st=$?
+  if [ "$st" -eq 0 ]; then
+    bad "$name \u2014 check-assets PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name \u2014 failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if (cd "$d" && ./tools/check-assets.sh >/dev/null 2>&1); then
+  ok "an untouched copy passes check-assets"
+else
+  bad "an untouched copy FAILS check-assets \u2014 the cases below mean nothing"
+  (cd "$d" && ./tools/check-assets.sh 2>&1) | sed 's/^/        /'
+fi
+
+# 1. Not square. One pixel column is enough; the portal measures, it does not eyeball.
+d=$(fresh_copy)
+python3 - "$d/logo-round.png" <<'PY'
+import struct, sys, zlib
+# Rewrite the IHDR width, and its CRC with it, without decoding the image: this keeps the
+# case about squareness rather than about whatever an encoder would change on a round-trip.
+p = sys.argv[1]
+b = bytearray(open(p, 'rb').read())
+w, h = struct.unpack('>II', bytes(b[16:24]))
+b[16:20] = struct.pack('>I', w - 1)
+b[29:33] = struct.pack('>I', zlib.crc32(bytes(b[12:29])) & 0xffffffff)
+open(p, 'wb').write(bytes(b))
+PY
+expect_assets "an image that is one pixel off square is caught" "not square" "$d"
+
+# 2. A reference to a file that is not there. This is the silent one: awesome-codex-plugins
+# fetches the icon, fails, and publishes the listing without it \u2014 no error anywhere.
+d=$(fresh_copy)
+mv "$d/assets/icon.png" "$d/assets/icon-renamed.png"
+expect_assets "a manifest pointing at a file that is not there is caught" "missing file" "$d"
+
+# 3. Over the 50 KB icon ceiling that awesome-codex-plugins enforces in its own CI.
+d=$(fresh_copy)
+cp "$d/logo-round.png" "$d/assets/icon.png"
+expect_assets "an icon over the 50 KB ceiling is caught" "icon over" "$d"
+
+# The base a relative path resolves from differs by vendor, and the first version of the
+# checker assumed one convention for both \u2014 reporting Codex's images as missing while its
+# own bundle resolved them fine. This pins that the Cursor manifest's `../` form is still
+# understood: break the file it reaches, and the checker must say so.
+d=$(fresh_copy)
+python3 - "$d/logo-round.png" <<'PY'
+import struct, sys, zlib
+p = sys.argv[1]
+b = bytearray(open(p, 'rb').read())
+w, h = struct.unpack('>II', bytes(b[16:24]))
+b[20:24] = struct.pack('>I', h - 1)
+b[29:33] = struct.pack('>I', zlib.crc32(bytes(b[12:29])) & 0xffffffff)
+open(p, 'wb').write(bytes(b))
+PY
+expect_assets "a path written relative to the manifest's own directory still resolves" \
+  ".cursor-plugin/plugin.json" "$d"
 
 # Initials. Found by a judge reading the sources list after three green gates had run over
 # it — the fourth rule this checker did not name. The pattern of the misses is worth stating:
