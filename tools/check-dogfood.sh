@@ -72,6 +72,38 @@ tools/frozen.sha256|catalog_entries=%s'
 CATEGORY_CLAIMS='notion/README.md|across %s categories
 notion/README.md|в %s категориях'
 
+# Words the product says about its own corpus that must exist IN that corpus. Numbers are
+# checked above; this checks names, and it exists because one name got it wrong twice.
+#
+# «онбординг» was written into the README's description of ux-writing.md, corrected on
+# 28.07 when a check found the file has no such section (its thirteen run A to M, and I is
+# «Диалоги подтверждения»), and then written back in during a rewrite two days later. A
+# defect that returns is a defect nobody is guarding.
+#
+# Format: claiming file <TAB> phrase <TAB> file the phrase claims to describe.
+NAME_CLAIMS='README.md	онбординг	skills/ru-text/references/ux-writing.md
+README.en.md	onboarding	skills/ru-text/references/ux-writing.md'
+
+verify_names() {
+  bad=''
+  while IFS='	' read -r claimant phrase target; do
+    [ -n "$claimant" ] || continue
+    [ -f "$claimant" ] || continue
+    grep -qiF -- "$phrase" "$claimant" || continue          # not claimed: nothing to check
+    grep -qiF -- "$phrase" "$target" && continue            # claimed and present: fine
+    bad="$bad${bad:+
+}$claimant says «$phrase» about $target, which does not contain it"
+  done <<EOF
+$NAME_CLAIMS
+EOF
+  if [ -z "$bad" ]; then
+    ok "no file is credited with a section it does not have"
+  else
+    bad "a file is credited with a section it does not have:"
+    printf '%s\n' "$bad" | sed 's/^/        /'
+  fi
+}
+
 verify_claims() { # $1=label  $2=value  $3=claim list
   missing=''
   n=0
@@ -147,6 +179,7 @@ printf 'check-dogfood: the numbers the product states about itself\n'
 verify_claims "stop-word catalogue" "$CAT" "$CATALOG_CLAIMS"
 guard_complete "stop-word catalogue" "$CAT" "$CATALOG_CLAIMS"
 verify_claims "catalogue categories" "$CATEG" "$CATEGORY_CLAIMS"
+verify_names
 
 [ "$fail" -eq 0 ] && { echo "check-dogfood: PASS"; exit 0; }
 echo "check-dogfood: FAIL — $fail check(s)"

@@ -618,6 +618,21 @@ expect_dogfood() { # $1=case-name $2=needle $3=dir
   fi
 }
 
+# The word guard, and it exists because the word came back. «онбординг» was written into the
+# README's description of ux-writing.md, corrected when a check found the file has no such
+# section, and written back in during a rewrite two days later. Numbers had a guard; names did
+# not.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'уведомления, диалоги подтверждения'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'уведомления, онбординг'))
+PYEOF
+expect_dogfood "a file credited with a section it does not have is caught" "does not contain it" "$d"
+
 d=$(fresh_copy)
 if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
   ok "an untouched copy passes check-dogfood"
