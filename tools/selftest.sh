@@ -31,10 +31,24 @@ bad()  { fail=$((fail + 1)); printf '  FAIL  %s\n' "$1"; }
 # fresh_copy — a self-contained repository slice: corpus, tools and baseline, all writable
 fresh_copy() {
   d=$(mktemp -d "$TMPROOT/case.XXXXXX")
-  mkdir -p "$d/skills/ru-text"
-  cp -R "$ROOT/skills/ru-text/references" "$d/skills/ru-text/references"
-  cp "$ROOT/skills/ru-text/SKILL.md" "$d/skills/ru-text/SKILL.md"
+  # The WHOLE skills tree, not just references/ and SKILL.md. The baseline counts atoms in
+  # skills/ru-text/agents/*.yaml too, so a copy missing them starts eight atoms short and
+  # any no-loss gate run against it fails for a reason that has nothing to do with the case.
+  cp -R "$ROOT/skills" "$d/skills"
   cp -R "$ROOT/tools" "$d/tools"
+  # Everything a checker reads has to be in the copy, or gates.sh fails inside a case for a
+  # reason the case is not about. This list grows when a checker learns to read a new file:
+  # check-version.sh added the manifests and the two READMEs. Missing files are copied
+  # silently rather than fatally — a case may deliberately be run against a partial tree.
+  cp -R "$ROOT/.claude-plugin" "$ROOT/.codex-plugin" "$ROOT/.cursor-plugin" "$d/" 2>/dev/null || true
+  mkdir -p "$d/.claude"
+  for f in gemini-extension.json openclaw.plugin.json README.md README.en.md INSTALL.md INSTALL.en.md .claude/CLAUDE.md; do
+    [ -f "$ROOT/$f" ] && cp "$ROOT/$f" "$d/$f" 2>/dev/null
+  done
+  cp -R "$ROOT/notion" "$d/notion" 2>/dev/null || true
+  # A repository, not just a directory: check-dogfood walks `git ls-files`, so a copy that
+  # is not one fails inside every case for a reason no case is about.
+  ( cd "$d" && git init -q . && git add -A ) >/dev/null 2>&1 || true
   printf '%s' "$d"
 }
 
@@ -167,8 +181,14 @@ esac
 printf 'selftest: extract-atoms.sh + diff-atoms.sh\n'
 
 # expect_diff <case> <expected exit: 0|1> <needle or -> <old> <new> [map]
+# The default map is EMPTY, not the repository's own. These cases compare snapshots of the
+# current corpus against each other, and every row of the real map names an atom the
+# current corpus no longer has — so in such a comparison every real row is legitimately
+# STALE, and «identical snapshots pass» started failing the moment the map stopped being
+# empty. What is under test here is diff-atoms on a synthetic pair; the real map is
+# exercised for real by gates.sh, and by the cases below that pass their own fixture.
 expect_diff() {
-  name=$1; want=$2; needle=$3; o=$4; n=$5; m=${6:-$ROOT/tools/atom-map.tsv}
+  name=$1; want=$2; needle=$3; o=$4; n=$5; m=${6:-$EMPTY_MAP}
   out=$("$ROOT/tools/diff-atoms.sh" "$o" "$n" "$m" 2>&1) && st=0 || st=$?
   if [ "$st" -ne "$want" ]; then
     bad "$name — exit $st, wanted $want"
@@ -184,6 +204,8 @@ expect_diff() {
 }
 
 W=$(mktemp -d "$TMPROOT/atoms.XXXXXX")
+EMPTY_MAP="$W/empty-map.tsv"
+printf '# no rows: see the note above expect_diff\n' > "$EMPTY_MAP"
 "$ROOT/tools/extract-atoms.sh" "$ROOT/skills/ru-text" > "$W/a.tsv"
 "$ROOT/tools/extract-atoms.sh" "$ROOT/skills/ru-text" > "$W/b.tsv"
 
@@ -427,16 +449,651 @@ fi
 # that would have said otherwise.
 if ! command -v python3 >/dev/null 2>&1; then
   bad "python3 is absent, so the NFC assumption behind extract-atoms is unverified here"
-elif python3 -c "
-import unicodedata,glob,io,sys
-bad=[(f,i+1) for f in glob.glob('$ROOT/skills/ru-text/references/*.md')+['$ROOT/skills/ru-text/SKILL.md']
-     for i,l in enumerate(io.open(f,encoding='utf-8').read().split(chr(10)))
-     if unicodedata.normalize('NFC',l)!=l]
-sys.exit(1 if bad else 0)"; then
+# $ROOT arrives through argv, never interpolated into the source. Spliced in, a repository
+# checked out into a directory whose name contains an apostrophe closes the string literal
+# and runs whatever follows it — and the milder half is worse to debug: the interpreter
+# raises, the else branch fires, and the selftest announces that THE CORPUS is no longer
+# NFC. A true-sounding sentence about the wrong file. The folding check above already
+# passes ROOT this way; this one did not.
+elif python3 - "$ROOT" <<'PYEOF'; then
+import unicodedata, glob, io, sys
+R = sys.argv[1]
+bad = [(f, i + 1)
+       for f in glob.glob(R + '/skills/ru-text/references/*.md') + [R + '/skills/ru-text/SKILL.md']
+       for i, l in enumerate(io.open(f, encoding='utf-8').read().split(chr(10)))
+       if unicodedata.normalize('NFC', l) != l]
+sys.exit(1 if bad else 0)
+PYEOF
   ok "the corpus is still NFC (no normalisation step needed)"
 else
   bad "the corpus is no longer NFC — extract-atoms must normalise, or comparisons will drift"
 fi
+
+printf 'selftest: check-version.sh\n'
+
+# expect_version <case-name> <substring the output must contain> <dir>
+expect_version() {
+  name=$1; needle=$2; d=$3
+  out=$("$d/tools/check-version.sh" 2>&1) && status=0 || status=$?
+  if [ "$status" -eq 0 ]; then
+    bad "$name — check-version PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if "$d/tools/check-version.sh" >/dev/null 2>&1; then
+  ok "an untouched copy passes check-version"
+else
+  bad "an untouched copy FAILS check-version — the cases below mean nothing"
+  "$d/tools/check-version.sh" 2>&1 | sed 's/^/        /'
+fi
+
+# One manifest moved and the rest did not: the exact shape of the v1.10.1 slip, where both
+# READMEs advertised the previous release while the manifests were current.
+d=$(fresh_copy)
+# [^"]*, not [0-9.]*: on a pre-release tree the narrow class matches nothing, the sed
+# no-ops, and this case passes or fails on whatever else is wrong with the copy.
+sed 's/"version": "[^"]*"/"version": "9.9.9"/' "$d/gemini-extension.json" > "$d/v" && mv "$d/v" "$d/gemini-extension.json"
+expect_version "one manifest out of step is caught" "version points disagree" "$d"
+
+# A pre-release is a version like any other. The v2.0.0-rc.1 bump caught the prose pattern
+# truncating the suffix — 2.0.0-rc.1 read as 2.0.0 — so a correct tree failed as an
+# eight-way disagreement. This copy pins the fix after the release strips the suffix from
+# the tree itself.
+d=$(fresh_copy)
+for m in .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json \
+         .cursor-plugin/plugin.json gemini-extension.json openclaw.plugin.json; do
+  sed 's/"version": "[^"]*"/"version": "9.9.9-rc.1"/' "$d/$m" > "$d/v" && mv "$d/v" "$d/$m"
+done
+sed 's/\*\*Version:\*\* [^ ]*/**Version:** 9.9.9-rc.1/' "$d/.claude/CLAUDE.md" > "$d/v" && mv "$d/v" "$d/.claude/CLAUDE.md"
+if "$d/tools/check-version.sh" >/dev/null 2>&1; then
+  ok "a pre-release version agreeing at every point passes"
+else
+  bad "a pre-release version agreeing at every point FAILS — the prose pattern is truncating the suffix again"
+  "$d/tools/check-version.sh" 2>&1 | grep -A9 'FAIL' | sed 's/^/        /'
+fi
+
+# The prose copy is the half that actually went stale last time. Both READMEs dropped their
+# prose version in favour of a badge that renders live from the releases API, so the one
+# prose point left is the convention file — which is the one that went stale SECOND, after
+# the READMEs were fixed.
+d=$(fresh_copy)
+sed 's/\*\*Version:\*\*/**Versionn:**/' "$d/.claude/CLAUDE.md" > "$d/v" && mv "$d/v" "$d/.claude/CLAUDE.md"
+expect_version "a version line missing from the convention file is caught" "missing or duplicated" "$d"
+
+# A trigger phrase dropped from the description. This is the failure the file exists for:
+# on a host with no instruction file the description IS the trigger, so losing a phrase
+# stops the skill firing for Russian-speaking users while every other gate stays green.
+d=$(fresh_copy)
+sed 's/вычитай, //' "$d/skills/ru-text/SKILL.md" > "$d/v" && mv "$d/v" "$d/skills/ru-text/SKILL.md"
+expect_version "a lost trigger phrase is caught" "lost a trigger phrase" "$d"
+
+# Present but pushed out of the head, where a truncating picker stops showing them.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/SKILL.md" <<'PY'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = s.replace('  Russian text quality. Triggers: ',
+              '  Russian text quality for typography, info-style, editorial, UX writing and\n'
+              '  business correspondence, plus AI-text cleanup. Triggers: ')
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+expect_version "Russian phrases pushed past the head are caught" "past character" "$d"
+
+# Over our own style budget.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/SKILL.md" <<'PY'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = s.replace('  причеши, ru-text.', '  причеши, ru-text. ' + ('padding words to overflow the budget ' * 3))
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+expect_version "a description over the budget is caught" "over our budget" "$d"
+
+# Neither README states the size of SKILL.md any more: the rewrite dropped it, because a
+# manifest's word count answers «did the author follow the spec», which is not a question a
+# reader has. §4 of check-version stays and is self-activating — if a size claim ever returns,
+# it is checked — so these cases BUILD the claim in the sandbox before corrupting it. Testing
+# a checker against a claim the product no longer makes would be testing nothing at all.
+add_size_claim() { # $1=dir  $2=words  $3=lines
+  python3 - "$1/README.md" "$2" "$3" <<'PY'
+import io, sys
+p, w, l = sys.argv[1], sys.argv[2], sys.argv[3]
+s = io.open(p, encoding='utf-8').read()
+anchor = '## Обновление'
+assert s.count(anchor) == 1, 'anchor moved; fix the fixture'
+s = s.replace(anchor, '## Технические детали\n\n- SKILL.md: %s слов, %s строк\n\n' % (w, l) + anchor, 1)
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+}
+
+skill_words() { python3 -c "import io,re,sys;print(len(re.findall(r'[^ \t\n\r\f\v]+', io.open(sys.argv[1], encoding='utf-8').read())))" "$1/skills/ru-text/SKILL.md"; }
+skill_lines() { grep -c '' "$1/skills/ru-text/SKILL.md"; }
+
+# Word count wrong, line count right.
+d=$(fresh_copy)
+add_size_claim "$d" 999 "$(skill_lines "$d")"
+expect_version "a stale SKILL.md word count is caught" "states the size of SKILL.md wrongly" "$d"
+
+# Line count wrong, word count right — pinned separately, because a comparison that looked
+# only at words passed this and left the selftest green.
+d=$(fresh_copy)
+add_size_claim "$d" "$(skill_words "$d")" 42
+expect_version "a stale SKILL.md line count is caught" "states the size of SKILL.md wrongly" "$d"
+
+# Two lines stating the size. §1 of this file has lived by «exactly once» since v1.10.1 and
+# §4 did not inherit it; it now allows none or one and refuses two.
+d=$(fresh_copy)
+add_size_claim "$d" 999 42
+add_size_claim "$d" 888 41
+expect_version "a second line stating the size is caught, not silently ignored" "want at most 1" "$d"
+
+# The file grows and a claim that was correct when written stops being true. This is the
+# failure that will actually happen: SKILL.md is edited far more often than the sentence.
+d=$(fresh_copy)
+add_size_claim "$d" "$(skill_words "$d")" "$(skill_lines "$d")"
+printf '\n- A line added to SKILL.md long after the README stopped being re-read.\n' >> "$d/skills/ru-text/SKILL.md"
+expect_version "SKILL.md growing past its stated size is caught" "states the size of SKILL.md wrongly" "$d"
+
+
+printf 'selftest: check-dogfood.sh\n'
+
+expect_dogfood() { # $1=case-name $2=needle $3=dir
+  name=$1; needle=$2; d=$3
+  out=$(cd "$d" && ./tools/check-dogfood.sh 2>&1) && status=0 || status=$?
+  if [ "$status" -eq 0 ]; then
+    bad "$name — check-dogfood PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+# The word guard, and it exists because the word came back. «онбординг» was written into the
+# README's description of ux-writing.md, corrected when a check found the file has no such
+# section, and written back in during a rewrite two days later. Numbers had a guard; names did
+# not.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'уведомления, диалоги подтверждения'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'уведомления, онбординг'))
+PYEOF
+expect_dogfood "a file credited with a section it does not have is caught" "does not contain it" "$d"
+
+d=$(fresh_copy)
+if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
+  ok "an untouched copy passes check-dogfood"
+else
+  bad "an untouched copy FAILS check-dogfood — the cases below mean nothing"
+  (cd "$d" && ./tools/check-dogfood.sh 2>&1) | sed 's/^/        /'
+fi
+
+# A consumer left behind when the catalogue moves. This is the defect the checker exists
+# for: four files went stale unnoticed the last time the number changed.
+d=$(fresh_copy)
+sed 's/Full stop-word catalog (92 entries)/Full stop-word catalog (91 entries)/' \
+  "$d/skills/ru-text/SKILL.md" > "$d/v" && mv "$d/v" "$d/skills/ru-text/SKILL.md"
+expect_dogfood "a consumer left behind is caught" "and these do not" "$d"
+
+# A claim nobody registered. The explicit list is only safe because this guard exists.
+d=$(fresh_copy)
+# A file NOT on the list: appending to README.md would prove nothing, because the guard
+# skips listed files by design.
+printf 'The catalogue holds 92 entries.\n' > "$d/CONTRIBUTING.md"
+( cd "$d" && git add -A ) >/dev/null 2>&1
+expect_dogfood "an unregistered claim is caught" "no claim is registered" "$d"
+
+# The corpus itself moving, with every claim left at the old number.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/references/info-style.md" <<'PY'
+import io, re, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = re.sub(r'(?m)^(## B\. Каталог стоп-слов.*\n)', r'\1\nвыдуманное|заменённое\n', s, count=1)
+io.open(p, 'w', encoding='utf-8').write(s)
+PY
+expect_dogfood "the corpus growing past its claims is caught" "and these do not" "$d"
+
+printf 'selftest: build-release.sh\n'
+
+expect_build() { # $1=case-name $2=needle $3=dir [$4=mode: check|build]
+  # NOT `${4:---check}`: that substitutes the default for an EMPTY fourth argument too, so
+  # the «dirty tree» case silently ran in --check mode and passed. A named mode cannot do
+  # that, and the mistake is invisible in the output when it happens.
+  name=$1; needle=$2; d=$3
+  if [ "${4:-check}" = "build" ]; then flag=""; else flag="--check"; fi
+  out=$(cd "$d" && ./tools/build-release.sh $flag 2>&1) && status=0 || status=$?
+  if [ "$status" -eq 0 ]; then
+    bad "$name — build-release PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | tail -3 | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if (cd "$d" && ./tools/build-release.sh --check >/dev/null 2>&1); then
+  ok "an untouched copy builds both assets and round-trips"
+else
+  bad "an untouched copy FAILS build-release — the cases below mean nothing"
+  (cd "$d" && ./tools/build-release.sh --check 2>&1) | tail -4 | sed 's/^/        /'
+fi
+
+# A reference file dropped from the index. This is the failure with no symptom: the skill
+# still installs, still activates, and answers from whatever corpus it has left.
+d=$(fresh_copy)
+( cd "$d" && git rm -q --cached skills/ru-text/references/ux-writing.md ) >/dev/null 2>&1
+expect_build "a reference file missing from the asset is caught" "in the asset" "$d"
+
+# The build must not run at all without the skill it is named after.
+d=$(fresh_copy)
+( cd "$d" && git rm -q --cached skills/ru-text/SKILL.md ) >/dev/null 2>&1
+expect_build "a staged tree with no ru-text/SKILL.md is caught" "no ru-text/SKILL.md" "$d"
+
+# Without --check the tree must be clean: an artefact built from a dirty tree matches no
+# commit, and the version inside it is then a claim about code that does not exist.
+d=$(fresh_copy)
+printf 'scratch\n' > "$d/skills/ru-text/references/scratch.md"
+expect_build "a dirty tree refuses a real build" "working tree is dirty" "$d" build
+
+printf 'selftest: gates.sh\n'
+
+# gates.sh calls this file, so a case that ran it unmodified would re-enter the selftest
+# forever. The copy's selftest is replaced by a stub whose exit code the case chooses:
+# what is under test here is the ORCHESTRATION — that a red checker stops the run, that a
+# green tree does not — never the checker being stubbed.
+stub_selftest() { printf '#!/bin/sh\nexit %s\n' "$2" > "$1/tools/selftest.sh"; chmod +x "$1/tools/selftest.sh"; }
+
+d=$(fresh_copy); stub_selftest "$d" 0
+if "$d/tools/gates.sh" >/dev/null 2>&1; then
+  ok "gates.sh passes on an untouched copy"
+else
+  bad "gates.sh FAILS on an untouched copy — every case below means nothing"
+  "$d/tools/gates.sh" 2>&1 | sed 's/^/        /'
+fi
+
+d=$(fresh_copy); stub_selftest "$d" 1
+if "$d/tools/gates.sh" >/dev/null 2>&1; then
+  bad "gates.sh passed although a checker exited non-zero"
+else
+  ok "a red checker stops gates.sh"
+fi
+
+# The no-loss gate is the LAST step, so a script that quietly stopped earlier would still
+# pass the case above. Losing a corpus line must reach it.
+#
+# The line is taken from typography.md, which has not changed since v1.10.1, and NOT from
+# addenda.md. The gate compares against the pinned baseline, so it can only miss an atom
+# the baseline HAS: trimming a line added after v1.10.1 is invisible to it by design, and
+# this case silently stopped testing anything the day addenda.md grew a new last line.
+#
+# A named rule, not `sed '$d'`. The last LINE of a reference file is not necessarily the
+# last ATOM of it — typography.md ends on blank lines, so deleting the last line deleted
+# nothing the gate could miss, and the case passed the corpus as intact while asserting the
+# opposite. R1 is the first typography rule and has been in the corpus since long before
+# the pinned baseline.
+d=$(fresh_copy); stub_selftest "$d" 0
+sed '/^R1\. Основные кавычки/d' "$d/skills/ru-text/references/typography.md" > "$d/trimmed" \
+  && mv "$d/trimmed" "$d/skills/ru-text/references/typography.md"
+grep -q '^R1\. Основные кавычки' "$d/skills/ru-text/references/typography.md" \
+  && bad "the fixture did not remove R1 — the case below proves nothing"
+if "$d/tools/gates.sh" >/dev/null 2>&1; then
+  bad "gates.sh passed on a corpus that lost a line — it never reached the no-loss gate"
+else
+  ok "a corpus that lost a line stops gates.sh"
+fi
+
+# gates.sh and the CI workflow are two copies of one sequence, kept in step by hand. Two
+# copies drift; this is the case that says so out loud. Comments are stripped first, so
+# naming a checker in prose does not count as running it.
+CI=$ROOT/.github/workflows/gates.yml
+# The character class covers what a checker may actually be named. It was `[a-z0-9-]+`,
+# which cannot see `tools/check_new.sh`, `tools/checkNew.sh`, or anything in a subdirectory
+# — three ways to add a checker to one file and not the other with this case still green.
+checkers() { sed 's/#.*//' "$1" | grep -oE 'tools/[A-Za-z0-9._/-]+\.sh' | sort -u; }
+if [ ! -f "$CI" ]; then
+  bad "the CI workflow is missing — gates.sh has nothing to be in step with"
+elif [ "$(checkers "$ROOT/tools/gates.sh")" = "$(checkers "$CI")" ]; then
+  ok "gates.sh invokes exactly the checkers CI invokes"
+else
+  bad "gates.sh and CI disagree about which checkers run"
+  printf '        gates.sh: %s\n' "$(checkers "$ROOT/tools/gates.sh" | tr '\n' ' ')"
+  printf '        CI:       %s\n' "$(checkers "$CI" | tr '\n' ' ')"
+fi
+
+# Naming a checker is not running it. A checker whose failure is swallowed — `|| true`,
+# or the line replaced by an `echo` that still mentions it — leaves the case above green,
+# because that case compares NAMES. This one compares the shape of the invocation: every
+# line in gates.sh that runs a checker must hand its failure to `fail`, and there must be
+# as many such lines as there are checkers, so that deleting one is not a way to pass.
+# `if ! tools/x.sh; then :; fi` runs a checker too, and the anchor used to miss it — a
+# swallowed failure in that shape was invisible to both arms of this case.
+guarded_invocations() { sed 's/#.*//' "$1" | grep -E '^[[:space:]]*(if[[:space:]]+!?[[:space:]]*)?tools/[A-Za-z0-9._/-]+\.sh' || true; }
+inv=$(guarded_invocations "$ROOT/tools/gates.sh")
+inv_n=$(printf '%s\n' "$inv" | grep -c . || true)
+unguarded=$(printf '%s\n' "$inv" | grep -c -v '|| fail' || true)
+[ -z "$inv" ] && inv_n=0 && unguarded=0
+if [ "$inv_n" -ge 4 ] && [ "$unguarded" -eq 0 ]; then
+  ok "every checker gates.sh runs hands its failure to fail (${inv_n} invocations)"
+else
+  bad "gates.sh: ${inv_n} checker invocations, ${unguarded} of them unguarded (want >=4 and 0)"
+  printf '%s\n' "$inv" | sed 's/^/        /'
+fi
+
+# The executable-and-parseable gate is the one step of gates.sh no name comparison can see:
+# it is written as the glob `tools/*.sh`, which matches no checker path. It was removable
+# with every case still green. Tested by behaviour rather than by grep — a checker that
+# cannot be parsed, in a subdirectory, must stop the run.
+d=$(fresh_copy); stub_selftest "$d" 0
+mkdir -p "$d/tools/sub"
+printf '#!/bin/sh\nif then fi\n' > "$d/tools/sub/broken.sh"; chmod +x "$d/tools/sub/broken.sh"
+out=$("$d/tools/gates.sh" 2>&1) && st=0 || st=$?
+if [ "$st" -eq 0 ]; then
+  bad "an unparseable checker did not stop gates.sh — the syntax gate is gone or shallow"
+elif printf '%s' "$out" | grep -qF 'syntax error: tools/sub/broken.sh'; then
+  ok "an unparseable checker in a subdirectory stops gates.sh, and says which one"
+else
+  bad "gates.sh failed, but not on the syntax gate — the case proves nothing"
+  printf '%s\n' "$out" | tail -3 | sed 's/^/        /'
+fi
+
+# The syntax gate must speak the runner's shell. /bin/sh is bash 3.2 on macOS and dash on
+# the ubuntu runner, so a bashism passed locally and failed in CI — the divergence a local
+# gate exists to catch first. Skipped, loudly, where dash is absent: a case that cannot run
+# must not report as a case that passed.
+if command -v dash >/dev/null 2>&1; then
+  d=$(fresh_copy); stub_selftest "$d" 0
+  printf '#!/bin/sh\narr=(a b)\necho "$arr"\n' > "$d/tools/bashism.sh"; chmod +x "$d/tools/bashism.sh"
+  if "$d/tools/gates.sh" >/dev/null 2>&1; then
+    bad "a bashism in a checker passed the syntax gate — sh -n instead of dash -n?"
+  else
+    ok "a bashism in a checker is caught locally, as it would be on the runner"
+  fi
+else
+  note "dash absent — the bashism case did not run (the runner's /bin/sh is dash)"
+fi
+
+# Static, and said to be static: $ROOT must reach python through argv, never spliced into
+# the source. A repository checked out into a directory whose name contains an apostrophe
+# closes the string literal and runs what follows; the milder half is a false «the corpus
+# is no longer NFC» about a file that is fine.
+spliced=$(grep -cE "glob\.glob\('\\\$ROOT|open\('\\\$ROOT|'\\\$ROOT/" "$ROOT/tools/selftest.sh" || true)
+viaargv=$(grep -cE "^(elif )?python3 - \"\\\$ROOT\"|^ *folded=\\\$\(python3 - \"\\\$ROOT\"" "$ROOT/tools/selftest.sh" || true)
+if [ "$spliced" -eq 0 ] && [ "$viaargv" -ge 2 ]; then
+  ok "both python blocks take \$ROOT through argv, none splices it into the source"
+else
+  bad "\$ROOT spliced into python source (${spliced} sites) or argv form lost (${viaargv} of 2)"
+fi
+
+# The parity case compares two sets built by ONE regex, so narrowing that regex blinds both
+# sides at once and the case cannot notice. Pin its breadth directly, on the names that
+# broke it: an underscore, a camel hump, a subdirectory.
+probe=$(printf 'tools/check_new.sh\ntools/checkNew.sh\ntools/sub/deep.sh\n' \
+        | grep -cE 'tools/[A-Za-z0-9._/-]+\.sh' || true)
+[ "$probe" -eq 3 ] && ok "the checker-name pattern covers _, camelCase and subdirectories" \
+                   || bad "the checker-name pattern matched $probe of 3 — divergence would go unseen"
+
+# CI can stop RUNNING a checker while still naming it, and the name comparison would stay
+# green. Every checker named in the workflow must sit on a line that runs it.
+if [ -f "$CI" ]; then
+  badline=$(sed 's/#.*//' "$CI" | grep -E 'tools/[A-Za-z0-9._/-]+\.sh' \
+            | grep -vE '^[[:space:]]*(run:[[:space:]]*)?(\$\()?(sha256sum|for|\[|tools/)' | grep -c . || true)
+  [ "$badline" -eq 0 ] && ok "every checker the CI workflow names is on a line that runs it" \
+                       || bad "CI names $badline checker(s) outside a running line"
+fi
+
+# The baseline pin is written out twice for the same reason, and a stale copy is worse
+# than none: the local gate would keep vouching for a baseline the repository no longer has.
+#
+# Comments are stripped from BOTH sides. Stripping only the local one meant a CI pin block
+# commented out — the check gone, the text still there — compared equal and stayed green.
+if [ -f "$CI" ]; then
+  hashes() { sed 's/#.*//' "$1" | grep -oE '[0-9a-f]{64}' | sort -u; }
+  pinpath() { sed 's/#.*//' "$1" | grep -oE 'tools/baseline/[A-Za-z0-9.-]+' | sort -u; }
+  pin_local=$(hashes "$ROOT/tools/gates.sh"); pin_ci=$(hashes "$CI")
+  path_local=$(pinpath "$ROOT/tools/gates.sh"); path_ci=$(pinpath "$CI")
+  if [ -n "$pin_local" ] && [ -n "$path_local" ] &&
+     [ "$pin_local" = "$pin_ci" ] && [ "$path_local" = "$path_ci" ]; then
+    ok "the baseline pin in gates.sh matches CI, file and hash"
+  else
+    bad "baseline pin differs: gates.sh $path_local $pin_local / CI $path_ci $pin_ci"
+  fi
+fi
+
+printf 'selftest: check-typography.sh\n'
+
+# The checker shipped green over eight real defects, because both halves of its R30 pattern
+# were narrower than the rule: the letter set held lowercase only, and the follower class
+# demanded a Cyrillic letter or a digit next.
+#
+# The two cases below pin one half EACH, and their shapes are chosen for that and nothing else.
+# The first pair written here failed this requirement — «В WSL-сессиях» and «В [README]» both
+# combine a capital preposition with a non-Cyrillic follower, so either mutation killed both
+# and neither hand was actually guarded. Verified by mutation: restoring the lowercase-only set
+# must break the FIRST case only, and restoring the narrow follower class the SECOND only.
+#   capital + Cyrillic follower  -> isolates the letter set
+#   lowercase + non-letter       -> isolates the follower class
+expect_typo() { # $1=case-name  $2=needle  $3=dir
+  name=$1; needle=$2; d=$3
+  out=$(cd "$d" && ./tools/check-typography.sh 2>&1) && st=0 || st=$?
+  if [ "$st" -eq 0 ]; then
+    bad "$name — check-typography PASSED on corrupted input"
+  elif printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — failed, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+d=$(fresh_copy)
+if (cd "$d" && ./tools/check-typography.sh >/dev/null 2>&1); then
+  ok "an untouched copy passes check-typography"
+else
+  bad "an untouched copy FAILS check-typography — the cases below mean nothing"
+  (cd "$d" && ./tools/check-typography.sh 2>&1) | sed 's/^/        /'
+fi
+
+# A CAPITAL preposition, which the first pattern never tested — and which is where a Russian
+# sentence most often starts one.
+d=$(fresh_copy)
+python3 - "$d/INSTALL.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('В\u00a0приложении', 'В приложении', 1))
+PYEOF
+expect_typo "a capital single-letter preposition is caught" "single-letter «В»" "$d"
+
+# A preposition followed by something that is not a Cyrillic letter — a markdown link. The
+# first pattern required a letter or digit next and let every one of these through.
+d=$(fresh_copy)
+python3 - "$d/INSTALL.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('и\u00a0**`.agents/skills/`**', 'и **`.agents/skills/`**', 1))
+PYEOF
+expect_typo "a preposition before a non-letter is caught" "single-letter «и»" "$d"
+
+# The two defects that actually shipped, kept as regression cases.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s = s.replace('машинного текста', 'машинного~текста', 1)
+io.open(p, 'w', encoding='utf-8').write(s)
+PYEOF
+expect_typo "a literal tilde standing in for a non-breaking space is caught" "literal ~" "$d"
+
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('\u00a0\u2014', ' \u2014', 1))
+PYEOF
+expect_typo "an ordinary space before an em dash is caught" "before an em dash" "$d"
+
+# Digit grouping. This case exists because it ESCAPED: the checker was green over «более
+# 2 000 атомов» set with an ordinary space, since nothing looked at digit groups at all, and
+# a judge found it by reading the file rather than by running the gate.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PY'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('2\u00a0000', '2 000', 1))
+PY
+expect_typo "an ordinary space between digit groups is caught" "between digit groups" "$d"
+
+# Initials. Found by a judge reading the sources list after three green gates had run over
+# it — the fourth rule this checker did not name. The pattern of the misses is worth stating:
+# every one was a rule the corpus has and the checker did not, never a rule it got wrong.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s.replace('А.\u00a0Э.\u00a0Мильчин', 'А. Э. Мильчин', 1))
+PYEOF
+expect_typo "an ordinary space after an initial is caught" "after an initial" "$d"
+
+printf 'selftest: probe-install.sh\n'
+
+# The probe judges what an agent did to a sandbox. These cases judge the probe, by building
+# the three outcomes by hand — because the one thing a gate must never do is pass on an
+# install that did not happen, and that is exactly what an «is there a SKILL.md anywhere»
+# check would do.
+probe_case() { # $1=case-name  $2=want(PASS|FAIL)  $3=needle  $4=sandbox
+  name=$1; want=$2; needle=$3; sb=$4
+  out=$("$ROOT/tools/probe-install.sh" check "$sb" 'Codex CLI' 2>&1) && st=PASS || st=FAIL
+  if [ "$st" != "$want" ]; then
+    bad "$name — probe said $st, wanted $want"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  elif [ -z "$needle" ] || printf '%s' "$out" | grep -qF "$needle"; then
+    ok "$name"
+  else
+    bad "$name — $st, but not for the stated reason (wanted: $needle)"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+}
+
+PB=$(mktemp -d)
+
+# Nobody ran the agent. An empty sandbox must never read as a clean install.
+"$ROOT/tools/probe-install.sh" setup "$PB/empty" 'Codex CLI' >/dev/null 2>&1
+probe_case "an empty sandbox is not a pass" FAIL "holds no SKILL.md" "$PB/empty"
+
+# The documented user path. This is the only shape that may pass.
+"$ROOT/tools/probe-install.sh" setup "$PB/good" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/good/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/good/home/.agents/skills/ru-text"
+probe_case "an install at the documented path passes" PASS "documented path" "$PB/good"
+
+# The failure this file was written from: a real agent installed Codex's copy into
+# ~/.codex/skills on the strength of a December-2025 blog post. The path exists, the skill
+# is intact, and Codex never looks there.
+"$ROOT/tools/probe-install.sh" setup "$PB/stray" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/stray/home/.codex/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/stray/home/.codex/skills/ru-text"
+probe_case "an install at an undocumented path is caught" FAIL "does not look" "$PB/stray"
+
+# Right path, wrong corpus. An agent that fetched an old tag or a fork passes every path
+# test above; only the bytes catch it.
+"$ROOT/tools/probe-install.sh" setup "$PB/stale" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/stale/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/stale/home/.agents/skills/ru-text"
+printf '\nA line no released ru-text ever carried.\n' >> "$PB/stale/home/.agents/skills/ru-text/SKILL.md"
+probe_case "a stale or forked copy at the right path is caught" FAIL "differs from this checkout" "$PB/stale"
+
+# Right path, right SKILL.md, half the corpus. The reference files are the product; a probe
+# that stopped at SKILL.md would bless a skill with no rules in it.
+"$ROOT/tools/probe-install.sh" setup "$PB/partial" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/partial/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/partial/home/.agents/skills/ru-text"
+rm -f "$PB/partial/home/.agents/skills/ru-text/references/typography.md"
+probe_case "a truncated corpus at the right path is caught" FAIL "truncated" "$PB/partial"
+
+# A symlinked install. The first version of the probe called this «a different thing from an
+# installed one» and would have failed it; a live run refuted that in one shot, with OpenAI's
+# own page: «Codex supports symlinked skill folders and follows the symlink target». The agent
+# had linked deliberately, so that a pull on the clone updates the install.
+"$ROOT/tools/probe-install.sh" setup "$PB/link" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/link/home/src" "$PB/link/home/.agents/skills"
+cp -R "$ROOT/skills/ru-text" "$PB/link/home/src/ru-text"
+ln -s "$PB/link/home/src/ru-text" "$PB/link/home/.agents/skills/ru-text"
+probe_case "a symlinked install at the documented path passes" PASS "documented path" "$PB/link"
+
+# The clone an agent makes before linking or copying. It is an intermediate, not a rogue
+# install, and the same live run had the probe report the source tree as four of them.
+"$ROOT/tools/probe-install.sh" setup "$PB/clone" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/clone/home/src/ru-text/.claude-plugin" "$PB/clone/home/.agents/skills"
+cp -R "$ROOT/skills" "$PB/clone/home/src/ru-text/skills"
+# The manifest is what makes a tree this repository rather than any directory with a .git —
+# see the decoy case below, which is why the marker had to become this specific.
+cp "$ROOT/.claude-plugin/plugin.json" "$PB/clone/home/src/ru-text/.claude-plugin/plugin.json"
+( cd "$PB/clone/home/src/ru-text" && git init -q . ) >/dev/null 2>&1
+cp -R "$ROOT/skills/ru-text" "$PB/clone/home/.agents/skills/ru-text"
+probe_case "the source clone is not reported as a rogue install" PASS "no copy landed outside" "$PB/clone"
+
+# The bypass a security review found and reproduced in one command: an empty `.git` beside a
+# rogue install disarmed the clone exclusion, and the probe printed PASS over an install at
+# the stale-blog path. A gate that a `mkdir` switches off is worse than no gate.
+#
+# The decoy is built exactly as the review built it, at ~/.codex/skills — which also pins the
+# SECOND attempt at the fix. That one required the tree to hold `skills/ru-text/SKILL.md`, and
+# `~/.codex/skills/ru-text` has that shape with no decoy at all, so any platform whose skills
+# directory is named `skills` would have excused itself. Only the plugin manifest separates a
+# checkout from an install.
+"$ROOT/tools/probe-install.sh" setup "$PB/decoy" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/decoy/home/.agents/skills" "$PB/decoy/home/.codex/skills/.git"
+cp -R "$ROOT/skills/ru-text" "$PB/decoy/home/.agents/skills/ru-text"
+cp -R "$ROOT/skills/ru-text" "$PB/decoy/home/.codex/skills/ru-text"
+mkdir -p "$PB/decoy/home/.codex/.git"
+probe_case "a decoy .git does not excuse an install at an undocumented path" FAIL "does not look" "$PB/decoy"
+
+# The repository's own test fixture lives at tools/testdata/corpus/SKILL.md, outside skills/.
+# The first clone rule excused only files under the root's `skills/`, so a genuine clone was
+# reported as a rogue install on the strength of a fixture. Everything under a verified root
+# is source.
+"$ROOT/tools/probe-install.sh" setup "$PB/fixture" 'Codex CLI' >/dev/null 2>&1
+mkdir -p "$PB/fixture/home/src/ru-text/.claude-plugin" "$PB/fixture/home/.agents/skills"
+cp -R "$ROOT/skills" "$PB/fixture/home/src/ru-text/skills"
+cp -R "$ROOT/tools" "$PB/fixture/home/src/ru-text/tools"
+cp "$ROOT/.claude-plugin/plugin.json" "$PB/fixture/home/src/ru-text/.claude-plugin/plugin.json"
+( cd "$PB/fixture/home/src/ru-text" && git init -q . ) >/dev/null 2>&1
+cp -R "$ROOT/skills/ru-text" "$PB/fixture/home/.agents/skills/ru-text"
+probe_case "a fixture outside skills/ does not make a clone look rogue" PASS "no copy landed outside" "$PB/fixture"
+
+# Every platform named in the table is either given paths or declared to own its installer.
+# A row typo silently produces a platform this probe can never judge.
+missing=$(awk -F'\t' '!/^#/ && $1 != "platform" && NF > 1 { print $1 "\t" $3 }' "$ROOT/tools/install-paths.tsv" \
+  | awk -F'\t' '{ if ($2 == "-") own[$1]=1; else has[$1]=1 }
+                END { for (p in own) if (p in has) print p }')
+if [ -z "$missing" ]; then
+  ok "no platform is both path-served and self-installing"
+else
+  bad "a platform claims both a path and its own installer: $missing"
+fi
+
+rm -rf "$PB"
 
 printf 'selftest: %d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

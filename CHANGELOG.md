@@ -5,6 +5,213 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-07-30
+
+### Breaking changes
+
+The same text can now come back with a different verdict. Nothing was removed and no command
+changed its interface, but four changes move findings and labels, and anyone who pinned a
+score or wrote a test against `/ru-score` output should re-run it before upgrading.
+
+- **A document can be held below «Хороший» by a single rule.** AD-14 (the piece is a chat
+  transcript) and AD-15 (the piece is addressed to a search engine) are charged to the whole
+  document and put a floor under the top two labels. A text that scored 8.4 and was called
+  «Хороший» in 1.10.1 keeps the 8.4 and loses the word.
+- **The AD-7 register carve-out no longer covers an author writing about their own text.**
+  It protects a speaker *inside* the text — dialogue, quotation, a character. Conversational
+  self-description that passed under the old wording is now a finding.
+- **Nine new tells and three new grammar sections mean more findings on unchanged text.**
+  AD-10…AD-16, plus §I verb government, §J gerund phrases with a mismatched subject and §K
+  context-dependent homophones. Text that was clean against 1.10.1 can be clean against 2.0.0
+  and still score lower, because the Structure and Precision dimensions now see more.
+- **The per-domain rule counts are gone from both READMEs.** If you quoted «96 typography
+  rules» from this project, there is no longer a number there to quote — see «Changed» for
+  why, and quote `tools/extract-atoms.sh skills/ru-text | wc -l` instead.
+
+### Added
+- **Seven tells of machine-written Russian**, measured against the golden set before they
+  shipped: AD-10 declared sincerity · AD-11 mandatory tricolon · AD-12 hollowed mechanism ·
+  AD-13 phantom attribution · AD-14 chat transcript as the artifact · AD-15 search-engine
+  addressee · AD-16 additive pseudo-pair. AD-14 and AD-15 are the first rules in this set
+  charged to the **document** rather than to a fragment — the defect is the shape of the
+  piece, and no local edit removes it. Nine further candidates were rejected on the record;
+  two of those rejections matter most, because even sentence rhythm and vocabulary poverty
+  are what detectors mistake for machine text and also what dry regulatory prose and
+  non-native Russian look like.
+- **The README asks the agent to install the skill, instead of teaching the human to.** The
+  «Быстрый старт» section was thirteen platform-by-platform recipes, 195 of the file's 411
+  lines. It is now one sentence to hand to an AI agent — «Установи навык
+  https://github.com/talkstream/ru-text глобально и вызывай его для любых задач с русским
+  текстом» — because an agent knows where its own platform keeps skills better than an
+  instruction written a year ago does. The README lost half its length.
+  The decision was tested rather than argued: three fresh agents were handed nothing but that
+  sentence, in sandboxes, role-framed as three different platforms' agents. Two installed
+  correctly; one put Codex's copy in `~/.codex/skills` on the strength of a December-2025
+  blog post, while OpenAI's current documentation says user skills live in
+  `$HOME/.agents/skills`. All three read this repository's README as their first source —
+  which is why the per-platform material was moved rather than deleted.
+- **`INSTALL.md` / `INSTALL.en.md`** — everything the one-liner does not carry, organised
+  around the fact the audit turned up: `~/.agents/skills/` is read by Codex, Cursor, Windsurf
+  AND GitHub Copilot, so this is one shared path plus exceptions rather than thirteen silos.
+  Also there: the Claude Desktop and Notion click-paths, which no agent can drive; the four
+  negative facts trial cannot discover (ru-text is absent from the Cursor marketplace, cloud
+  sessions do not inherit the plugin, the community pin trails by months, `npx skills add`
+  installs three skills); and the update story a one-shot install does not have.
+- **`tools/install-paths.tsv`** — where each platform loads a skill from, with the vendor URL
+  and the date it was read. One source for the INSTALL tables and for the probe's assertions,
+  so the two cannot drift apart.
+- **`tools/probe-install.sh`** — the gate that replaces reading prose against vendor docs. It
+  builds a sandbox, prints the one-line prompt, and afterwards judges the disk: did the skill
+  land at a path this platform documents, did a copy land anywhere it does not, are the bytes
+  this corpus, did all ten reference files arrive. The second of those is the one that
+  matters — an agent usually writes several copies, so a check that only looked for a hit
+  would have blessed the `~/.codex/skills` failure. The script deliberately does not run the
+  agent: a shell cannot start another vendor's agent, and one that pretended to would be a
+  gate testing itself. Five selftest cases, one per outcome.
+- **AD-17, a comma welded to a dash.** Raised by the director on reading a junction in this
+  project's own README: «люди так не пишут в живой жизни, даже профессионалы языка». The rule is
+  honest about its footing — Rozental §64 PERMITS the junction, Lebedev's Ководство §143 does not
+  discuss combining marks, and nothing was found from Ilyakhov, so the rule claims no source
+  forbids it. It observes that living prose avoids what the norm allows, which is what `addenda.md`
+  is for. Five carve-outs, and the first is load-bearing: the trigger is a JUNCTION, not the
+  character pair, so direct speech («„Хороший вопрос“, — ответил инженер») is two constructions and
+  never flagged.
+- **§A.1 of `editorial-punctuation.md` gains the particle rule.** A restrictive particle in front
+  of a conjunction moves the comma left rather than removing it: «вызывай ru-text, только когда я
+  прошу». The gap was found by a check that had to reach outside the corpus to catch it (ПАС
+  §116–117, Розенталь §33.6) — nothing in the corpus could have.
+- **A model may call the check again, and it now starts cheap.** `ru-check` and `ru-score` carried
+  `disable-model-invocation: true`, which solved a real cost problem — a 15–20k-token check firing
+  on any Russian text in sight — by making the tool unreachable to the agent that was supposed to
+  run it. The flag is gone, the descriptions now carry the Russian phrases a person actually says
+  («вычитай», «прогони ru-text», «оцени текст»), and the cost problem is solved where it lives:
+  an explicit request reads the whole corpus, while a self-initiated run starts with triage — the
+  neuroslop index plus the stop-word catalogue, ~3k tokens against ~51k — and escalates on
+  evidence. Triage may report only what a single line decides; a neuroslop tell is never a triage
+  finding, because every AD rule's carve-outs live in the full file.
+- **A grammar layer the corpus had been missing**, in `editorial-grammar.md`: §I verb
+  government from a **closed list** of the verbs and prepositions that are actually confused,
+  plus mismatched government across coordinated members · §J the gerund phrase whose subject
+  is not the subject of the sentence · §K context-dependent homophones. An **open** case
+  check was written first and then deliberately rejected: over a whole text it flags the
+  ordinary variation of a fluent writer, which makes it a detector of non-native Russian
+  rather than a grammar rule.
+- **Nine golden cases for the new rules, and four carve-out controls** (#29). The set grew
+  from 13 texts to 22. Cases 12, 13, 19 and 22 assert **zero** findings and are built only
+  from constructions the rules exempt — clean prose, the AD-1…AD-9 carve-outs, the 2026
+  carve-outs, and the grammar ones. They are what would catch the rules firing on honest
+  writing, and all four now measure zero.
+- **A floor under the label in `scoring.md`.** A document charged with AD-14 or AD-15 is
+  never labelled «Эталонный» or «Хороший», whatever the arithmetic says. This is not a cap:
+  the number is still printed as it computed, and the report names the rule that held the
+  label down. The arithmetic can be right and the word on top of it still false.
+- **Four checkers and a release builder.** `tools/gates.sh` runs CI's sequence as one
+  command, which is what lets the pre-push hook run it at all: with no `package.json` and no
+  `pyproject`, this repository looked to that hook like a project with no tests, and the
+  selftest now fails when the two copies of that sequence drift. `check-version.sh` holds the
+  version at ten points, the skill description inside its budget, the six Russian trigger
+  phrases inside the head of it, and the size SKILL.md is advertised at. `check-dogfood.sh`
+  holds the numbers this product states about itself against the corpus, with a completeness
+  guard that names any file stating one that nobody registered. `build-release.sh` builds the
+  two release assets from tracked files only, refuses a dirty tree, and proves each asset by
+  unpacking it. The selftest grew from 45 cases to 81.
+- **`tools/atom-map.tsv` gains its first sixteen rows** — the first in the repository's
+  history. Nine record the `scoring.md` lines whose scope the new rules extend; one records
+  AD-7.5, whose rationale says in plain words that the meaning was changed on purpose.
+
+### Changed
+- **AD-7.5 narrowed.** The register carve-out now protects a speaker *inside* the text —
+  dialogue, quotation, a character — and not an author writing about their own text in a
+  conversational tone. The assistant register is a monologue written to sound like speech,
+  and it fell straight through the old wording. AD-7 also gains the trigger forms a model
+  actually reaches for: «скажу честно», «если честно», «не буду врать».
+- **The corpus size is now quoted as a machine-counted floor.** «~1 044 rules» was a
+  hand-maintained figure nobody could reproduce; it is replaced in eleven files by «over
+  2,000 linguistic atoms» / «более 2 000 лингвистических атомов» — the unit this
+  repository's own no-loss gate counts, reproducible with
+  `tools/extract-atoms.sh skills/ru-text | wc -l` (2219 at this release). A floor rather than
+  a figure, so that adding a rule does not oblige anyone to re-stamp eleven files.
+- **The per-domain rule counts are gone from both READMEs.** The «Домены» table quoted seven
+  figures — 96, 197, 88, 171, 217, 128, 138 — which sum to 1035: the retired «~1 044 rules»,
+  split up. v1.10.1 recounted them by hand and corrected four; one release later three of
+  the recounted ones were wrong again (57 comma traps against a stated 56, 59 button labels
+  against a stated 58), and four of the seven domain figures appear nowhere in the corpus at
+  all. The table now names the reference file for each section instead, so a reader who wants
+  a number can open the file and count. The one number that stayed — «Стоп-слова (92 записи)»
+  — is the one `check-dogfood.sh` verifies against §B on every run.
+
+### Fixed
+- **Both control texts of the golden set asserted zero findings and had never been run.**
+  Both failed on their first run — seven findings and six, every one a real typographic
+  defect in the fixture, which contained no non-breaking spaces at all while claiming to be
+  written by the rules of the corpus.
+- **Three defects in the new rules, caught by the measurement rather than by reading.** A
+  document-level charge replaced ten ordinary findings with three and the text came out
+  looking cleaner; density replaced the per-instance findings with a line about density;
+  and AD-16 absorbed a pleonasm that lived in Grammar, scoring its target text 1.1 **higher**
+  than before the rule against it existed. All three are now rules in their own right, the
+  last of them stating the general principle: a new rule must never make its target score
+  better.
+- **The «Техническое качество» section advertised a SKILL.md that no longer existed.** It
+  claimed 587 words where the file holds 583, and 9 reference files where `references/`
+  holds 10. A claim offered as evidence has to be measured, so `check-version.sh` now reads
+  the file and compares both READMEs against it. It compares the numbers rather than the
+  sentence: Russian inflects the noun with the numeral — 583 слова, 587 слов, 581 слово —
+  and a literal-string check would go red on a correct line the day the count crossed a
+  declension boundary.
+- **The note about the community marketplace was wrong, and wrong in the direction that
+  costs users the release.** Since #19 both READMEs have said the pin «advances automatically
+  with up to a day's lag». It does not. The pin is moved by a nightly sweep that opens at
+  most thirty pull requests per run against a catalogue of more than two thousand entries,
+  walking it roughly in alphabetical order; ru-text sits about 72% of the way down that list
+  and has not been bumped once in the marketplace's last 300 commits to its manifest. Both
+  READMEs now describe the mechanism, tell the reader that `claude plugins list` shows what
+  they actually have, and point at `npx skills add talkstream/ru-text` or a source install
+  for anyone who needs the current version today.
+- **Every install channel the README advertises was run against its vendor's current
+  documentation, and eight of them had drifted.** The instructions were written once and
+  never re-checked; the platforms moved.
+  - **Claude Desktop does not take the CLI's commands.** `/plugin` is terminal-only; in the
+    app the path is the **+** button → **Plugins** → **Add plugin**. And «one install works
+    in CLI, Desktop, VS Code, JetBrains and Web» was false on Web: a user-scope install does
+    not reach a cloud session, which needs `enabledPlugins` in the repository's
+    `.claude/settings.json`. WSL sessions have no plugins at all.
+  - **Codex needs a marketplace added before `/plugins` shows anything** — `codex plugin
+    marketplace add <owner>/<repo>` — and a new session before the bundled skills load.
+    Neither step was in the README.
+  - **ru-text is not in the Cursor marketplace.** The README told users to search for it
+    there; the catalogue lists 216 plugins and none of them is ru-text. The manual copy,
+    previously the fallback, is now the instruction.
+  - **Both Antigravity paths had moved.** Global is `~/.gemini/config/skills/`, which all
+    three Antigravity products read; per-project is `.agents/skills/` — plural — with the
+    old singular still accepted for compatibility.
+  - **OpenClaw refs are owner-qualified**: `@talkstream/ru-text`, as ClawHub's own page
+    instructs. Bare slugs are tolerated only for already-installed or unambiguous skills.
+  - **`npx skills add` does less than the README implied.** It installs three skills, not
+    one. Without `-y` it opens an interactive picker and, pasted into a script, installs
+    nothing. It writes `.windsurf/skills`, `.junie/skills` and `.continue/skills` only when
+    those directories already exist, so on a fresh project it leaves those three platforms
+    unserved — their sections now lead with the manual copy. And it is project-scoped: a
+    user-level install (`-g`) has to be updated with `-g`, or the update reports success
+    while the old copy stays.
+- **`.codex-plugin/plugin.json` put `logo` at the top level**, where the Codex manifest
+  schema does not define it; it belongs inside `interface`. Moved.
+- **The Notion template inventory was missing a section and quoting a stale word count.**
+  The template grew an «AI-Text Tells (Neuroslop)» section in June that the «What's included»
+  list never mentioned, and the «~1,450 words» figure had drifted to 1,865. The list now
+  names the section, and the word count is gone rather than re-stamped — same reasoning as
+  the domain table.
+- **The convention file's own claim about the corpus floor was wrong in the way it warns
+  against.** It said the floor is stated «in eleven files». Nine files state it, and
+  `.codex-plugin/plugin.json` on `main` was still advertising «~1,044 rules» while the
+  sentence claimed the sweep was complete. The count is replaced by the `grep` that
+  reproduces it.
+- **The ClawHub publish note was false in the direction that ships the wrong version.** It
+  said `--version` is required and that omitting it fails. On clawhub 0.23.1 the guard fires
+  only when the flag is present and malformed; omitted, the flag defaults to the registry's
+  next patch. A dry run without it printed «Would publish ru-text@1.10.2» and exited 0 — so
+  publishing 2.0.0 without `--version 2.0.0` would have silently shipped a patch release.
+
 ## [1.10.1] - 2026-07-25
 
 Corrects a safety claim that was never enforced, and folds in the documentation and distribution work

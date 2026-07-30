@@ -1,0 +1,49 @@
+# Where each platform loads a skill from, and who says so.
+#
+# This file is the single source for three things that used to drift apart: the table in
+# INSTALL.md, the assertions in probe-install.sh, and whatever a person says out loud about
+# where ru-text ends up. A path stated in prose and nowhere else is a path nobody re-checks;
+# every row here carries the vendor URL it came from and the date it was last read.
+#
+# Why it exists at all: on 28.07.2026 an independent probe handed a fresh agent nothing but
+# «install this skill globally» and watched it install Codex's copy into ~/.codex/skills on
+# the strength of a December-2025 blog post, while OpenAI's current documentation says user
+# skills live in $HOME/.agents/skills. The repository is what an agent reads first, so the
+# repository has to be the place the true path is written down.
+#
+# The headline the rows show: ~/.agents/skills is read by Codex, Cursor, Windsurf AND
+# GitHub Copilot. It is not a convention one vendor invented — it is where four of them
+# converged, and it is what the skills CLI writes to. Everything else is an exception.
+#
+# Columns: platform <TAB> scope <TAB> path <TAB> source <TAB> read-on
+#   scope: user | project | plugin  — «plugin» means the platform has its own installer and
+#          a filesystem path is not the interface (Claude Code, Gemini CLI, OpenClaw, Notion).
+#   path:  `-` when scope is plugin. Home-relative paths keep their leading ~.
+#
+# Regenerating is a human act: re-read the source URL, then edit the row and the date.
+# probe-install.sh asserts the CONTENT of these paths; it cannot tell you a vendor moved one.
+
+platform	scope	path	source	read-on
+Codex CLI	user	~/.agents/skills	https://learn.chatgpt.com/docs/build-skills.md	2026-07-28
+Codex CLI	project	.agents/skills	https://learn.chatgpt.com/docs/build-skills.md	2026-07-28
+Cursor	user	~/.agents/skills	https://cursor.com/docs/skills.md	2026-07-28
+Cursor	user	~/.cursor/skills	https://cursor.com/docs/skills.md	2026-07-28
+Cursor	project	.agents/skills	https://cursor.com/docs/skills.md	2026-07-28
+Cursor	project	.cursor/skills	https://cursor.com/docs/skills.md	2026-07-28
+GitHub Copilot	user	~/.agents/skills	https://docs.github.com/en/copilot/concepts/agents/about-agent-skills	2026-07-28
+GitHub Copilot	user	~/.copilot/skills	https://docs.github.com/en/copilot/concepts/agents/about-agent-skills	2026-07-28
+GitHub Copilot	project	.agents/skills	https://docs.github.com/en/copilot/concepts/agents/about-agent-skills	2026-07-28
+GitHub Copilot	project	.github/skills	https://docs.github.com/en/copilot/concepts/agents/about-agent-skills	2026-07-28
+Windsurf	user	~/.agents/skills	https://docs.devin.ai/desktop/cascade/skills	2026-07-28
+Windsurf	user	~/.codeium/windsurf/skills	https://docs.devin.ai/desktop/cascade/skills	2026-07-28
+Windsurf	project	.agents/skills	https://docs.devin.ai/desktop/cascade/skills	2026-07-28
+Windsurf	project	.windsurf/skills	https://docs.devin.ai/desktop/cascade/skills	2026-07-28
+Google Antigravity	user	~/.gemini/config/skills	https://antigravity.google/docs/skills	2026-07-28
+Google Antigravity	project	.agents/skills	https://antigravity.google/docs/skills	2026-07-28
+JetBrains Junie	project	.junie/skills	https://github.com/vercel-labs/skills	2026-07-28
+Continue.dev	project	.continue/skills	https://github.com/vercel-labs/skills	2026-07-28
+Cline	project	.cline/skills	https://github.com/vercel-labs/skills	2026-07-28
+Claude Code	plugin	-	https://code.claude.com/docs/en/discover-plugins	2026-07-28
+Gemini CLI	plugin	-	https://github.com/talkstream/ru-text	2026-07-28
+OpenClaw	plugin	-	https://clawhub.ai/talkstream/ru-text	2026-07-28
+Notion	plugin	-	https://www.notion.com/help/notion-ai-skills	2026-07-28

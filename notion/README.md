@@ -24,17 +24,18 @@ Turn any Notion page into a Russian text quality assistant. Requires Notion Busi
 
 ### What's included
 
-The skill template contains ~1,450 words of condensed rules:
+The skill template is a condensed subset of the corpus:
 - 12 typography rules (always applied)
 - 92 stop-words across 8 categories with replacements
 - 30 anti-patterns (bureaucratic language, passive voice, bloat, pleonasms)
+- 9 AI-text tells (neuroslop) across 4 categories
 - Quality checklist
 
-For the full set of ~1,044 rules across 7 domains, use the [complete plugin](https://github.com/talkstream/ru-text) with Claude Code, Codex CLI, Gemini CLI, Cursor, or OpenClaw.
+For the full set of 2,000+ linguistic atoms across 7 domains, use the [complete plugin](https://github.com/talkstream/ru-text) with Claude Code, Codex CLI, Gemini CLI, Cursor, or OpenClaw.
 
 ## Option B: Notion via MCP (Claude Code)
 
-Use the full ru-text plugin with Notion pages through Claude Code and the official Notion MCP server. This gives you access to all ~1,044 rules with progressive loading.
+Use the full ru-text plugin with Notion pages through Claude Code and the official Notion MCP server. This gives you access to the whole corpus with progressive loading.
 
 ### Setup
 
@@ -89,17 +90,18 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 
 ### Что входит
 
-Шаблон навыка содержит ~1450 слов сжатых правил:
+Шаблон навыка — сжатая выборка из корпуса:
 - 12 правил типографики (применяются всегда)
 - 92 стоп-слова в 8 категориях с заменами
 - 30 антипаттернов (канцелярит, пассивный залог, многословие, плеоназмы)
+- 9 примет ИИ-текста (нейрослоп) в 4 категориях
 - Чеклист качества
 
-Полный набор из ~1 044 правил в 7 доменах доступен через [полную версию плагина](https://github.com/talkstream/ru-text) для Claude Code, Codex CLI, Gemini CLI, Cursor или OpenClaw.
+Полный набор из более чем 2 000 лингвистических атомов в 7 доменах доступен через [полную версию плагина](https://github.com/talkstream/ru-text) для Claude Code, Codex CLI, Gemini CLI, Cursor или OpenClaw.
 
 ## Способ Б: Notion через MCP (Claude Code)
 
-Полный плагин ru-text для работы со страницами Notion через Claude Code и официальный Notion MCP-сервер. Доступны все ~1 044 правил с прогрессивной загрузкой.
+Полный плагин ru-text для работы со страницами Notion через Claude Code и официальный Notion MCP-сервер. Корпус доступен целиком, с прогрессивной загрузкой.
 
 ### Настройка
 

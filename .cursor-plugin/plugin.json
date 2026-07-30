@@ -1,8 +1,8 @@
 {
   "name": "ru-text",
   "displayName": "ru-text",
-  "version": "1.10.1",
-  "description": "Russian text quality — ~1,044 rules for typography, info-style, editorial, UX writing, business correspondence, and AI-text cleanup. Auto-activates on Russian text.",
+  "version": "2.0.0",
+  "description": "Russian text quality for AI agents — neuroslop cleanup, typography, information style, editorial standards, UX writing, business correspondence. 2,000+ linguistic atoms, loaded on demand. Auto-activates on Russian text.",
   "author": {
     "name": "Arseniy Kamyshev",
     "email": "nafigator@gmail.com"
@@ -11,7 +11,10 @@
   "logo": "../logo-round.png",
   "keywords": [
     "russian",
+    "neuroslop",
+    "ai-text-detection",
     "typography",
+    "proofreading",
     "editorial",
     "info-style",
     "ux-writing",
