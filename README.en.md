@@ -40,7 +40,7 @@ Three things changed: verbal nouns became verbs, the passive voice named its act
 
 **Landing pages and documentation.** "Команда профессионалов" is replaced by something checkable. Typography, inverted-pyramid structure, links that say where they lead.
 
-**Text that came out of a model** — yours or someone else's. ru-text knows sixteen tells of machine writing. Five are visible in the fragment itself:
+**Text that came out of a model** — yours or someone else's. ru-text knows seventeen tells of machine writing. Five are visible in the fragment itself:
 
 - manufactured antithesis ("не X, а Y" — "not X but Y") with no antecedent;
 - preemptive self-praise ("чётко, по делу, без воды" — "crisp, on point, no fluff");
@@ -112,7 +112,7 @@ The corpus is spread over ten reference files, and they load on demand rather th
 - [`ux-writing.md`](skills/ru-text/references/ux-writing.md) — buttons, errors, empty states, forms, notifications, confirmation dialogs
 - [`business-writing.md`](skills/ru-text/references/business-writing.md) — emails, messengers, tone, meeting notes
 - [`anti-patterns.md`](skills/ru-text/references/anti-patterns.md) — wrong-to-right pairs, grouped by severity
-- [`addenda.md`](skills/ru-text/references/addenda.md) — sixteen tells of machine writing, with their carve-outs
+- [`addenda.md`](skills/ru-text/references/addenda.md) — seventeen tells of machine writing, with their carve-outs
 - [`scoring.md`](skills/ru-text/references/scoring.md) — the scoring rubric: dimensions, weights, floors
 - [`sources.md`](skills/ru-text/references/sources.md) — sources and attribution
 

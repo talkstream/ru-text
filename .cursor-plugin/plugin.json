@@ -1,7 +1,7 @@
 {
   "name": "ru-text",
   "displayName": "ru-text",
-  "version": "2.0.0-rc.2",
+  "version": "2.0.0-rc.3",
   "description": "Russian text quality — 2,000+ linguistic atoms for typography, info-style, editorial, UX writing, business correspondence, and AI-text cleanup. Auto-activates on Russian text.",
   "author": {
     "name": "Arseniy Kamyshev",

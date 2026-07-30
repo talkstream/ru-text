@@ -26,6 +26,7 @@ additions.
 - [AD-14. Chat transcript as the artifact](#ad-14-chat-transcript-as-the-artifact-диалог-с-нейросетью-вместо-текста)
 - [AD-15. Search-engine addressee](#ad-15-search-engine-addressee-адресат--поисковик-а-не-читатель)
 - [AD-16. Additive pseudo-pair](#ad-16-additive-pseudo-pair-не-только-x-но-и-y)
+- [AD-17. Comma welded to a dash](#ad-17-comma-welded-to-a-dash-запятая-сомкнутая-с-тире)
 
 ## Neuroslop index
 
@@ -48,6 +49,7 @@ unverifiable and fast-dating.
 | Assistant-register meta-commentary — «Отличный вопрос!», «Надеюсь, это помогло» | AD-8 |
 | Hollow opener — «давайте разберёмся», «погрузимся», «важно понимать, что» | AD-9 |
 | Excessive em dashes — staccato dash rhythm | AD-1 |
+| Comma welded to a dash — «…, — …» inside one sentence | AD-17 |
 | Throat-clearing stop-words — «стоит отметить, что», «нельзя не отметить» | `info-style.md` §B |
 | Empty universal preamble — «в современном мире», «не секрет, что» | `info-style.md` §B |
 | Unproven-claim adjectives — «качественный», «надёжный», «эффективный» | `info-style.md` §B |
@@ -922,3 +924,82 @@ AD-16.8 (the pair and the synonymy are two defects, not one). «Не тольк�
 **Severity:** Low. Secondary signal in the **С — Structure** dimension (supporting **Ч — Clarity**). Density is the signal; an isolated pair is not flagged at all. Cannot trigger non-compensatory caps alone.
 
 **Acknowledged:** identified in the 2026 neuroslop review from the linguistic channel; checked against the corpus before proposing, where the construction appears exactly once and as a rule about predicate agreement.
+
+## AD-17. Comma welded to a dash (запятая, сомкнутая с тире)
+
+**Problem:** a clause closes with a comma and the next thought opens with an em dash, so the two
+marks end up side by side inside one sentence: «перечисление, у которого правда три элемента, —
+выписано в самом правиле». Each mark is correct on its own. Together they are a junction a
+person almost never reaches, because a person restructures the sentence first. A model does not
+restructure — it applies both rules and prints both marks. The tell is not an error of grammar;
+it is the fingerprint of rule-following without an ear.
+
+**Sources:**
+- Rozental, §64 «Запятая и тире»: «При „встрече“ внутри предложения запятой и тире сначала
+  ставится запятая, а затем тире». **The norm permits the junction** — this rule does not
+  contradict the reference, it observes that living prose avoids what the norm allows
+- Checked and NOT found: Lebedev's Ководство §143 «Знаки препинания в нестандартных ситуациях»
+  does not discuss combining marks at all, and no statement on the subject was found from
+  Ilyakhov. **No source forbids the construction, and this rule does not claim one does**
+- `editorial-punctuation.md` — the corpus has no rule producing the junction: it emerges from
+  two correct rules applied together, which is why nothing caught it
+- Independently formulated from the 2026 review of AI-generated Russian prose
+
+**Trigger construction:** a comma immediately followed by an em dash, `, —`, inside a sentence,
+where the comma closes a subordinate clause, a participial phrase or an aside, and the dash
+opens a predicate, an aside or a summary.
+
+**What to do:** remove the need for one of the marks. Split the sentence, or reorder it so the
+junction never forms. Do not break the norm by deleting the comma and keeping the dash — that
+produces an error where there was only an infelicity.
+
+AD-17.1 (the trigger is a JUNCTION, not the pair of characters). Two marks that each belong to a
+different construction are not this rule. Direct speech is the case that matters: in «„Хороший
+вопрос“, — ответил инженер» the comma closes the quoted reply and the dash introduces the
+author's words. That is the punctuation of direct speech, prescribed and universal, and it is
+**never** flagged. Every occurrence of `, —` in this corpus outside this rule's own examples is of that kind — direct speech, in AD-7.5 and AD-10.4 and their tables.
+
+AD-17.2 (carve-out — homogeneous subordinate clauses before a main clause). Rozental §40 and §46
+describe a construction where comma-plus-dash works as a single mark: a run of homogeneous
+subordinate clauses closing before the main clause. «Кто виноват, кто прав, — судить не нам».
+Not flagged.
+
+AD-17.3 (carve-out — a book, or a text edited as one). The director's scope: the tell is about
+the register of everyday professional writing. In literary prose, in a printed book, or when the
+task is explicitly the copy-editing of one, the junction is a legitimate authorial rhythm and is
+left alone. Where the genre is unclear, ask rather than flag.
+
+AD-17.4 (carve-out — quotation). A junction inside quoted material stays. See «Someone else's
+words stay theirs» in `SKILL.md`: an issue in a third party's text may be reported, never edited.
+
+AD-17.5 (single-count with AD-1). A sentence can carry both: AD-1 counts em dashes per paragraph,
+AD-17 takes one junction. Where a paragraph is over the dash limit **and** holds a junction,
+report AD-1 for the density and AD-17 for the junction — the fixes differ, and removing the
+junction usually removes one dash, which is why the order matters: fix AD-17 first, then re-count
+for AD-1.
+
+**Examples:**
+
+| Wrong | Correct |
+|---|---|
+| Перечисление, у которого три элемента, — выписано в самом правиле. | Перечисление из трёх элементов выписано в самом правиле. |
+| Команда наполняет каталоги, только если они уже существуют, — сама она их не создаёт. | Команда наполняет каталоги, только если они уже существуют. Сама она их не создаёт. |
+| Отчёт, собранный за ночь, — на столе у заказчика. | Отчёт, собранный за ночь, лежит на столе у заказчика. |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| «Хороший вопрос», — ответил инженер. | Direct speech: two constructions, not a junction (AD-17.1). |
+| — Скажу честно, я не знаю, — ответил инженер. | Same, with a dialogue dash (AD-17.1). |
+| Кто виноват, кто прав, — судить не нам. | Homogeneous subordinate clauses before the main clause (AD-17.2). |
+| A junction inside a passage being copy-edited as a book. | Literary register (AD-17.3). |
+
+**Severity:** Low. Secondary signal in the **С — Structure** dimension. A single junction is
+worth a remark and no more; the signal is density, and the fix is a rewrite the author would
+have made anyway. Cannot trigger non-compensatory caps alone.
+
+**Acknowledged:** raised by the director, 29.07.2026, on reading a junction in this project's own
+README: normative, and still a tell — «люди так не пишут в живой жизни, даже профессионалы
+языка». The research behind it, including what the named sources do **not** say, is recorded in
+`~/.claude/plans/ru-text-v2/comma-dash-research.md`.
