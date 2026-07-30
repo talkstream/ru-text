@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-07-30
+
+### Fixed
+- **The English README was still the pre-rewrite page.** «Five are visible in the fragment
+  itself» pointed at a fragment containing none of the five: the neuroslop section was lifted
+  to the front in Russian and not in English, and the sentence stayed pointing at the
+  bureaucratese demo that replaced it. The page's central claim referred to nothing. Rewritten
+  section for section against the Russian, with every Russian specimen glossed for a reader who
+  does not read Russian, and with three things the English page never carried: how to tell a
+  silent install failure, the reader's right to narrow the trigger, and what the rubric does
+  NOT measure.
+- **The arithmetic, in English.** «Seventeen tells» over «Five… Nine more… Two others» is
+  sixteen. The running count is gone, as it is in Russian.
+- **Four unreproducible token figures**, deleted in Russian by 505e4f2 and still standing in
+  English: 86,000 / 1,700 / 3,000 / 51,000, plus «nearly half». Replaced by the one measurable
+  number — four kilobytes, which `wc -c skills/ru-text/SKILL.md` settles.
+- **The install prompt had drifted between the three files that quote it.** A typography
+  normaliser put two non-breaking spaces inside the copyable command in README.md, so the
+  string a reader copies stopped matching the one `tools/probe-install.sh` hands a fresh agent
+  — the probe was testing a string we do not publish. The prompt is a literal, not prose;
+  `check-typography.sh` now skips that blockquote, and `check-dogfood.sh` compares the three
+  copies on exact bytes. Selftest 93 → 94.
+
 ## [2.0.0] - 2026-07-30
 
 ### Breaking changes

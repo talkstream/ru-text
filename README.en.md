@@ -1,10 +1,46 @@
 # ru-text
 
-[![Version](https://img.shields.io/github/v/release/talkstream/ru-text?label=version&color=2ea44f)](https://github.com/talkstream/ru-text/releases/latest) [![GitHub stars](https://img.shields.io/github/stars/talkstream/ru-text?style=flat&label=stars)](https://github.com/talkstream/ru-text/stargazers) [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/talkstream)
+[![Version](https://img.shields.io/github/v/release/talkstream/ru-text?label=version&color=2ea44f)](https://github.com/talkstream/ru-text/releases/latest) [![License](https://img.shields.io/github/license/talkstream/ru-text?label=license&color=blue)](LICENSE) [![GitHub stars](https://img.shields.io/github/stars/talkstream/ru-text?style=flat&label=stars)](https://github.com/talkstream/ru-text/stargazers)
 
-**Languages:** [Русский](README.md) | English
+[Русский](README.md) · [Install](INSTALL.en.md) · [What changed](CHANGELOG.md) · [Sources](skills/ru-text/references/sources.md)
 
-Your AI agent already writes Russian. ru-text takes care of how that text looks and reads: guillemets and em dashes appear on their own, bureaucratic phrasing goes, and the references on editing, UX copy and business correspondence load when they are needed.
+Your AI agent is already putting your thoughts into Russian, and it shows: straight quotes where the language wants guillemets, a hyphen where it wants an em dash, "в целях повышения эффективности" ("with a view to increasing the efficiency of"), "Отличный вопрос!" ("Great question!"). The thought is yours; the voice is a machine's.
+
+ru-text is a Russian proofreading skill for AI agents. It works inside the agent and cleans this up as it goes: typography, bureaucratic register, and seventeen tells of machine-written text (neuroslop). For every edit it gives you the fragment and the rule behind it.
+
+Your words, your style and your tone it does not touch: those are not errors. And it will not rewrite your file until you ask it to.
+
+## Neuroslop
+
+Catching a model by its vocabulary is hopeless: the vocabulary is ours. Its manner gives it away. It compliments your question, and argues with something nobody said.
+
+Here are five sentences with not one fact in them:
+
+> Отличный вопрос! Сейчас всё объясню — коротко, без воды и по делу. Скажу честно: тут есть нюанс. Давайте разберёмся, как это работает. Дело не в скорости, а в предсказуемости.
+
+*"Great question! I will explain it all now — briefly, no fluff, straight to the point. I will be honest with you: there is a nuance here. Let us work out how this works. It is not about speed, it is about predictability."*
+
+The same answer from someone who has something to say:
+
+> Под нагрузкой система замедляется предсказуемо: очередь растёт линейно до 800 запросов в секунду, дальше отказы. Вот замеры.
+
+*"Under load the system slows down predictably: the queue grows linearly up to 800 requests per second, and past that it starts failing. Here are the measurements."*
+
+The devices, in order:
+
+- "Отличный вопрос!" ("Great question!") — assistant-register filler;
+- "коротко, без воды и по делу" ("briefly, no fluff, straight to the point") — praising yourself for brevity;
+- "скажу честно" ("I will be honest") — declared sincerity;
+- "давайте разберёмся" ("let us work this out") — a hollow opener;
+- "дело не в скорости, а в предсказуемости" ("it is not about speed, it is about predictability") — manufactured antithesis: it denies what nobody asserted.
+
+I see the first version every day — in other people's READMEs and in my own drafts. It reads smoothly and reports nothing.
+
+Before it raises a finding, the skill reads the carve-outs. Inside a quotation, in an analysis of someone else's text, in a legal formula, the device is legitimate. And the tricolon — the model's favourite rhythm of three — is legitimate when there really are three things.
+
+The reference holds seventeen such tells in all. Two of them are charged against the document as a whole, because no local edit repairs them: a text that stayed a transcript of a chat with a neural network, and a text written for a search query.
+
+The skill takes bureaucratic register apart the same way: "в целях повышения эффективности взаимодействия" ("with a view to increasing the efficiency of interdepartmental interaction") becomes "чтобы отделы работали быстрее" ("so the departments work faster"); "осуществляется контроль" ("control is carried out") becomes "следит Петрова" ("Petrova is watching it"). Verbal nouns turn back into verbs, faceless oversight acquires a surname, and "в целях" and "осуществлять" are cut: both are in the catalogue of 92 stop-words. The skill does not invent facts — it will ask you for the surname.
 
 ## Install
 
@@ -12,101 +48,60 @@ Hand this sentence to your AI agent:
 
 > Установи навык https://github.com/talkstream/ru-text глобально и вызывай его для любых задач с русским текстом: вычитка, типографика, очистка от нейрослопа, редактура, UX-тексты, деловая переписка.
 
-The agent takes it from there: it knows where its platform keeps skills better than any instruction written a year ago. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
+*In English: install the ru-text skill globally and invoke it for any Russian-text task — proofreading, typography, neuroslop cleanup, editing, UX copy, business correspondence.* Hand your agent the Russian, not the translation.
 
-Then start a new session — skills are loaded when a session starts, not in the one that installed them.
+That is usually enough: the agent knows where its platform keeps skills better than a year-old instruction does. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
 
-Installing by hand, an agent that got it wrong, or a platform with its own installer — all of that is in [INSTALL.en.md](INSTALL.en.md): the directories of twelve platforms with the vendor URL each came from, the click-paths for Claude Desktop and Notion (Notion installs by clicking, not by agent), and four things an agent cannot discover by trying.
+Skills are picked up when a session starts, so start a new one.
 
-## What it looks like
+Then try it on real text: give the agent a paragraph and ask it to "вычитай" ("proofread this"). What comes back is a corrected version and a list of edits. No list — the skill did not load; see [INSTALL.en.md](INSTALL.en.md).
 
-Before:
+Installing by hand, an agent that put it in the wrong place, or a platform with an installer of its own — all of that is in [INSTALL.en.md](INSTALL.en.md): the skill directory for each platform, with the vendor page the path came from; the click-paths for Claude Desktop and Notion; and four things an agent will not discover by trying.
 
-> В целях повышения эффективности взаимодействия между подразделениями было принято решение о проведении мероприятий по оптимизации документооборота. Ответственными лицами осуществляется контроль за надлежащим исполнением поручений.
+## What you decide
 
-After:
+**Your request outranks the rules.** Say "пиши разговорно" ("write it conversationally") and it will be conversational. Academic, legal, SEO, literary — the same. These are defaults, and a direct request from you cancels them.
 
-> Чтобы отделы работали быстрее, мы упрощаем документооборот. За исполнением поручений следят Иванов и Петрова.
+**You issue the mandate.** The install sentence asks the agent to invoke the skill for any task involving Russian text. Want a narrower mandate? Write one: "вызывай ru-text, только когда я прошу вычитку" ("invoke ru-text only when I ask for a proofread"). The agent follows your wording.
 
-*"To make the departments work faster, we are simplifying our paperwork. Ivanov and Petrova follow up on assignments."*
+**Nothing is rewritten silently.** When it checks, the skill hands back the corrected version and a list of the changes; it edits your file only if you asked for that directly.
 
-Three things changed: verbal nouns became verbs, the passive voice named its actor, and "в целях" and "осуществляется" left — both are in the catalogue of 92 stop-words.
+**Someone else's text stays theirs.** Quotations, code and third-party fragments inside your document are reproduced as they are: a remark about them, perhaps; an edit to them, never.
 
-## What it will fix
+**One command turns it off.** In Claude Code — `/plugin`; on the other platforms, delete the skill directory.
 
-**Buttons, errors, empty states.** "Отмена" ("Cancel") instead of "Нет" ("No"). An error says what happened and what to do. A placeholder is an example, not an instruction.
+Sometimes the agent runs the proofread itself, without asking: that is how its automatic checks are set up. Such a pass begins with a fast check, and the fast check never passes itself off as a full proofread.
 
-**Emails and messages.** "Довожу до сведения" ("I hereby bring to your attention") becomes "сообщаю" ("I am letting you know"). Subject, first sentence and request move into place. The tone stays respectful without being obsequious.
+## What else it fixes
 
-**Landing pages and documentation.** "Команда профессионалов" is replaced by something checkable. Typography, inverted-pyramid structure, links that say where they lead.
+**Buttons, errors, empty states.** A button names the action — "Отмена" ("Cancel") rather than "Нет" ("No"); an error says what happened and what to do next; a placeholder is an example, not an instruction.
 
-**Text that came out of a model** — yours or someone else's. ru-text knows seventeen tells of machine writing. Five are visible in the fragment itself:
+**Emails and messages.** The subject line leads with the business at hand — "Согласовать бюджет на Q3" ("Approve the Q3 budget"); the first sentence carries the request or the conclusion; "довожу до сведения" ("I hereby bring to your attention") unfolds into "сообщаю" ("I am letting you know"). The tone stays respectful, without fawning.
 
-- manufactured antithesis ("не X, а Y" — "not X but Y") with no antecedent;
-- preemptive self-praise ("чётко, по делу, без воды" — "crisp, on point, no fluff");
-- assistant-register filler ("Отличный вопрос!" — "Great question!", "Надеюсь, помог" — "Hope that helped");
-- hollow openers ("давайте разберёмся" — "let us figure this out", "погрузимся" — "let us dive in");
-- phantom attribution ("как показывают исследования" — "studies show") with no study behind it.
-
-Nine more are of the same kind. Two others are charged to the whole document rather than to a fragment, because no local edit repairs them: a piece that stayed a chat transcript, and a piece written for a search engine instead of a reader.
-
-Where the device is legitimate — a quotation, an analysis of someone else's text, a legal formula, a list that genuinely has three items — is written into the rule itself. The carve-out is read before the finding is raised.
-
-## What it costs you in context
-
-The corpus is large — roughly 86,000 tokens, and nearly half of that is the single reference
-on machine-written text. Running all of it over every paragraph would be wasteful at your
-expense, so ru-text does not.
-
-What stays in context permanently is only the always-on skill, about 1,700 tokens: the
-typography table and the top stop-words. Everything else loads when it is needed.
-
-The full check runs when you ask for it — «вычитай», «прогони ru-text», or a gate in your own
-discipline that names ru-text. Then the whole corpus is read, because that is what you asked
-for.
-
-When the agent checks itself, unprompted, it starts with a fast pass instead: the index of
-tells and the stop-word catalogue, about 3,000 tokens rather than 51,000. It catches
-typography and stop-words — the things a single line decides. If it finds a trace of machine
-writing, or five findings accumulate, it expands into the full check on its own. The fast
-pass always labels itself as fast and never passes for the full one.
-
-The fast pass does **not** judge the tells of machine writing. Each of them carries carve-outs
-naming where the device is legitimate, and those live only in the full reference. Spotting a
-trace is a reason to expand, not a reason to raise a finding.
-
-## Boundaries
-
-**Your request outranks the rules.** Ask for a casual, academic, legal, SEO or literary style and ru-text adapts. These are quality defaults, not requirements.
-
-**Nothing is rewritten silently.** A check returns the corrected version plus a list of changes; a file is edited in place only when you ask for that.
-
-**Someone else's words stay theirs.** Quoted material, code blocks and third-party text inside your document are reproduced as-is: a remark about them, perhaps; an edit to them, never.
-
-**It turns off like any skill.** Through your platform: `/plugin` in Claude Code, or by deleting the skill directory elsewhere.
+**Landing pages and documentation.** Instead of "команда профессионалов" ("a team of professionals") — something a reader can check; the conclusion on top, by the inverted pyramid; a link says where it leads.
 
 ## Scoring
 
-`/ru-text:ru-score` gives a score from 0 to 10 across five dimensions: typography, clean language, grammar, structure, precision for the reader. Each dimension comes with specific issues and quoted fragments.
+Claude Code has two commands. `/ru-text:ru-score` takes a reading from a text: a score from 0 to 10 across five dimensions — typography, clean language, grammar, structure, precision for the reader. Every finding comes with a quotation from your text and the rule it was raised under, so the score can be checked line by line and argued with. `/ru-text:ru-check` does the analysis without a score: findings, the rule for each, a proposed replacement. On the other platforms, ask in words — "оцени этот текст по ru-text" ("score this text with ru-text"), "вычитай" ("proofread this") — and the rubric loads itself.
 
-The top labels have a floor the arithmetic does not override. A document that turned out to be a chat transcript, or one written for a search engine, is never labelled «Эталонный» (Benchmark) or «Хороший» (Good) whatever it scores — and the rubric names the rule that capped it. The number itself is printed as it computed.
+Along with the score, the rubric prints what it did not measure: factual accuracy, fit with the audience, the author's voice and originality, effectiveness, conformity to the brief. Voice is not part of the score: 8.0 for a cautious text and 8.0 for a blunt one mean the same thing.
 
-`/ru-text:ru-check` does the analysis without a score: findings, the rule behind each, and a proposed replacement.
-
-Both are Claude Code's slash syntax. Elsewhere, just ask: "score this text with ru-text", "proofread this" — the rubric loads on demand.
+The two top labels — "Эталонный" ("Benchmark") and "Хороший" ("Good") — do not go to a document that stayed a chat transcript or was written for a search engine: such a text can be clean in every phrase and useless as a whole. The rubric names the rule that capped the label. The number itself is printed exactly as it came out.
 
 ## The corpus
 
-Over 2,000 linguistic atoms: rules, wrong → right pairs, dictionary entries and carve-outs. That is a floor, not an exact count, and a command produces it:
+Over 2,000 linguistic atoms: rules, wrong → right pairs, dictionary entries and carve-outs. That is a floor, not an exact number, and a command counts it:
 
 ```bash
 tools/extract-atoms.sh skills/ru-text | wc -l
 ```
 
-The corpus is spread over ten reference files, and they load on demand rather than at session start: a large body of rules costs no context until it is needed. Open any of them and count the rules yourself — that is more reliable than a number maintained by hand.
+I used to type that number in by hand. It drifted across the files, I fixed it in nine of them at once — and in the note recording that fix I got even the number of files wrong. Now a script prints it.
+
+The corpus is laid out across 10 reference files, and they load on demand, so at the start of a session your context is untouched. Open any of them and count the rules yourself.
 
 - [`typography.md`](skills/ru-text/references/typography.md) — quotes, dashes, non-breaking spaces, digit grouping, abbreviations
-- [`info-style.md`](skills/ru-text/references/info-style.md) — the catalogue of 92 stop-words, text structure, facts over adjectives
+- [`info-style.md`](skills/ru-text/references/info-style.md) — the catalogue of 92 stop-words, text structure, facts instead of judgements
 - [`editorial-punctuation.md`](skills/ru-text/references/editorial-punctuation.md) — complex sentences, comma traps, introductory words
 - [`editorial-grammar.md`](skills/ru-text/references/editorial-grammar.md) — agreement, pleonasms, verb government, gerunds, homophones
 - [`ux-writing.md`](skills/ru-text/references/ux-writing.md) — buttons, errors, empty states, forms, notifications, confirmation dialogs
@@ -116,25 +111,37 @@ The corpus is spread over ten reference files, and they load on demand rather th
 - [`scoring.md`](skills/ru-text/references/scoring.md) — the scoring rubric: dimensions, weights, floors
 - [`sources.md`](skills/ru-text/references/sources.md) — sources and attribution
 
+## What it costs you in context
+
+ru-text does not run the whole corpus over every paragraph — that would be waste, and you would be the one paying for it.
+
+One file stays in context permanently — the always-on skill. That is 4 kilobytes: the typography table and the top of the stop-word list. The references sit beside it and load when their turn comes.
+
+Say "вычитай" or "прогони ru-text" ("run ru-text over this") and it reads the whole corpus.
+
+When the agent checks itself, a fast pass runs over the index of tells and the stop-word catalogue. It catches typography and stop-words — the things a single line decides. If five findings accumulate, or a trace of machine writing shows up, the pass expands into a full proofread on its own.
+
+The fast pass does not judge the tells of machine writing: each of them carries a carve-out naming where the device is legitimate, and the carve-outs live only in the full reference. Spotting a trace is a reason to expand.
+
 ## Updating
 
-A one-shot install has no mechanism of its own: the agent installed the skill and forgot about it. Every few months, ask it to run the install again; what changed is in the [CHANGELOG](CHANGELOG.md), and the per-platform commands are in [INSTALL.en.md](INSTALL.en.md#updating).
+A one-shot install has no update mechanism: the agent installed the skill and forgot about it. There is one signal — the repository's releases: Watch → Custom → Releases. When a release notification arrives, ask your agent to run the install again. What changed is written in the [CHANGELOG](CHANGELOG.md); the commands for each platform are in [INSTALL.en.md](INSTALL.en.md#updating).
 
-One thing worth knowing up front: the ru-text pin in the Claude Code community marketplace trails the current version by months. `claude plugins list` shows the version you have; if it is old, install the skill by copying — [the same file](INSTALL.en.md#what-an-agent-cannot-work-out-for-itself) explains how.
+The ru-text pin in the Claude Code community marketplace trails the current version by months. `claude plugins list` will show the version you have; if it is old, install the skill by copying: three commands in [INSTALL.en.md](INSTALL.en.md#the-shared-directory).
 
 ## Sources and credits
 
-These books, guides and tools taught me how to work with Russian text. If ru-text saves you time, buy their books and use their tools.
+These books, guides and tools taught me how to work with Russian text. If ru-text saves you time — buy their books and use their tools.
 
 **Typography and layout.** Artyom Gorbunov, "Typography and Layout" · [Bureau Gorbunov's Tips](https://bureau.ru/soviet/) · A. Milchin and L. Cheltsova, "The Publisher's and Author's Handbook" · [Ilya Birman's typography layout](https://ilyabirman.ru/typography-layout/) · [Type.today journal](https://type.today)
 
 **Information style.** Maxim Ilyakhov, "Write, Shorten" and "Clear and Understandable" · [T—Zh editorial policy](https://journal.tinkoff.ru/manual/) · [Kontur guides](https://guides.kontur.ru) · [Yandex Gravity UI](https://gravity-ui.com)
 
-**Writing and language.** M. Ilyakhov and L. Sarycheva, "New Rules of Business Correspondence" · Nora Gal, "[Living Word and Dead Word](http://lib.ru/TRANSLATORS/NORA_GAL/slowo.txt)" · D. Rozental's reference books · Artemy Lebedev, "[Mandership](https://www.artlebedev.ru/kovodstvo/)" · [Ozon's UX writing practices](https://habr.com/ru/companies/ozontech/articles/821383/) · GOST R 7.0.12-2011 and GOST 7.12-93
+**Writing and language.** Artemy Lebedev, "[Mandership](https://www.artlebedev.ru/kovodstvo/)" · Nora Gal, "[Living Word and Dead Word](http://lib.ru/TRANSLATORS/NORA_GAL/slowo.txt)" · D. Rozental's reference books · M. Ilyakhov and L. Sarycheva, "New Rules of Business Correspondence" · [Ozon's UX writing practices](https://habr.com/ru/companies/ozontech/articles/821383/) · GOST R 7.0.12-2011 and GOST 7.12-93
 
 The full list, with what each source contributed, is in [`sources.md`](skills/ru-text/references/sources.md).
 
-Nearby tools: [Glavred](https://glvrd.ru), [Lebedev's Typograf](https://www.artlebedev.ru/typograf/), [Orfogrammka](https://orfogrammka.ru).
+Alongside them, the tools: [Glavred](https://glvrd.ru), [Lebedev's Typograf](https://www.artlebedev.ru/typograf/), [Orfogrammka](https://orfogrammka.ru).
 
 ## Intellectual property notice
 
@@ -144,12 +151,12 @@ The authors and publishers of the sources listed have not endorsed or reviewed t
 
 ## What's next
 
-A Telegram bot, a browser extension, a WordPress plugin. Ideas and corrections go to [issues](https://github.com/talkstream/ru-text/issues) or [discussions](https://github.com/talkstream/ru-text/discussions).
+Next I want a Telegram bot and a browser extension. A WordPress plugin I am only thinking about so far. Ideas and remarks go to [issues](https://github.com/talkstream/ru-text/issues) or [discussions](https://github.com/talkstream/ru-text/discussions).
 
 ## Author
 
 Arseniy Kamyshev — [nafigator@gmail.com](mailto:nafigator@gmail.com) · [Telegram](https://t.me/nafigator) · [GitHub](https://github.com/talkstream)
 
-I work on social projects, and the work on ru-text is sustained by the people it has proven useful to. If it makes your products better — [GitHub Sponsors](https://github.com/sponsors/talkstream).
+If ru-text saved you a proofreading pass — [GitHub Sponsors](https://github.com/sponsors/talkstream). Found a rule that is wrong? Open an [issue](https://github.com/talkstream/ru-text/issues). The corpus grows on findings like that too, and in the CHANGELOG they are credited by name.
 
-[MIT](LICENSE) · [Privacy policy](PRIVACY_POLICY.md) · the plugin makes no network calls and collects no data.
+[MIT](LICENSE) · [Privacy policy](PRIVACY_POLICY.md) · the plugin makes no network calls and collects no data. This page was proofread by the current version of ru-text.

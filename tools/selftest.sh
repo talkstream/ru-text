@@ -633,6 +633,22 @@ io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'уведомления, 
 PYEOF
 expect_dogfood "a file credited with a section it does not have is caught" "does not contain it" "$d"
 
+# The install prompt, quoted in three files. The divergence this catches was invisible: a
+# typography normaliser put two non-breaking spaces inside the copyable command, so the README
+# stopped matching the string tools/probe-install.sh hands a fresh agent — and the probe began
+# testing a string we do not publish. Two non-breaking spaces are exactly the mutation.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, re, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+m = re.search(r'Установи навык.*?переписка\.', s, re.S)
+assert m, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(m.group(0), m.group(0).replace(' и вызывай', ' и\u00a0вызывай', 1), 1))
+PYEOF
+expect_dogfood "an install prompt that drifted between files is caught" "must quote it identically" "$d"
+
 d=$(fresh_copy)
 if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
   ok "an untouched copy passes check-dogfood"

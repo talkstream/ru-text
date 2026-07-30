@@ -181,6 +181,38 @@ guard_complete "stop-word catalogue" "$CAT" "$CATALOG_CLAIMS"
 verify_claims "catalogue categories" "$CATEG" "$CATEGORY_CLAIMS"
 verify_names
 
+# The install prompt is quoted in three places: both READMEs and the sandbox probe. A probe that
+# feeds an agent a different string than the one we publish tests nothing, and the divergence is
+# invisible — it was two non-breaking spaces, put there by a typography normaliser that could not
+# tell a copyable command from prose. Compared on exact bytes, because that is what the reader
+# copies and what the probe sends.
+prompt_of() { # $1=file — the install prompt as one line, or empty
+  python3 - "$1" <<'PYX'
+import io, re, sys
+try:
+    t = io.open(sys.argv[1], encoding='utf-8').read()
+except OSError:
+    sys.exit(0)
+m = re.search(r'Установи навык.*?переписка\.', t, re.S)
+if m:
+    print(re.sub(r'[ \t\n]+', ' ', m.group(0)))
+PYX
+}
+
+pr_ru=$(prompt_of README.md)
+pr_en=$(prompt_of README.en.md)
+pr_probe=$(prompt_of tools/probe-install.sh)
+if [ -z "$pr_ru" ]; then
+  bad "the install prompt is missing from README.md"
+elif [ "$pr_ru" = "$pr_en" ] && [ "$pr_ru" = "$pr_probe" ]; then
+  ok "the install prompt is byte-identical in both READMEs and the probe"
+else
+  bad "the install prompt differs between the files that must quote it identically:"
+  printf '        README.md     %s\n' "$pr_ru" | sed 's/$//'
+  printf '        README.en.md  %s\n' "$pr_en"
+  printf '        probe-install %s\n' "$pr_probe"
+fi
+
 [ "$fail" -eq 0 ] && { echo "check-dogfood: PASS"; exit 0; }
 echo "check-dogfood: FAIL — $fail check(s)"
 exit 1

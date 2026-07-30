@@ -93,6 +93,16 @@ for path in sys.argv[1:]:
             continue
         if fence:
             continue
+        # A blockquote holding the install prompt is a string the reader COPIES and hands to
+        # an agent, not prose we typeset. Russian typography applies to what we write; it does
+        # not apply to a literal someone will paste. The rules were applied to it once, by a
+        # normaliser that could not tell the difference, and put two non-breaking spaces inside
+        # a command — so the string in the README stopped being byte-identical to the one
+        # tools/probe-install.sh feeds a fresh agent, and the probe began testing a string we
+        # do not publish. Skipping the line here is what lets those two stay identical.
+        if raw.lstrip().startswith('> Установи навык'):
+            continue
+
         # Inline code and link targets carry paths, flags and commands. `~/.agents/skills` is
         # a tilde that belongs; a hyphen in `-g` is not a dash. Blank them, keeping offsets so
         # the reported column still points at the real character.

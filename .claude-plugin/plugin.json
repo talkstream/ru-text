@@ -1,6 +1,6 @@
 {
   "name": "ru-text",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Russian text quality for AI agents — neuroslop cleanup, typography, information style, editorial standards, UX writing, business correspondence. 2,000+ linguistic atoms, loaded on demand.",
   "author": {
     "name": "Arseniy Kamyshev",
