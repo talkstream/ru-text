@@ -140,8 +140,15 @@ def stats(values: List[int]) -> Stats:
     return Stats(n, mean, sd, (sd / mean if mean else 0.0), q(0.25), q(0.5), q(0.75))
 
 
+class Unreadable(Exception):
+    """The file is not UTF-8 text. Raised so a batch loses one file, not the rest."""
+
+
 def measure(path: str) -> Shape:
-    text = io.open(path, encoding='utf-8').read()
+    try:
+        text = io.open(path, encoding='utf-8').read()
+    except (UnicodeDecodeError, OSError) as e:
+        raise Unreadable('%s: %s' % (path, e))
     sents = sentences(text)
     lengths = [len(WORD.findall(s)) for s in sents]
     subord = [len(SUBORD_RE.findall(s)) for s in sents]
@@ -195,5 +202,14 @@ if __name__ == '__main__':
             sys.exit(2)
         compare(args[1], args[2])
     else:
+        # One unreadable file must not take the batch down with it: the point of passing
+        # several paths is to compare them, and a traceback on the second loses the rest.
+        bad = 0
         for p in args:
-            report(measure(p))
+            try:
+                report(measure(p))
+            except Unreadable as e:
+                sys.stderr.write('measure-prose-shape: пропущен — %s\n' % e)
+                bad += 1
+        if bad and bad == len(args):
+            sys.exit(1)
