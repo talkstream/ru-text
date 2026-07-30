@@ -140,6 +140,28 @@ else
   printf '%s\n' "$points" | sed 's/^/        /'
 fi
 
+
+# ── 1b. The version baked into the social image ──────────────────────────────────────
+# The Open Graph card carries «2.0» as a literal (assets/og/og.html). It is deliberately
+# major.minor rather than the full triple — a card that social platforms cache for months
+# should not claim a patch level — but a literal with no gate is exactly the failure this
+# project has paid for twice: «~1 044 rules» that nobody could reproduce, and the retired
+# «1,040» on the previous preview. A 3.0 release re-stamps eight manifests and would leave
+# the image saying 2.0 in silence. So the LINE is checked, not the patch.
+og=assets/og/og.html
+if [ -f "$og" ]; then
+  baked=$(sed -n 's|.*class="ver">\([0-9][0-9]*\.[0-9][0-9]*\)<.*|\1|p' "$og" | head -1)
+  full=$(printf '%s\n' "$points" | head -1 | cut -f2)
+  line=$(printf '%s' "$full" | cut -d. -f1-2)
+  if [ -z "$baked" ]; then
+    bad "no version found in $og — the <span class=\"ver\"> is gone or renamed"
+  elif [ "$baked" = "$line" ]; then
+    ok "the social image says $baked, and the manifests are on the $line line"
+  else
+    bad "the social image says $baked but the manifests are on $line — rebuild it: tools/build-og.sh"
+  fi
+fi
+
 # ── 2. The description fits our budget ───────────────────────────────────────────────
 raw=$(description)
 len=$(printf '%s' "$raw" | cut -f1)

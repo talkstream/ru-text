@@ -518,6 +518,10 @@ for m in .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugi
   sed 's/"version": "[^"]*"/"version": "9.9.9-rc.1"/' "$d/$m" > "$d/v" && mv "$d/v" "$d/$m"
 done
 sed 's/\*\*Version:\*\* [^ ]*/**Version:** 9.9.9-rc.1/' "$d/.claude/CLAUDE.md" > "$d/v" && mv "$d/v" "$d/.claude/CLAUDE.md"
+# The social image carries the major.minor line as a literal, and a real version bump moves
+# it too — build-og.sh re-renders from this source. Leaving it behind would make this case
+# fail for a reason it is not about, and would model a bump nobody should perform.
+sed 's|class="ver">[0-9.]*<|class="ver">9.9<|' "$d/assets/og/og.html" > "$d/v" && mv "$d/v" "$d/assets/og/og.html"
 if "$d/tools/check-version.sh" >/dev/null 2>&1; then
   ok "a pre-release version agreeing at every point passes"
 else
@@ -1156,6 +1160,9 @@ if ! (cd "$ROOT" && ./tools/build-og.sh --check >/dev/null 2>&1); then
   skip "build-og cases — no renderer here, or the committed images already differ"
 else
   d=$(fresh_copy)
+  # fresh_copy stages but never commits, and --check reads the blob out of HEAD. Without a
+  # commit every case here would report MISSING instead of exercising the comparison.
+  ( cd "$d" && git -c user.email=t@t -c user.name=t commit -qm baseline ) >/dev/null 2>&1
   # A two-pixel change to the accent rule. Small enough that only a real comparison finds it.
   python3 - "$d/assets/og/og.html" <<'PYEOF'
 import io, sys
