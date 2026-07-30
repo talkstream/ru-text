@@ -27,6 +27,9 @@ fail=0
 note() { printf '  %s\n' "$1"; }
 ok()   { pass=$((pass + 1)); printf '  ok    %s\n' "$1"; }
 bad()  { fail=$((fail + 1)); printf '  FAIL  %s\n' "$1"; }
+# Counted separately and printed in the summary: a skipped case must never read
+# as a passing one, and must never be invisible. §No silent caps.
+skip() { skipped=$((skipped + 1)); printf '  skip  %s\n' "$1"; }
 
 # fresh_copy — a self-contained repository slice: corpus, tools and baseline, all writable
 fresh_copy() {
@@ -1138,6 +1141,51 @@ else
   bad "initials guard failed: counted $n sentences where there is 1"
 fi
 
+printf 'selftest: build-og.sh\n'
+
+# The social images are a generated artefact whose generator is committed, which is this
+# project's own standard for anything generated. These cases guard the two claims that make
+# the arrangement worth anything: that --check actually notices when the render stops
+# matching the source, and that a missing input fails loudly rather than rendering a card
+# with a hole in it.
+#
+# Skipped, not failed, where no browser exists: the ubuntu runner has no Chrome, and a green
+# suite that reddens over a missing renderer teaches people to ignore it. The skip is
+# counted and printed.
+if ! (cd "$ROOT" && ./tools/build-og.sh --check >/dev/null 2>&1); then
+  skip "build-og cases — no renderer here, or the committed images already differ"
+else
+  d=$(fresh_copy)
+  # A two-pixel change to the accent rule. Small enough that only a real comparison finds it.
+  python3 - "$d/assets/og/og.html" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace('width: 58px; height: 2px', 'width: 60px; height: 2px', 1))
+PYEOF
+  out=$(cd "$d" && ./tools/build-og.sh --check 2>&1) && st=0 || st=$?
+  if [ "$st" -eq 0 ]; then
+    bad "build-og --check PASSED after the source changed"
+  elif printf '%s' "$out" | grep -q 'DIFFERS'; then
+    ok "build-og --check notices when the render stops matching its source"
+  else
+    bad "build-og --check failed, but not for the stated reason"
+    printf '%s\n' "$out" | sed 's/^/        /'
+  fi
+
+  d=$(fresh_copy)
+  mv "$d/assets/mark.png" "$d/assets/mark-hidden.png"
+  out=$(cd "$d" && ./tools/build-og.sh 2>&1) && st=0 || st=$?
+  if [ "$st" -eq 0 ]; then
+    bad "build-og rendered a card with its mark missing"
+  elif printf '%s' "$out" | grep -q 'assets/mark.png'; then
+    ok "a missing input is named, not silently drawn around"
+  else
+    bad "build-og failed on a missing mark, but did not name the file"
+  fi
+fi
+
 printf 'selftest: probe-install.sh\n'
 
 # The probe judges what an agent did to a sandbox. These cases judge the probe, by building
@@ -1258,5 +1306,9 @@ fi
 
 rm -rf "$PB"
 
-printf 'selftest: %d passed, %d failed\n' "$pass" "$fail"
+if [ "${skipped:-0}" -gt 0 ]; then
+  printf 'selftest: %d passed, %d failed, %d skipped\n' "$pass" "$fail" "$skipped"
+else
+  printf 'selftest: %d passed, %d failed\n' "$pass" "$fail"
+fi
 [ "$fail" -eq 0 ]
