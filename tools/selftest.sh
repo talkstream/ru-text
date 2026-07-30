@@ -649,6 +649,14 @@ io.open(p, 'w', encoding='utf-8').write(
 PYEOF
 expect_dogfood "an install prompt that drifted between files is caught" "must quote it identically" "$d"
 
+# The golden set's own size, stated in prose. Two AD-17 cases landed and the figure stayed at
+# 22 — a hand-maintained number in the file that documents the measurement, which is the defect
+# this release spent two days removing from the READMEs.
+d=$(fresh_copy)
+mkdir -p "$d/tools/golden/99-a-case-nobody-counted"
+: > "$d/tools/golden/99-a-case-nobody-counted/text.md"
+expect_dogfood "a golden case the README did not count is caught" "cases and holds" "$d"
+
 d=$(fresh_copy)
 if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
   ok "an untouched copy passes check-dogfood"

@@ -186,6 +186,20 @@ verify_names
 # invisible — it was two non-breaking spaces, put there by a typography normaliser that could not
 # tell a copyable command from prose. Compared on exact bytes, because that is what the reader
 # copies and what the probe sends.
+# The golden set states its own size in prose, and prose does not count directories. Two cases
+# for AD-17 landed and the figure stayed at 22 — the same hand-maintained-number defect this
+# release spent two days removing from the READMEs, reappearing in the file that documents the
+# measurement. Counted, not remembered.
+golden_cases=$(find tools/golden -maxdepth 1 -type d -name '[0-9]*' | wc -l | tr -d ' ')
+stated=$(grep -oE 'Все [0-9]+ текста' tools/golden/README.md | grep -oE '[0-9]+' | head -1)
+if [ -z "$stated" ]; then
+  bad "tools/golden/README.md no longer states how many cases the set holds"
+elif [ "$stated" = "$golden_cases" ]; then
+  ok "the golden set states its true size ($golden_cases cases)"
+else
+  bad "the golden set says $stated cases and holds $golden_cases"
+fi
+
 prompt_of() { # $1=file — the install prompt as one line, or empty
   python3 - "$1" <<'PYX'
 import io, re, sys
