@@ -1111,17 +1111,31 @@ else
   bad "measure-prose-shape cannot separate flat from varied prose: CV $flat_cv vs $var_cv"
 fi
 
-# The abbreviation guard. Without it every «т. д.» invents a sentence boundary, and the
-# variance is then measured on debris rather than on prose. One sentence, three abbreviations.
+# The two full-stop guards, mutated SEPARATELY, because a fixture that exercises both at
+# once proves neither. The first version of this case failed exactly that test: it put «т. д.»
+# before a comma and «т. е.» before a lowercase word, where the splitter would not have cut
+# anyway — so it passed with the ABBREV list emptied, and guarded nothing. Verified by
+# mutation: emptying ABBREV must break the FIRST case only, and removing the initials regex
+# the SECOND only. Both need a full stop followed by space + CAPITAL, which is the one shape
+# the splitter acts on.
 cat > "$d/abbr.md" <<'ABBREOF'
-Мы проверили типографику, пунктуацию, согласование и т. д., затем сверили результат с
-образцом, т. е. с текстом, который А. С. Пушкин никогда не писал, и расхождений не нашли.
+Полный список расхождений см. Приложение 2 в конце документа.
 ABBREOF
 n=$(python3 tools/measure-prose-shape.py "$d/abbr.md" | awk '/^  слов / {print $4}')
 if [ "$n" = "1" ]; then
-  ok "abbreviations and initials do not invent sentence boundaries"
+  ok "an abbreviation before a capital does not invent a sentence boundary"
 else
-  bad "abbreviation guard failed: counted $n sentences where there is 1"
+  bad "ABBREV guard failed: counted $n sentences where there is 1"
+fi
+
+cat > "$d/initials.md" <<'INITEOF'
+Справочники Д. Э. Розенталя лежат на той же полке.
+INITEOF
+n=$(python3 tools/measure-prose-shape.py "$d/initials.md" | awk '/^  слов / {print $4}')
+if [ "$n" = "1" ]; then
+  ok "initials do not invent a sentence boundary"
+else
+  bad "initials guard failed: counted $n sentences where there is 1"
 fi
 
 printf 'selftest: probe-install.sh\n'
