@@ -41,6 +41,15 @@ jobs:
             sh -n "$f" || { echo "syntax error: $f"; exit 1; }
           done
 
+      - name: Python tools are executable and parseable
+        # Mirrors the .py loop in tools/gates.sh — tools/ gained its first Python file
+        # and the shell loop cannot see it.
+        run: |
+          for f in $(find tools -name '*.py' -type f | sort); do
+            test -x "$f" || { echo "not executable: $f"; exit 1; }
+            python3 -c "import ast,io,sys; ast.parse(io.open(sys.argv[1],encoding='utf-8').read(), sys.argv[1])" "$f"
+          done
+
       - name: Selftest — every checker must be able to fail
         # Runs first. If the checkers cannot fail, their passing below means nothing.
         run: tools/selftest.sh

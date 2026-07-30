@@ -74,69 +74,22 @@ anything.
   prose legitimately looks like. Any candidate in this area must first show how it differs
   from the rejected one, or it is the rejected one.
 
-## The flattening — the observation that reframes this whole direction
+## The flattening — moved out of this file, and up a release
 
-Reported by the author on 30.07.2026, from using v2.0 on real texts: after ru-text, prose
-comes out **too short and too chopped**. His words: the tool is so good at its filters that
-it kills the liveliness of the language.
+The author's 30.07.2026 observation — that texts come out too short and too chopped after a
+ru-check pass — lived here for one day. On 31.07.2026 he raised it to a **2.1** release:
+too many removals, and they do not always leave the text any skeleton at all.
 
-Take this seriously before deciding whether it is true, because the mechanism that would
-produce it is already in the design, and it is not a bug in any single rule.
+It belongs in its own file, `roadmap-v2.1-conservation.md`, and the reason is the same one
+that makes this file a major version. A brake on rules the corpus already has needs no new
+kind of rule, no new dimension and no new score, so it is minor. The formative half needs
+all three.
 
-**Every rule in the corpus is a removal, and nothing in it has a stake in what stays.** Over
-2 000 atoms, and each one names something to take out or replace with something shorter. A
-checker built only of subtractions has one fixed point: the shortest text that violates
-nothing. Run it hard enough and every document walks toward that point, whatever it was
-before. No rule causes this. The *set* causes it, and only the set can fix it.
-
-**The scoring model does not resist it either.** All five dimensions penalise. A text of
-eight-word declaratives with no subordination, no aside and no digression violates nothing
-in typography, nothing in clean language, nothing in grammar, nothing in structure and
-nothing in precision — so it scores well. The rubric cannot tell «edited» from
-«eviscerated», because it was never given anything to defend.
-
-**And the result is a new tell.** This is the sharp part. Uniform short declaratives with a
-flat rhythm and no subordination is exactly the register the neuroslop work already treats
-as suspicious — AD-6 and the rhythm candidates exist because sameness reads as machine. An
-anti-neuroslop tool that presses every text into one shape has not removed the machine
-signature; it has replaced someone else's with its own. Ours would be harder to spot,
-because it is made of individually correct edits.
-
-**Measure it before building anything on it.** The observation is an impression from the
-person who knows the corpus best, which makes it the best possible reason to look and still
-not evidence. The measurement is cheap and the prediction is falsifiable: take a corpus of
-texts before and after a ru-check pass and compare the *distributions* — sentence length
-(mean and, more importantly, variance), subordinate clauses per sentence, clause depth,
-paragraph length. If the flattening is real, the variance narrows and the depth drops while
-the mean falls. If the variance holds, the texts got shorter without getting flatter, and
-this section is wrong. Do that first; it decides whether v3.0 needs a conservation half at
-all, and «the author said so» is not a substitute for it.
-
-**If it is real, what v3.0 owes it is not another rule — it is a conservation principle.**
-Sketches, none of them earned yet:
-
-- **A protected class.** Some structures must be named as things a finding may not touch:
-  subordination that carries the logic of the argument, an aside that carries voice, a long
-  sentence that *is* the point rather than a failure to stop. Today nothing in the corpus
-  can say «leave this».
-- **A budget rather than a verdict.** A finding fires today because it is individually
-  right. It could instead be suppressed when applying it would push the passage past a
-  measured variety floor — the same shape as the document-level tells AD-14 and AD-15,
-  which already judge a text whole rather than a fragment.
-- **A check that reads the OUTPUT.** Every gate we have reads the source. None asks the
-  question this section is about: does the edited text now look edited? That is a
-  document-level rule about our own effect, and it is the most honest thing this direction
-  could produce.
-
-**The trap, stated so it is not walked into.** «Write livelier» is not a rule, and it lands
-hardest on the two registers the director has ruled permanently off limits — dry academic
-and regulatory prose, which are *supposed* to be flat, and translated Russian. A
-conservation principle must be able to leave a deliberately flat text alone. If it cannot,
-it is worse than the flattening it was meant to cure.
-
-Related and deliberately kept apart: the **sentence-length variety** candidate below is
-about detecting flatness in someone else's text. This section is about not *causing* it in
-ours. The second does not need the first to be solved.
+Read that file before adding anything here: if 2.1 lands a conservation principle, several
+candidates below change shape, and the **sentence-length variety** candidate in particular
+must be read against it. That candidate is about detecting flatness in someone else's text;
+2.1 is about not causing it in ours. They are not the same problem and neither solves the
+other.
 
 ## What is NOT in this direction
 

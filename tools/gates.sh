@@ -57,6 +57,19 @@ for f in $(find tools -name '*.sh' -type f | sort); do
 done
 echo "gates: ok    tools/**.sh executable and POSIX-parseable (via $SHCHECK -n)"
 
+# Same argument, other language. tools/ gained its first .py with measure-prose-shape.py,
+# and the loop above cannot see it: a broken Python file would sit there reading as a
+# passing tool to anything that only checks whether the file exists.
+PYFILES=$(find tools -name '*.py' -type f | sort)
+if [ -n "$PYFILES" ]; then
+  for f in $PYFILES; do
+    [ -x "$f" ] || fail "not executable: $f"
+    python3 -c "import ast,io,sys; ast.parse(io.open(sys.argv[1],encoding='utf-8').read(), sys.argv[1])" "$f" \
+      || fail "syntax error: $f"
+  done
+  echo "gates: ok    tools/**.py executable and parseable"
+fi
+
 # ── 2. Selftest — every checker must be able to fail ────────────────────────────────
 # Runs first among the gates. If the checkers cannot fail, their passing below means
 # nothing at all.

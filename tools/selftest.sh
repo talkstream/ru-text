@@ -1073,6 +1073,57 @@ io.open(p, 'w', encoding='utf-8').write(s.replace('А.\u00a0Э.\u00a0Мильч�
 PYEOF
 expect_typo "an ordinary space after an initial is caught" "after an initial" "$d"
 
+printf 'selftest: measure-prose-shape.py\n'
+
+# The instrument that will decide whether the flattening is real
+# (docs/roadmap-v2.1-conservation.md). If it cannot tell a flat text from a varied one, the
+# measurement it produces is worthless and every rule built on it is built on nothing.
+#
+# Two synthetic texts of the SAME word count, differing only in shape: one is eight
+# eight-word declaratives, the other is the same content in sentences of 3 to 22 words with
+# subordination. The instrument must separate them on the coefficient of variation, and it
+# must NOT separate them on total words — a checker that merely counts words would pass a
+# CV assertion by accident, so both directions are asserted.
+d=$(mktemp -d "$TMPROOT/shape.XXXXXX")
+cat > "$d/flat.md" <<'FLATEOF'
+Система замедляется под нагрузкой. Очередь растёт линейно до предела. Дальше начинаются
+отказы на каждом запросе. Мы сняли замеры на трёх стендах. Результат совпал во всех трёх
+случаях. Порог держится около восьмисот запросов в секунду. Ниже порога задержка почти не
+меняется. Выше порога задержка растёт очень быстро.
+FLATEOF
+cat > "$d/varied.md" <<'VARIEDEOF'
+Система замедляется. Очередь растёт линейно до предела, за которым начинаются отказы, и
+происходит это не постепенно, а сразу на всех запросах разом. Мы сняли замеры. Результат
+совпал на трёх стендах, хотя стенды собирали разные люди и в разное время. Порог держится
+около восьмисот запросов в секунду. Ниже него задержка почти не меняется, выше растёт так
+быстро, что пользователь замечает это раньше любого монитора.
+VARIEDEOF
+
+flat_cv=$(python3 tools/measure-prose-shape.py "$d/flat.md" \
+  | awk '/^  длина предложения/ {print $5}')
+var_cv=$(python3 tools/measure-prose-shape.py "$d/varied.md" \
+  | awk '/^  длина предложения/ {print $5}')
+if [ -z "$flat_cv" ] || [ -z "$var_cv" ]; then
+  bad "measure-prose-shape printed no CV for sentence length"
+elif awk -v a="$flat_cv" -v b="$var_cv" 'BEGIN{exit !(b > a * 1.5)}'; then
+  ok "a varied text measures a visibly higher CV than a flat one ($var_cv vs $flat_cv)"
+else
+  bad "measure-prose-shape cannot separate flat from varied prose: CV $flat_cv vs $var_cv"
+fi
+
+# The abbreviation guard. Without it every «т. д.» invents a sentence boundary, and the
+# variance is then measured on debris rather than on prose. One sentence, three abbreviations.
+cat > "$d/abbr.md" <<'ABBREOF'
+Мы проверили типографику, пунктуацию, согласование и т. д., затем сверили результат с
+образцом, т. е. с текстом, который А. С. Пушкин никогда не писал, и расхождений не нашли.
+ABBREOF
+n=$(python3 tools/measure-prose-shape.py "$d/abbr.md" | awk '/^  слов / {print $4}')
+if [ "$n" = "1" ]; then
+  ok "abbreviations and initials do not invent sentence boundaries"
+else
+  bad "abbreviation guard failed: counted $n sentences where there is 1"
+fi
+
 printf 'selftest: probe-install.sh\n'
 
 # The probe judges what an agent did to a sandbox. These cases judge the probe, by building
