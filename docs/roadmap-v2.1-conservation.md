@@ -62,6 +62,65 @@ and this whole file is wrong. That outcome must be as publishable as the other o
 model, only counts that a person can re-derive by hand from the same text — because a
 measurement used to justify suppressing findings has to be one nobody can argue with.
 
+## The first measurement: not confirmed, and the corpus could not confirm it
+
+Run 31.07.2026. Five Russian texts that had never been through the skill — the author's own
+chat messages, a technical field report, a working plan, an audit and an analytical note,
+about 5 400 words of varied register. Provenance was verified rather than assumed: text this
+skill has processed carries non-breaking spaces after single-letter prepositions, so
+`NBSP > words/60` disqualifies a candidate as a «before». Two candidates failed exactly that
+test and were dropped; a third was dropped because the instrument read it as four sentences
+averaging 140 words, which is a structured document rather than prose.
+
+Each text was proofread by an agent that read the reference files itself and applied every
+finding. Median change across the five:
+
+| metric | change |
+|---|---|
+| words | +0.0 % |
+| sentence length, mean | −0.5 % |
+| sentence length, standard deviation | −1.2 % |
+| **sentence length, CV** | **+0.0 %** |
+| subordinate clauses per sentence | +0.0 % |
+| commas per sentence | +0.2 % |
+
+Heading counts matched in every text, so the agents edited rather than rewrote and the rows
+are readable.
+
+**The hypothesis is not confirmed on this corpus. It is also not refuted, because this corpus
+cannot test it.** The reason is in the finding counts, not in the shape numbers: of 90
+findings on one text, 87 were invisible NBSP insertions; of 25 on another, 24 were. The
+stop-word catalogue returned one hit across one text and zero across another. Three of the
+five agents reported the same thing independently — zero §B hits, zero канцелярит, zero
+passive-voice findings, zero neuroslop. There was nothing to remove, so nothing could be
+over-removed.
+
+That is a finding about the sample, and it sharpens the question rather than closing it. Prose
+written and already edited by people yields almost no removals. The complaint is about drafts
+**written by a model** — the population this skill exists for — where the removals are dense.
+A second corpus of model-drafted Russian is the test that can actually fail.
+
+## Two defects the run surfaced that are not flattening
+
+Both were raised independently by the agents, and both are the same shape: a rule applied
+correctly in a place where it should not have applied at all.
+
+**A date.** R59 prescribes `13.07.2026` and carries no register carve-out, so an ISO-8601 date
+was converted inside a field report addressed to a vendor's macOS engineering team. The rule
+was obeyed; a machine-readable, unambiguous date became ambiguous for a non-Russian reader.
+(One agent applied it; another, on a different text, ran the same candidate down and rejected
+it on the grounds that R59 prescribes without prohibiting. Two correct readings of the same
+rule text is itself the defect.)
+
+**Invisible characters in strings meant for machines.** In a document three-quarters composed
+of quoted source lines with `file:line` citations — strings destined to be find-and-replaced
+back into those files — R30 inserts NBSP that breaks exact-string tooling, which is a harm
+`ru-check`'s own output-format section already names. The agent withheld them; nothing in the
+corpus told it to.
+
+Neither is about volume. Both are about **place**, and 2.1 should answer for both: not only
+how much a check removes, but where it is entitled to act at all.
+
 ## What 2.1 could ship, once the measurement says it should
 
 None of this is designed yet. Recorded as shapes, ranked by how little new machinery each
@@ -87,6 +146,75 @@ that absence is the whole problem stated in one line.
 tells the model to find everything. It does not tell it to prefer the smallest intervention
 that fixes the defect. That single instruction may carry a surprising amount of the effect,
 and it is testable against the same measurement.
+
+## The damage score the author asked for: there is no number, and that is the answer
+
+Asked 31.07.2026: a quantity the check would use to weigh its own edits, so that «remove»
+can be measured against «break». A fourteen-agent panel ran it — five evidence bases, four
+designs from incompatible starting points, one adversary each, one synthesis — and an
+arbiter ruled on the result. Full proposal:
+`~/Projects/_scratch/ru-text-flattening/damage-metric/proposal.md`.
+
+**No number survives, for two reasons that are properties of the subject rather than gaps in
+the search.** Everything the tradition counts — HTER, TTR, lexical density, edit distance —
+measures the VOLUME of intervention and not the harm: ninety invisible NBSP insertions score
+an enormous edit distance and do no damage at all, while one converted date breaks a
+document. And a score a check reports about ITSELF is a score it lowers by editing less; the
+identity function beats a human reference on BLEU, 59.85 against 43.90 (Sulem 2018).
+
+**What replaces it is a right, not a scale.** Every rule carries one of two dispositions:
+*edits* — the finding goes into the corrected text — or *suggests* — it goes into the report
+with a ready replacement and leaves the text alone. The label is written once, by a person,
+in the file beside the trigger; it is not a judgement made on the run. That is the shape
+every comparable tool converged on independently: `Fix safety` in ruff, `Applicability` in
+clippy, `fixable` against `hasSuggestions` in ESLint. Cost at the check: zero new judgements
+on typography, which is where the findings actually are.
+
+**The criterion, and it was already in the corpus unmarked:** does the prescribed replacement
+name a participant, or assert a fact, that the source does not? The passive table was read
+line by line — all ten right-hand sides name an agent absent from the left, and the eighth
+literally prints `[Кто] сделает [что] до [когда]`. An agent cannot supply that name; the
+document does not contain it. So it must not try, and the corpus has been telling it so
+without a word for the mechanism.
+
+Default is *edits*. §I, §J, §K, punctuation and typography carry no label at all — those are
+error corrections, not removals.
+
+**Refused, each on evidence:** a findings budget per paragraph (the threshold is not derived
+from any measurement, and on one golden case «one per paragraph» would apply 3 findings of
+10); a protected class of spans (the condition that opens the class is the condition that
+lifts it — shown on our own dash case); and any sixth rubric dimension (two byte-identical
+texts would score differently, and one note would reach «Хороший» without a single edit —
+which is this project's own recorded defect that a rule must not raise its victim's score).
+
+**Ruled: the mechanism ships, the map does not.** The set of rules to label was stated as 25
+lines and reproduces as 25 by grep, but that is a floor at roughly 35 % recall — bracketed
+placeholders alone are 16 lines in `anti-patterns.md`, an extended grep gives 55, and a
+reader's census is about 70. Worse, the label's own first sentence, read alone, captures 35
+plain «убрать» lines in §B and would plug the water-removal engine outright; eleven
+disjunctive lines («убрать или обосновать») get labelled against the criterion they are
+supposed to fail. The census has to be done by eye, the label restricted to its fact form,
+and the disjunctive lines given a conditional of their own — before anything is written into
+a reference file.
+
+**The uncovered path is named rather than papered over.** Text generated under the always-on
+`SKILL.md` never loads a reference file, so no label in a reference file reaches it. For
+generation the arbiter agrees the gap cannot be closed by a line — the test has no source to
+compare against, because there is no source yet. For editing text already in context it
+disagrees with the proposal: a self-contained line in the SKILL.md body is a mechanism of
+exactly the kind that fixed the v1.8.1 NBSP defect.
+
+## Correcting one thing said about the first measurement
+
+The «no flattening» result covers the SYNTACTIC axis only — coefficient of variation of
+sentence length, subordination, commas, paragraph length. The LEXICAL axis was not measured
+at all: type-token ratio and lexical density, which is where the effect has been reported.
+That is a real hole in the instrument and it is now on record.
+
+It does not overturn the result, and the reason matters: that zero was load-scoped. One to
+five prose edits per text cannot move a type-token ratio any more than they moved a variance.
+The lexical axis has to be measured on a corpus that is actually loaded — corpus 3 — and with
+NBSP normalised away before tokenisation, or the invisible insertions will dominate the count.
 
 ## The trap, stated so it is not walked into
 
