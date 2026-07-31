@@ -111,6 +111,58 @@ AD-1.4. "Dash between subject and predicate" (тире между подлежа
 
 AD-1.5. Test for "mannered" tone (манерность): read aloud. If dashes create a staccato rhythm that feels artificial, replace some with other constructions.
 
+AD-1.6 (what the budget counts — a parallel row is one dash). AD-1.1 is a budget on choices, and a
+series is one choice made once. Two or more em dashes are ONE ROW when all three hold:
+
+- they sit inside one paragraph or one list block — a row never spans paragraphs;
+- every dash carries the same syntactic role;
+- the text itself anchors them as a series. The anchor is one of: a count announced before them
+  («решение состоит из трёх частей»); ordinals, dates or numbers standing in the same position in
+  every member; list markup; the same word or phrase repeated after every dash.
+
+A row counts as ONE dash toward AD-1.1. **The list of anchors is closed**, and it governs the count
+in AD-1.1 and nothing else: AD-1.2 reaches a row whatever the count says, charged once, to the row
+(AD-1.7). An anchor a reader has to argue for is not an anchor — the test is a string another person
+can point at, not the author's statement that a series was intended. Looking enumerable is not an
+anchor either: «Отчёт — на почте. Правки — в комментариях. Сборка — завтра утром» has no announced
+count, no ordinal, no list markup and no phrase repeated after the dashes, so it is three sentences
+sharing a shape and not a row. That shape is AD-1.3's own territory, and AD-1.3 fires on it. Nor
+does repetition across a junction anchor anything: a word that closes one member and opens the next
+stands in two different positions rather than the same one.
+
+Two constructions stay outside this clause. A paired aside («Скилл — набор правил — помогает») is one
+construction spending two marks, not a series, and counts as the two it is written with. And the
+budget governs running prose: a table is not a paragraph and is not counted, because AD-1's signal is
+the rhythm of running prose and cells have no rhythm across them.
+
+AD-1.7 (a row is edited whole or left whole). Where a row is charged — because it carries the
+paragraph over the limit, or because AD-1.2 finds a more precise mark for it — the charge is made to
+the row, and the replacement applies to every member or to none. Varying the mark among members costs
+more than the density it cures: «Первая — очередь запросов… Вторая: переработка шага… Третья:
+повторный прогон…» takes away the parallel the reader was using to hold the list. Inside one row
+AD-1.3 does not apply — there the repetition IS the structure. Between rows, and between independent
+sentences, AD-1.3 stands unchanged.
+
+AD-1.8 (trim to the limit, never to zero). AD-1.1 sets a budget of one to two, not of none. A
+paragraph over the limit comes down to one or two dashes and stops there; a paragraph left with none,
+where the dashes were carrying structure, is a new defect and not a fix. Measured over ten texts on
+01.08.2026: the dash count fell in seven of them, and one paragraph of three anaphoric «— потому что»
+went to zero — past this rule's own budget. AD-1 was the mechanic that did it, which is why the floor
+is written here instead of being left to judgement.
+
+AD-1.9 (marks the norm prescribes are not counted). The budget is on dashes the author chose. The
+dialogue dash, and the dashes that set off the author's words in direct speech — the one before them
+and the one resuming the speech after them, as in R19's «— Добрый день! — сказал он» and the
+broken-quote schema «П, — а, — п» — are prescribed and have no alternative mark: they do not count
+toward AD-1.1 at all. This is the reasoning AD-17.1 already applies to the same construction.
+Charging them would fine a text for obeying this corpus.
+
+Order of application, because four clauses now touch one number: exclude the prescribed marks
+(AD-1.9), then collapse rows (AD-1.6), then count what is left against AD-1.1.
+
+**Acknowledged:** the blind reading of 01.08.2026, where readers were given ten pairs without being
+told which side had been edited and preferred the unedited side.
+
 **Replacement strategies:**
 
 | Pattern with dash | Alternative | When to use alternative |
@@ -122,6 +174,14 @@ AD-1.5. Test for "mannered" tone (манерность): read aloud. If dashes c
 | Всё готово — можно начинать | Всё готово; можно начинать | Two independent clauses |
 | Скилл — набор правил — помогает | Скилл (набор правил) помогает | Aside, not emphasis |
 
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+|---|---|
+| Причины две. Первая — цена. Вторая — сроки. | Announced count and ordinals: one row, one dash toward the budget (AD-1.6). |
+| «4 августа — стенд», «11 августа — приёмка», «20 августа — отчёт» одним списком | Dates in the same position inside one list block: one row (AD-1.6). |
+| — Смету пересчитали к утру, — доложил прораб. | Direct speech: the marks are prescribed, not chosen (AD-1.9). |
 ---
 
 ## AD-2. Excessive parcellation (избыточная парцелляция)

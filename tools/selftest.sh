@@ -684,6 +684,28 @@ io.open(p, 'w', encoding='utf-8').write(re.sub(r'Все[\s\u00a0]+[0-9]+[\s\u00a
 PYEOF
 expect_dogfood "a size stated in another numeral agreement is still read" "says 21 cases" "$d"
 
+# The word budget for the one file loaded on every turn. It was stated twice in the convention
+# file and checked nowhere, and it was FALSE while it stood: «under 600 words» over a file of
+# 615. A budget nobody can fail is not a budget. Two cases, one per direction: the count must
+# be read against the stated number, and a missing statement must not read as «within budget».
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/SKILL.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(s + '\n' + ('padding word ' * 200) + '\n')
+PYEOF
+expect_dogfood "a SKILL.md over its stated budget is caught" "over the stated budget" "$d"
+
+d=$(fresh_copy)
+python3 - "$d/.claude/CLAUDE.md" <<'PYEOF'
+import io, re, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+io.open(p, 'w', encoding='utf-8').write(re.sub(r'at most \*\*[0-9]+ words\*\*', 'as small as it can be', s, count=1))
+PYEOF
+expect_dogfood "a budget removed from the convention file is caught" "no longer states a word budget" "$d"
+
 d=$(fresh_copy)
 if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
   ok "an untouched copy passes check-dogfood"

@@ -12,7 +12,7 @@ Over 2,000 independently formulated linguistic atoms across 7 thematic areas. No
 
 1. **Quality** — every rule must be accurate and actionable
 2. **User care** — plugin helps, never restricts. User's explicit style request overrides defaults
-3. **Performance** — SKILL.md under 600 words; references load on demand, not at startup
+3. **Performance** — SKILL.md at most **650 words** (measured `LC_ALL=C wc -w`); references load on demand, not at startup. The figure used to read «under 600» and was false: the file was 615 words when nobody checked, and the always-on dash fix of 01.08.2026 took it to 640. The budget is now a gate in `tools/check-dogfood.sh`, not a sentence — a size claim about the one file loaded on every turn is exactly the kind that goes stale in silence.
 4. **Legal safety** — no "distilled from", no implied endorsement, no author names in section headers
 
 ## Architecture
@@ -24,7 +24,7 @@ Over 2,000 independently formulated linguistic atoms across 7 thematic areas. No
 openclaw.plugin.json            → OpenClaw native plugin manifest
 gemini-extension.json           → Gemini CLI extension metadata
 (No new manifests needed — GitHub Copilot, Windsurf, Cline, JetBrains Junie, and Continue.dev read standard SKILL.md natively)
-skills/ru-text/SKILL.md         → always-on typography + routing table (<600 words, cross-platform)
+skills/ru-text/SKILL.md         → always-on typography + routing table (≤650 words, gated, cross-platform)
 skills/ru-text/references/      → 9 domain files + addenda + sources (loaded on demand)
 skills/ru-text/agents/openai.yaml → Codex skill metadata (Claude ignores)
 skills/ru-text/agents/gemini.yaml → Gemini skill metadata (Claude ignores)

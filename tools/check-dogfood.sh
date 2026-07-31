@@ -204,6 +204,21 @@ else
   bad "the golden set says $stated cases and holds $golden_cases"
 fi
 
+# The one file loaded on every turn, so its size is a per-turn cost and the only claim in this
+# repository that was BOTH stated twice and checked nowhere. It read «under 600 words» while the
+# file stood at 615, and the always-on dash fix of 01.08.2026 took it to 640 — a budget nobody
+# could bust because nobody could fail it. The number is read out of the convention file rather
+# than repeated here: two copies of a budget drift, and this checker exists because one already did.
+skill_words=$(LC_ALL=C wc -w < skills/ru-text/SKILL.md | tr -d ' ')
+skill_budget=$(grep -oE 'at most \*\*[0-9]+ words\*\*' .claude/CLAUDE.md | grep -oE '[0-9]+' | head -1)
+if [ -z "$skill_budget" ]; then
+  bad ".claude/CLAUDE.md no longer states a word budget for SKILL.md"
+elif [ "$skill_words" -le "$skill_budget" ]; then
+  ok "SKILL.md is $skill_words words, within the stated budget of $skill_budget"
+else
+  bad "SKILL.md is $skill_words words, over the stated budget of $skill_budget — trim it, or move the budget on purpose"
+fi
+
 prompt_of() { # $1=file — the install prompt as one line, or empty
   python3 - "$1" <<'PYX'
 import io, re, sys
