@@ -67,6 +67,24 @@ SUBORD = ['что', 'чтобы', 'который', 'которая', 'кото�
           'откуда', 'зачем', 'почему', 'сколько', 'насколько', 'пусть', 'раз']
 
 WORD = re.compile(r'[А-Яа-яЁёA-Za-z0-9]+(?:-[А-Яа-яЁёA-Za-z0-9]+)*')
+
+# The em dash as an intonation mark. Counted because the blind panel found the check cutting
+# parallel rows of them to zero against a rule whose own budget is one to two per paragraph:
+# 4 -> 2 and 3 -> 0, measured. A hyphen inside a compound is not one of these; the pattern
+# requires whitespace on the left, which a compound never has.
+DASH_RE = re.compile(r'(?<=[\s\u00a0])[\u2014\u2013](?=[\s\u00a0])')
+
+# Intensifiers and hedges — the voice-carrying words. «Честно» and «реально» inside a
+# commitment and an admission of fault were the ONLY substantive deletions in the whole
+# experiment, and every one was called damage by a judge who did not know which text was
+# which. Closed list on purpose: this is a counter, not a rule, and a counter that guesses
+# is worse than none.
+INTENS_RE = re.compile(
+    r'(?<![А-Яа-яЁё-])('
+    r'честно|реально|правда|прямо|вообще|совсем|очень|крайне|весьма|довольно|'
+    r'просто|буквально|разумеется|конечно|пожалуй|кажется|похоже|скорее|вроде|'
+    r'наверное|видимо|как\s?бы|всё\s?же|всё-таки|как\s?раз|именно'
+    r')(?![А-Яа-яЁё-])', re.IGNORECASE)
 SUBORD_RE = re.compile(r'(?<![\w-])(?:' + '|'.join(SUBORD) + r')(?![\w-])', re.IGNORECASE)
 
 
@@ -123,6 +141,8 @@ class Shape:
     subord: Stats
     commas: Stats
     para: Stats
+    dashes: int = 0
+    intens: int = 0
 
 
 def stats(values: List[int]) -> Stats:
@@ -153,8 +173,19 @@ def measure(path: str) -> Shape:
     lengths = [len(WORD.findall(s)) for s in sents]
     subord = [len(SUBORD_RE.findall(s)) for s in sents]
     commas = [s.count(',') for s in sents]
-    paras = [len(sentences(p)) for p in re.split(r'\n\s*\n', text) if sentences(p)]
-    return Shape(path, sum(lengths), stats(lengths), stats(subord), stats(commas), stats(paras))
+    # Paragraphs are split from the STRIPPED text. Splitting the raw text and then calling
+    # sentences() — which strips again, per paragraph — let a code block or a table count as
+    # a paragraph on one path and vanish on the other; the two paths disagreed by 37 % on a
+    # document with fenced blocks. The instrument has to walk one text, not two.
+    stripped = strip_markup(text)
+    paras = [len(sentences(p)) for p in re.split(r'\n\s*\n', stripped) if sentences(p)]
+    # Dashes and intensifiers are the axes the blind panel of 01.08.2026 discriminated on,
+    # 24 votes to 4, while this file returned +0.0 % and the roadmap wrote «not confirmed».
+    # A ruler that has no marks where the effect lives reports the effect as absent.
+    dashes = len(DASH_RE.findall(stripped))
+    intens = len(INTENS_RE.findall(stripped))
+    return Shape(path, sum(lengths), stats(lengths), stats(subord), stats(commas), stats(paras),
+                 dashes, intens)
 
 
 def report(m: Shape) -> None:

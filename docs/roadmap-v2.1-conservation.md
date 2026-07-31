@@ -62,7 +62,11 @@ and this whole file is wrong. That outcome must be as publishable as the other o
 model, only counts that a person can re-derive by hand from the same text — because a
 measurement used to justify suppressing findings has to be one nobody can argue with.
 
-## The first measurement: not confirmed, and the corpus could not confirm it
+## The first measurement: not confirmed — and OVERTURNED the next day, see below
+
+**Read the blind panel first.** Everything in this section is what the instrument said, and
+the instrument was measuring the wrong axes. It is kept because the reasoning is the evidence
+for how a null result gets manufactured, not because its conclusion stands.
 
 Run 31.07.2026. Five Russian texts that had never been through the skill — the author's own
 chat messages, a technical field report, a working plan, an audit and an analytical note,
@@ -99,6 +103,54 @@ That is a finding about the sample, and it sharpens the question rather than clo
 written and already edited by people yields almost no removals. The complaint is about drafts
 **written by a model** — the population this skill exists for — where the removals are dense.
 A second corpus of model-drafted Russian is the test that can actually fail.
+
+## The blind panel: the author was right, and the instrument was blind
+
+01.08.2026. Ten before/after pairs from both corpora, split into files named A1/A2 … J1/J2 with
+the order inside each pair alternating, so no judge could learn the convention from the first
+pair. Three judges — an attentive reader, a working editor of Russian non-fiction, a
+psycholinguist — read all twenty texts and answered one question per pair: **which reads more
+like something a person wrote and edited.** «Indistinguishable» was declared a full answer and
+worth more than an invented difference. Counting by codepoints was forbidden: the question is
+not about typography, and tallying non-breaking spaces would have revealed the after-text
+instantly without answering anything.
+
+| more human | votes | of those, high confidence |
+|---|---|---|
+| **the text BEFORE the check** | **24** | **11** |
+| the text after | 4 | 1 |
+| indistinguishable | 2 | 0 |
+
+Seven pairs of ten were unanimous for the before-text. Not one pair was unanimous the other way.
+Reproduce the tally against `blind-key.json` with the script in the panel report.
+
+And separately: **all seven accusations of damage — «something left here and there is a hole» —
+landed on after-texts. Seven of seven.**
+
+**The instrument said the opposite on the same bytes.** `measure-prose-shape.py` returned median
+CV changes of +0.0 % and +0.4 % and the roadmap wrote «not confirmed». It measures
+sentence-length variance and subordination. The judges were discriminating on intra-sentence
+punctuation, on intensifiers and on register loudness — axes it does not count at all. The
+finding was not absent; the ruler had no marks there.
+
+One indirect confirmation that this is an effect and not noise: the only «indistinguishable»
+pair is the one where almost nothing was edited. Discrimination tracks dose.
+
+**The mechanism is named, and it is countable.** Dashes of one role in a series or an anaphora
+are counted separately and cut to zero rather than to the rule's own budget — reproduced at
+4→2 and at 3→0 against a stated budget of «1–2 per paragraph». And the intensifiers «честно» and
+«реально», removed inside a commitment and inside an admission of fault: the only substantive
+deletions in the whole experiment, and every one of them was named as damage by a judge who did
+not know which text was which.
+
+**What this costs the earlier section, precisely.** «Not confirmed» was true of the instrument
+and false of the product. The honest statement is that the experiment failed to arrange the
+flattening it was looking for, and then reported the absence as a property of the corpus. That
+is how a null result gets manufactured, and it happened here with every gate green.
+
+**The standing refusal that follows.** No corpus 3, in any of the four shapes the arbiter listed,
+until the instrument is repaired: the same median over a thin dose returns zero whatever the
+truth, and the last zero was read as a licence within the hour.
 
 ## Two defects the run surfaced that are not flattening
 
