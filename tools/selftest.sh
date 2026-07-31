@@ -668,6 +668,22 @@ mkdir -p "$d/tools/golden/99-a-case-nobody-counted"
 : > "$d/tools/golden/99-a-case-nobody-counted/text.md"
 expect_dogfood "a golden case the README did not count is caught" "cases and holds" "$d"
 
+# The noun agrees with the numeral, and the guard used to hard-code one form. At 28 the file
+# correctly says «текстов», the pattern wanted «текста», and the guard reported «no longer
+# states how many cases the set holds» — failing on correct Russian, in the repository whose
+# subject is correct Russian. The case pins the READING, not the agreement: whatever form the
+# prose takes, the guard must come back with the NUMBER and compare it.
+d=$(fresh_copy)
+python3 - "$d/tools/golden/README.md" <<'PYEOF'
+import io, re, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+# «Все 21 текст» — the singular form, which no fixed «текста» pattern can see.
+io.open(p, 'w', encoding='utf-8').write(re.sub(r'Все[\s\u00a0]+[0-9]+[\s\u00a0]+текст(а|ов)?',
+                                               'Все 21 текст', s, count=1))
+PYEOF
+expect_dogfood "a size stated in another numeral agreement is still read" "says 21 cases" "$d"
+
 d=$(fresh_copy)
 if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
   ok "an untouched copy passes check-dogfood"

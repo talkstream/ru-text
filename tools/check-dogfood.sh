@@ -191,7 +191,11 @@ verify_names
 # release spent two days removing from the READMEs, reappearing in the file that documents the
 # measurement. Counted, not remembered.
 golden_cases=$(find tools/golden -maxdepth 1 -type d -name '[0-9]*' | wc -l | tr -d ' ')
-stated=$(grep -oE 'Все [0-9]+ текста' tools/golden/README.md | grep -oE '[0-9]+' | head -1)
+# The noun agrees with the numeral, so the pattern cannot hard-code one form: 24 takes
+# «текста», 28 takes «текстов», 21 would take «текст». The first version fixed «текста»
+# and reported «no longer states how many cases the set holds» the moment the set grew
+# past 24 — a guard failing on correct Russian, which is a poor look in this repository.
+stated=$(grep -oE 'Все [0-9]+ текст(а|ов)?' tools/golden/README.md | grep -oE '[0-9]+' | head -1)
 if [ -z "$stated" ]; then
   bad "tools/golden/README.md no longer states how many cases the set holds"
 elif [ "$stated" = "$golden_cases" ]; then

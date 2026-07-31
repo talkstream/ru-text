@@ -226,6 +226,15 @@ large round numbers|mixed|1,5 млн, 20 тыс.
 tables, formulas, statistics|digits|5, 12, 230
 monetary amounts in documents|digits + words in parens|150 000 (сто пятьдесят тысяч) руб.
 
+Approximation exception -- row "10+" only, narrative text only. Do not flag the word form when both hold: the numeral is rounded to a ten, hundred or thousand, and an approximation marker attaches to that numeral -- the counted noun fronted in the genitive it governs (минут десять), or one of около, примерно, где-то, под, с лишним, с небольшим.
+
+- Approximate -- words are correct: занимает минут десять; из шестидесяти с лишним замечаний
+- Exact -- row "10+" stands: запись хранится тридцать -> 30 суток; в двенадцати -> в 12 километрах
+- Bounds are not approximations (до, от, за, более, свыше, не менее): до сорока -> до 40 секунд
+- Labels are not counts: пункт двадцать, версия двадцать -- row "10+" stands
+
+Never applies to large round numbers -- their row demands mixed form even under a marker (тысяч десять запросов -> 10 тыс. запросов) -- nor in tables, statistics or monetary amounts (last two rows), nor when the same value also stands in digits nearby -- there G.5 governs.
+
 ### G.2. Ordinal numerals
 
 Suffix via hyphen (not period):
