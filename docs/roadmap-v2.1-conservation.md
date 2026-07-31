@@ -216,6 +216,55 @@ five prose edits per text cannot move a type-token ratio any more than they move
 The lexical axis has to be measured on a corpus that is actually loaded — corpus 3 — and with
 NBSP normalised away before tokenisation, or the invisible insertions will dominate the count.
 
+## The five carve-outs: four killed by their own opponents, nothing shipped
+
+Written 31.07.2026, one author each, one adversary each, against the arbiter's ranking that
+called them «ready now, zero new machinery». They were not ready. Four came back «переделать»
+and the fifth «брать с правками» with three kills of its own. Every kill is verified against
+a file in this repository, and the pattern across them is worth more than any of them.
+
+**Passive.** The carve-out exempted «the interface» by name — and `tools/golden/04-ui-copy`
+REQUIRES the finding «не может быть обработан — пассив в интерфейсе». One lost finding is a
+golden-set failure by `tools/golden/README.md:20`. Its «procedure» clause was worse: title a
+document «Порядок рассмотрения обращений» and every agentless канцелярит passive inside it
+becomes exempt, which is the register the rule exists for. Its second half turned a frozen
+zero-control text red.
+
+**R59, dates.** The carve-out missed the very evidence it was written for. The cell is Russian
+prose («2026‑07‑13 · воспроизведение проверено на хосте»), so neither «a program» nor «a
+non-Russian engineer» reads it and the exemption never fires; and the date is written with
+U+2011 non-breaking hyphens, so a reader applying the letter does not call it an ISO date at
+all. Then the loophole: «who reads this» is not a property of the text, it is a claim the
+author makes in a heading. `## Отчёт для аудиторов` over a Russian accounting table switches
+off the table half of R59 by assertion.
+
+**R30 in machine-read strings.** Measured, and the premise dissolved: in the flagship document
+the «Сейчас» column — the half that is actually searched — was already correct 20 out of 20
+without any carve-out, because those lines are quotations and `SKILL.md:24` already covers
+them. The only clause that suppressed anything suppressed it in the «Предлагаю» column, which
+is text destined to become published Russian prose. The carve-out would have shipped hanging
+one-letter prepositions into an article.
+
+**Anglicisms and caps.** The anglicism carve-out was not asked for — the arbiter asked for the
+COLUMN to be rewritten — and rewriting the column already closes the field case without it.
+The caps test was undecidable: it asks which emphasis the surface renders while forbidding the
+only evidence the check receives, so it resolves to «the caps stays» by default and silences a
+Critical-tier line. Its fixture needed the channel written into the first line of the input to
+be decidable at all, which is proof enough.
+
+**G.1, numerals.** «Not flagged, at any value» lets any exact count escape by inversion —
+«Нашли расхождений сорок восемь» has the same shape as «минут десять» and is not an
+approximation. The approximation lives in the ROUNDNESS the speaker chose, not in the word
+order.
+
+**What this changes about the method, not just the batch.** Every one of the four failed the
+same way: the carve-out was written from the case that motivated it and not tested against the
+cases the rule already protects. The golden set caught two of them, the corpus's own frozen
+controls caught a third, and a measurement caught the fourth by showing its premise was false.
+A carve-out is a change to a rule's SCOPE, so the acceptance test is not «does it fix my case»
+but «which existing finding does it lose» — and that test has to run before the wording is
+argued about.
+
 ## The trap, stated so it is not walked into
 
 «Write livelier» is not a rule, and it lands hardest on the two registers the author has
