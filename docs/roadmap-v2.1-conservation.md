@@ -172,15 +172,56 @@ row, so the carve-out was never meant to save them.
 
 Thirteen and thirteen. Four pairs of five still unanimous for the unedited text.
 
-**And B.1 did not reach the text.** Verified byte for byte: the landing page said «мы честно
+**And B.1 did not reach the text.** ~~Verified byte for byte: the landing page said «мы честно
 скажем», the check made it «мы скажем», and the re-run with the carve-out in place left it «мы
-скажем». That is exactly the configuration B.1 describes — a promise to a client where «честно»
-means «we will not string you along». A judge who did not know the states called it a hole and
-put it better than the rule does: without the word the sentence promises that you will get an
-answer, which is to say it promises nothing. **A carve-out that exists in the corpus and does
-not reach the text is not a carve-out yet**, and why it failed — unread or read and not applied
-— is unknown, because the re-run was not asked to account for each amendment by name. That is a
-defect in the experiment's instructions, not in the rule.
+скажем». That is exactly the configuration B.1 describes.~~ **RETRACTED the same day — see
+below.** The paragraph is left standing because it is the second manufactured verdict of this
+experiment and the two were manufactured differently.
+
+### Retraction: B.1 works, and the probe was outside its jurisdiction
+
+The sentence above tested B.1 with a word B.1 does not govern. «Честно» is not one of the eleven
+amplifiers §B lists — очень, крайне, чрезвычайно, максимально, предельно, абсолютно, невероятно,
+буквально, реально, действительно, по-настоящему — and B.1's own third paragraph says so in as
+many words: a declared-sincerity label «keeps its own charge under AD-10 or AD-7, those words are
+not in this catalogue». Bare «честно» is an AD-7 trigger (`addenda.md`, the announced-sincerity
+line). So the check deleted it under a different rule, and B.1 had nothing to decline.
+
+On the sentence B.1 does govern it fired exactly as designed. One admission in the whole
+experiment carries a §B amplifier — `corpus/04-audit.md`, the line B.1's own text cites — and its
+three states settle it:
+
+| state | the line | «реально» |
+|---|---|---|
+| before | «**Честный** ответ директору: ДА — один баг того же семейства (F3) у нас **реально** есть» | present |
+| after, B.1 not yet written | «Ответ директору: да, один баг того же семейства (F3) у нас есть» | **cut** |
+| after, B.1 in the corpus | «Ответ директору: ДА — один баг того же семейства (F3) у нас **реально** есть» | **kept** |
+
+`git log -S` puts B.1 in the corpus at 03:23; the re-run wrote that file at 03:40. The
+sincerity label «Честный» is gone in both later states, which is AD-10 doing its job and which
+B.1 explicitly refuses to undo. The carve-out subtracted one charge and left the other standing,
+which is the whole of what it promises.
+
+**The lesson is about the probe, not about transmission.** «A rule in the corpus is not a rule
+that works» was the generalisation drawn from this, and it was drawn from a test the rule's own
+scope statement excludes — a paragraph I had written and then read past. A rule states what it
+covers; the probe comes from that statement, not from the nearest sentence that looks similar.
+
+**One real gap survives the retraction.** B.1 has no positive golden case: the set's only «честно»
+is the AD-10.4 dialogue carve-out, and the four cases carrying a §B amplifier all expect it
+flagged. The golden criterion is no-loss — findings AFTER ⊇ findings BEFORE — so a carve-out that
+never fires cannot fail it. All 108 self-tests pass and none of them says anything about B.1.
+That is the gate-narrower-than-the-rule pattern once more, and this time it is the gate's coverage
+rather than its logic.
+
+**And the open question is now AD-7's, not B.1's.** «Позвоните, и мы честно скажем, есть ли сейчас
+то, что вам нужно, — а если нет, назовём срок» loses «честно» to the announced-sincerity trigger.
+A judge who did not know the states called it a hole and put it better than the rule does: without
+the word the sentence promises that you will get an answer, which is to say it promises nothing.
+Whether that deletion is right turns on which line fired — the trigger list, or AD-7.1's
+three-part test, which is stated over «без [vice]» and «[virtue] говоря» forms and does not
+obviously reach a manner adverb on a promise about future conduct. Diagnose that before writing
+anything.
 
 **What the judges named instead, all three independently:**
 
