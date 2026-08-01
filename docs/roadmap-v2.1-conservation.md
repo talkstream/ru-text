@@ -218,10 +218,30 @@ rather than its logic.
 то, что вам нужно, — а если нет, назовём срок» loses «честно» to the announced-sincerity trigger.
 A judge who did not know the states called it a hole and put it better than the rule does: without
 the word the sentence promises that you will get an answer, which is to say it promises nothing.
-Whether that deletion is right turns on which line fired — the trigger list, or AD-7.1's
-three-part test, which is stated over «без [vice]» and «[virtue] говоря» forms and does not
-obviously reach a manner adverb on a promise about future conduct. Diagnose that before writing
-anything.
+**Diagnosed the same day, and the rule was repaired.** Four probes, three independent readings
+each, judges reading AD-7 from the file: six of six flagged it, six of six named a line of the
+**trigger list** as the decider, and six of six reported that AD-7.1 applied literally returns
+`does-not-apply` — its class frame named two surface forms, «без [vice]» and «[virtue] говоря»,
+and a bare manner adverb is neither. Both controls behaved: the delivery flourish was flagged
+unanimously, the engineer's line of dialogue survived unanimously on AD-7.5. **The list was
+charging what the test did not authorise**, so anyone reading the rule literally would have
+concluded «честно» was out of scope — which is exactly what all six readers found.
+
+The obvious repair — «triggers are candidates, AD-7.1 decides» — was rejected by the arbiter with
+a named loss: under the literal AD-7.1 it sterilises the whole announced-sincerity family, and
+this file's own AD-10 record shows that blindness already cost a year of misses. The repair went
+the other way: AD-7.1's class frame was widened to its own trigger list and clause (2)'s polarity
+to «answers an objection … by denying the vice or by asserting its opposite». Written against an
+inventory of **74 positions** — 25 from the rule's body, 39 from ten live prose files, 10 from the
+golden set — every one accounted for by name, and **no verdict moved on any of them**. The
+load-bearing detail: without binding AD-7.7's two carve-outs into AD-7.1 explicitly, seven of the
+thirty-six positions that carve-outs release today would have flipped to findings.
+
+**And the deletion itself is correct.** «Честно» is a virtue adverb on a self-statement; removing
+it loses no checkable fact; the demonstration stands in the same sentence («а если нет, назовём
+срок»), and by AD-10.3 a label is redundant where the demonstration is present. The blind judge
+measured aliveness and the arbiter measured correctness, and both can be right at once — which is
+this whole experiment in one line. No carve-out was written for it.
 
 **What the judges named instead, all three independently:**
 
