@@ -152,6 +152,56 @@ is how a null result gets manufactured, and it happened here with every gate gre
 until the instrument is repaired: the same median over a thin dose returns zero whatever the
 truth, and the last zero was read as a licence within the hour.
 
+## The second blind panel: the dash count moved, the perception did not
+
+01.08.2026, after AD-1.6…AD-1.9 and B.1 were in the corpus. The five texts that had lost the
+most dashes were re-checked by agents that read the rules from the files, and the same three
+judges read «before» against «after the fix», blind, order alternating.
+
+**The mechanic is fixed, and the instrument shows it.** Texts losing dashes went from five of
+five to two of five; eleven of the sixteen cut marks came back; three documents were restored
+whole. On one text nothing changed, and the agent said so plainly — the two marks there form no
+row, so the carve-out was never meant to save them.
+
+**The perception did not move at all.**
+
+| panel | the BEFORE text called more human | the edited one | indistinguishable |
+|---|---|---|---|
+| first, these same five texts | **13** | 2 | 0 |
+| second, after the fix | **13** | 1 | 1 |
+
+Thirteen and thirteen. Four pairs of five still unanimous for the unedited text.
+
+**And B.1 did not reach the text.** Verified byte for byte: the landing page said «мы честно
+скажем», the check made it «мы скажем», and the re-run with the carve-out in place left it «мы
+скажем». That is exactly the configuration B.1 describes — a promise to a client where «честно»
+means «we will not string you along». A judge who did not know the states called it a hole and
+put it better than the rule does: without the word the sentence promises that you will get an
+answer, which is to say it promises nothing. **A carve-out that exists in the corpus and does
+not reach the text is not a carve-out yet**, and why it failed — unread or read and not applied
+— is unknown, because the re-run was not asked to account for each amendment by name. That is a
+defect in the experiment's instructions, not in the rule.
+
+**What the judges named instead, all three independently:**
+
+*Caps turned into italics.* In a working plan «⚠️ НЕ последовательным вставлением» became «*не*»,
+and a judge said what the corpus does not: shouting in that kind of document is not sloppiness,
+it is a risk marker. Get the order wrong and twenty-six captions land on the wrong photographs.
+
+*Words of pressure* — «честно», «реально», «максимально» — removed exactly where the author
+raised their voice.
+
+*A numeral system applied by halves.* «Не ниже плюс 12… нагрузка до пяти тонн… высота от шести
+метров»: three numbers in one sentence, two in words and one in digits. Each is individually
+correct by the table and the sentence stumbles.
+
+*Word order.* «Аналогия, которая работает почти всегда, — записная книжка» straightened into
+direct order, so the image arrives before the reader knows what it is for.
+
+**The honest conclusion.** The dashes were a real breakage and it is fixed. They were not the
+main one. The main one is loudness and stance — caps, intensifiers, and the author's chosen
+emphasis — and that is where the next round goes.
+
 ## Two defects the run surfaced that are not flattening
 
 Both were raised independently by the agents, and both are the same shape: a rule applied
