@@ -237,6 +237,19 @@ golden set — every one accounted for by name, and **no verdict moved on any of
 load-bearing detail: without binding AD-7.7's two carve-outs into AD-7.1 explicitly, seven of the
 thirty-six positions that carve-outs release today would have flipped to findings.
 
+**That sentence was true and still hid a narrowing, for one hour.** Putting every family through
+clause (1) meant clause (1) now decides them — and clause (1) said «the author's own delivery or
+method» while triggers 424 and 426 both say «about one's own **product** or method». Before the
+widening the mismatch cost nothing, because clause (1) never gated those families at all. After
+it, praise of one's own product was released while the list went on claiming to charge it, and
+the rule's own Wrong row «Это работает, и без всякой магии» would have stopped matching itself.
+The inventory could not catch this: it answers what a rule finds **today**, and the question was
+what a **new** clause admits. Its author wrote «о своём методе» and «три клаузы выполнены» over
+four product positions without ever putting the word «product» against them, and I read the
+assertion rather than the clause. One word repaired it, verified on three fragments with two
+independent readings each: the product flourish flagged 2/2, the informative «без» control
+released 2/2, the case-14 tricolon routed to AD-11 exactly as that case declares.
+
 **And the deletion itself is correct.** «Честно» is a virtue adverb on a self-statement; removing
 it loses no checkable fact; the demonstration stands in the same sentence («а если нет, назовём
 срок»), and by AD-10.3 a label is redundant where the demonstration is present. The blind judge
