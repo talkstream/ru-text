@@ -1099,9 +1099,11 @@ marker from a shouted paragraph.
 
 **Trigger construction:** a run of **three or more consecutive words** set entirely in uppercase
 Cyrillic, each word two letters or longer. Ordinary punctuation attached to a word — a comma, a
-colon, a dash between words — does not break the run; a lowercase word does. A sentence, a line
-outside a heading, a whole paragraph. Count words, not characters: the defect is a band, not a
-capital letter.
+colon, a dash between words — does not break the run. A lowercase word breaks it, and **so does a
+line break**: a run never spans two lines. That second clause is load-bearing rather than tidy.
+Without it an uppercase heading and the uppercase word opening the paragraph below it merge into
+one run, and a marker the carve-outs protect gets swallowed by a band it does not belong to.
+Count words, not characters: the defect is a band, not a capital letter.
 
 **What to do:** offer to lower the band and mark the load some other way. Offer — the replacement
 is proposed, never asserted as the only correct form.
