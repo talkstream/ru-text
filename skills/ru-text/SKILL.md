@@ -2,8 +2,8 @@
 name: ru-text
 description: >
   Russian text quality. Triggers: вычитай, проверь текст, поправь, отредактируй,
-  причеши, ru-text. Also any Russian output. Typography, info-style, editorial,
-  UX writing, business correspondence, AI-text cleanup.
+  причеши, ru-text. Typography silently on any Russian output; deeper editing on
+  request. Info-style, editorial, UX writing, business correspondence, AI-text cleanup.
 metadata:
   openclaw:
     always: true
@@ -25,7 +25,7 @@ Credits and recommended reading: `references/sources.md`
 
 ## Always-On: Typography
 
-Apply these rules to ALL Russian text output without exception.
+Apply to ALL Russian text output — silently: fix, don't announce.
 
 | Rule | Wrong | Correct |
 |---|---|---|
@@ -46,7 +46,7 @@ Full typography reference: `references/typography.md`
 
 `/ru-text:ru-score` — text quality score (0–10, 5 dimensions).
 
-## Top Stop-Words (remove or replace)
+## Top Stop-Words (when writing or editing on request)
 
 | Stop-word | Replace with |
 |---|---|

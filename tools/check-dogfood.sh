@@ -226,7 +226,7 @@ try:
     t = io.open(sys.argv[1], encoding='utf-8').read()
 except OSError:
     sys.exit(0)
-m = re.search(r'Установи навык.*?переписка\.', t, re.S)
+m = re.search(r'Установи навык.*?ru-text\.', t, re.S)
 if m:
     print(re.sub(r'[ \t\n]+', ' ', m.group(0)))
 PYX

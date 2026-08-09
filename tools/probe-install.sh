@@ -88,9 +88,9 @@ setup)
   # agent creates is a decision it made, and `check` can therefore attribute it.
   mkdir -p "$dir/home" "$dir/project"
   cat > "$dir/PROMPT.txt" <<PROMPT
-Установи навык https://github.com/talkstream/ru-text глобально и вызывай его для
-любых задач с русским текстом: вычитка, типографика, очистка от нейрослопа, редактура, UX-тексты,
-деловая переписка.
+Установи навык https://github.com/talkstream/ru-text глобально и вызывай его, когда работа идёт
+над качеством русского текста: вычитка, типографика, очистка от нейрослопа, редактура, UX-тексты,
+деловая переписка — или по прямому упоминанию ru-text.
 PROMPT
   cat > "$dir/RUN.md" <<RUN
 # Probe sandbox — $platform

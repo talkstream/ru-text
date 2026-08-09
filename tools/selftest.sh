@@ -653,10 +653,10 @@ python3 - "$d/README.md" <<'PYEOF'
 import io, re, sys
 p = sys.argv[1]
 s = io.open(p, encoding='utf-8').read()
-m = re.search(r'Установи навык.*?переписка\.', s, re.S)
+m = re.search(r'Установи навык.*?ru-text\.', s, re.S)
 assert m, 'anchor moved; fix the fixture'
 io.open(p, 'w', encoding='utf-8').write(
-    s.replace(m.group(0), m.group(0).replace(' и вызывай', ' и\u00a0вызывай', 1), 1))
+    s.replace(m.group(0), m.group(0).replace('\u00a0вызывай', '\u00a0\u00a0вызывай', 1), 1))
 PYEOF
 expect_dogfood "an install prompt that drifted between files is caught" "must quote it identically" "$d"
 

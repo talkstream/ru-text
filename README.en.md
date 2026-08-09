@@ -57,7 +57,7 @@ The skill takes bureaucratic register apart the same way: "в целях пов�
 
 Hand this sentence to your AI agent:
 
-> Установи навык https://github.com/talkstream/ru-text глобально и вызывай его для любых задач с русским текстом: вычитка, типографика, очистка от нейрослопа, редактура, UX-тексты, деловая переписка.
+> Установи навык https://github.com/talkstream/ru-text глобально и вызывай его, когда работа идёт над качеством русского текста: вычитка, типографика, очистка от нейрослопа, редактура, UX-тексты, деловая переписка — или по прямому упоминанию ru-text.
 
 *In English: install the ru-text skill globally and invoke it for any Russian-text task — proofreading, typography, neuroslop cleanup, editing, UX copy, business correspondence.* Hand your agent the Russian, not the translation.
 
