@@ -27,6 +27,7 @@ additions.
 - [AD-15. Search-engine addressee](#ad-15-search-engine-addressee-адресат--поисковик-а-не-читатель)
 - [AD-16. Additive pseudo-pair](#ad-16-additive-pseudo-pair-не-только-x-но-и-y)
 - [AD-17. Comma welded to a dash](#ad-17-comma-welded-to-a-dash-запятая-сомкнутая-с-тире)
+- [AD-18. Uppercase band vs. deliberate emphasis](#ad-18-uppercase-band-vs-deliberate-emphasis-капслок-полоса-против-выделения)
 
 ## Neuroslop index
 
@@ -1072,3 +1073,89 @@ have made anyway. Cannot trigger non-compensatory caps alone.
 README: normative, and still a tell — «люди так не пишут в живой жизни, даже профессионалы
 языка». The research behind it, including what the named sources do **not** say, is recorded in
 `~/.claude/plans/ru-text-v2/comma-dash-research.md`.
+
+---
+
+## AD-18. Uppercase band vs. deliberate emphasis (капслок: полоса против выделения)
+
+**Problem:** Russian keyboards have no italic key. In a chat, a ticket, a working plan or a
+message to a colleague, uppercase is often the only emphasis a writer has, and it carries load:
+urgency, a risk marker, the word the reader must not skip. The corpus used to answer this with a
+single unconditioned line — replace uppercase with bold — and the check obeyed it on live texts:
+`Вернись к задачам из моего запроса и РАБОТАЙ` became `и **работай**`, `выпущен ПОЛНОСТЬЮ` became
+`выпущен **полностью**`, and a working plan lost `БЕЗ`, `УЖЕ`, `НИКОГДА`, the markers by which
+that plan was read. Three blind judges, independently, named uppercase turned into italics as a
+reason the checked text reads deader than the original.
+
+Two runs over the same source disagreed with each other: one converted six uppercase tokens in an
+audit, the other converted none, and inside a single run the same word was lowered in prose and
+kept in a status-table cell. The improvisation was sensible and was written down nowhere. An
+unconditioned line does not decide — it makes each run guess.
+
+**Sources:** the emphasis convention itself is not disputed by any style authority in this corpus;
+what is new here is the boundary. Checked and NOT found: no source in this corpus rules on
+uppercase used as emphasis where no other emphasis is available, and none distinguishes a one-word
+marker from a shouted paragraph.
+
+**Trigger construction:** a run of **three or more consecutive words** set entirely in uppercase
+Cyrillic, each word two letters or longer. Ordinary punctuation attached to a word — a comma, a
+colon, a dash between words — does not break the run; a lowercase word does. A sentence, a line
+outside a heading, a whole paragraph. Count words, not characters: the defect is a band, not a
+capital letter.
+
+**What to do:** offer to lower the band and mark the load some other way. Offer — the replacement
+is proposed, never asserted as the only correct form.
+
+AD-18.1 (carve-out — short emphasis). One or two uppercase words are **never** flagged, whatever
+they are and wherever they stand. `СРОЧНО: сервер лежит`, `РАБОТАЙ, не ленись`, `нет ли ЭТИХ ЖЕ
+классов` are deliberate emphasis and stay. This is the branch that matters most: the one-word
+marker is what the flattening was made of.
+
+AD-18.2 (carve-out — abbreviations). Acronyms and initialisms are outside the rule entirely and do
+not count toward the run: `БАМ`, `ВОВ`, `ЕГРЮЛ`, `ЕГРИП`, `ОКВЭД`, `ГОСТ`, `НДС`. Three of them in
+a row are three abbreviations, not a band.
+
+AD-18.3 (carve-out — machine text and status cells). Identifiers, constants, environment
+variables, SQL keywords, file names and the status words inside a table cell (`ПРИСУТСТВУЕТ`,
+`ОТСУТСТВУЕТ`, `НЕТ`) are not prose emphasis and are not flagged. A run of Latin uppercase is not
+this rule's subject at all.
+
+AD-18.4 (carve-out — headings). A heading set in uppercase is a layout decision, not a sentence,
+and belongs to the design of the document rather than to its prose.
+
+AD-18.5 (single-count with `anti-patterns.md`). The summary table entry for uppercase points here
+and carries no policy of its own. Charge a fragment once, under AD-18.
+
+**Examples:**
+
+| Wrong | Correct |
+| --- | --- |
+| ЭТО НУЖНО СДЕЛАТЬ СЕГОДНЯ, ИНАЧЕ РЕЛИЗ СОРВЁТСЯ | Это нужно сделать сегодня, иначе релиз сорвётся |
+| ПРОСЬБА ВНИМАТЕЛЬНО ПРОЧИТАТЬ ВЕСЬ РАЗДЕЛ ЦЕЛИКОМ | Просьба прочитать весь раздел |
+
+**Counter-examples (do NOT flag):**
+
+| Acceptable | Reason |
+| --- | --- |
+| СРОЧНО: сервер лежит | one word, AD-18.1 |
+| нет ли ЭТИХ ЖЕ классов в нашем биллинге | two words, AD-18.1 |
+| выписка из ЕГРЮЛ и ЕГРИП по коду ОКВЭД | abbreviations, AD-18.2 |
+| в ячейке статуса — ПРИСУТСТВУЕТ | status cell, AD-18.3 |
+| `SAVE_PAYMENT_METHOD=true` | machine text, AD-18.3 |
+
+**Severity:** Low. Secondary signal in the **Ч — Clarity** dimension. Cannot trigger
+non-compensatory caps alone.
+
+**Not a neuroslop tell, deliberately.** This rule is absent from the Neuroslop index above, and
+that absence is load-bearing. Uppercase emphasis is a mark of a person typing in a hurry on a
+keyboard with no italic key; a model does not shout. Listing it among the tells of machine prose
+would route the fast triage path — which reads that index and does not read this file — toward
+treating human emphasis as a machine artefact, which is the exact inversion of what this rule is
+for.
+
+**Acknowledged:** ruled by the director, 09.08.2026, on two fragments of his own: `СРОЧНО: сервер
+лежит` — «намеренная эмоциональность, а не слоп или ошибка, живость языка так поддерживается».
+The measurement behind the threshold is recorded in
+`~/Projects/_scratch/ru-text-flattening/inventory-15-registers.md`: the longest uppercase run in
+the live corpora is two words, and every one of the sixteen conversions the check performed was
+one or two words long.

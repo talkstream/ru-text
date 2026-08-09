@@ -24,7 +24,7 @@ Wrong|Correct
 Дефис вместо тире: "Москва - столица"|Москва -- столица (em-dash)
 Три точки "..."|Многоточие … (U+2026, single glyph)
 Знак номера: "No." или "#"|№ (знак номера)
-CAPS LOCK ДЛЯ ВЫДЕЛЕНИЯ|**Полужирный** или *курсив*
+ЭТО НУЖНО СДЕЛАТЬ СЕГОДНЯ, ИНАЧЕ РЕЛИЗ СОРВЁТСЯ|Обычный регистр; одно-два слова прописными не трогать — правило и его карв-ауты в AD-18
 
 Remaining 10: nested quotes, en-dash in ranges, double dashes, space before comma, no space after period, latin x vs multiplication sign, inconsistent ё, double spaces, (c) vs ©, minus vs em-dash in text. All covered in [typography.md](typography.md).
 
