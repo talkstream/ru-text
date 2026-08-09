@@ -38,10 +38,20 @@ What it counts, and what each count is worth:
                    clause and no aside. Falls when a text is chopped, and cannot be gamed by
                    a rule that only shortens words.
 
-Reported per file: n, mean, standard deviation, coefficient of variation, and the quartiles.
-CV — sd/mean — is what to watch across a before/after pair, because it is scale-free: a text
-can lose 30% of its words and hold its CV, and that is the outcome that falsifies the
-flattening hypothesis.
+Reported per file: n, p90, mean adjacent step, standard deviation, CV and the quartiles.
+
+THE HEADLINE IS p90, and CV is NOT a verdict metric. That reversal is measured, not stylistic.
+CV — sd/mean — was chosen here because it is scale-free, and scale-freedom is exactly the
+blindness: chopping a sentence in half divides sd and mean in the same proportion, so their
+ratio does not move. Dose-response run of 09.08.2026 over tools' own splitter on a graded
+fixture (5 real texts, 4 rungs, long sentences chopped at the nearest comma): absolute spread
+fell on 5 texts of 5, and CV was monotone on ZERO of them — rising on two. p90 was strictly
+monotone on 5 of 5. The fixture and the numbers live in
+~/Projects/_scratch/ru-text-flattening/dose/.
+
+This matters beyond a column heading: two «not reproduced» verdicts were reported from median
+CV while three blind judges voted 24 to 4 for the unchecked text. The metric could not have
+shown otherwise. Read the delta inside a pair, never the absolute between texts.
 """
 
 import io
@@ -131,6 +141,8 @@ class Stats:
     q1: int
     med: int
     q3: int
+    p90: int = 0
+    step: float = 0.0
 
 
 @dataclass
@@ -147,7 +159,11 @@ class Shape:
 
 def stats(values: List[int]) -> Stats:
     if not values:
-        return Stats(0, 0.0, 0.0, 0.0, 0, 0, 0)
+        return Stats(0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.0)
+    # The step is computed on the ORIGINAL order: it is the rhythm of alternation, and
+    # sorting would destroy exactly what it measures.
+    step = (sum(abs(values[i] - values[i + 1]) for i in range(len(values) - 1))
+            / (len(values) - 1)) if len(values) > 1 else 0.0
     v = sorted(values)
     n = len(v)
     mean = sum(v) / n
@@ -157,7 +173,8 @@ def stats(values: List[int]) -> Stats:
     def q(f: float) -> int:
         return v[min(n - 1, int(f * n))]
 
-    return Stats(n, mean, sd, (sd / mean if mean else 0.0), q(0.25), q(0.5), q(0.75))
+    return Stats(n, mean, sd, (sd / mean if mean else 0.0), q(0.25), q(0.5), q(0.75),
+                 q(0.90), step)
 
 
 class Unreadable(Exception):
@@ -193,10 +210,12 @@ def report(m: Shape) -> None:
     print('  слов %d, предложений %d' % (m.words, m.length.n))
     rows = [('длина предложения', m.length), ('подчинение на предложение', m.subord),
             ('запятых на предложение', m.commas), ('предложений в абзаце', m.para)]
-    print('  %-28s %7s %7s %7s   %s' % ('', 'среднее', 'ст.откл', 'CV', 'кварт. 25/50/75'))
+    print('  %-28s %6s %7s %7s %7s   %s'
+          % ('', 'p90', 'перепад', 'ст.откл', 'CV*', 'кварт. 25/50/75'))
     for name, s in rows:
-        print('  %-28s %7.2f %7.2f %7.3f   %d / %d / %d'
-              % (name, s.mean, s.sd, s.cv, s.q1, s.med, s.q3))
+        print('  %-28s %6d %7.2f %7.2f %7.3f   %d / %d / %d'
+              % (name, s.p90, s.step, s.sd, s.cv, s.q1, s.med, s.q3))
+    print('  * CV слеп к рубке — не использовать для вердиктов, см. докстринг.')
 
 
 def compare(before: str, after: str) -> None:
@@ -208,18 +227,24 @@ def compare(before: str, after: str) -> None:
         return ((y - x) / x * 100) if x else float('nan')
 
     print('\nДЕЛЬТА (после − до), в процентах от «до»:')
-    print('  %-28s %10s %10s %10s' % ('', 'среднее', 'ст.откл', 'CV'))
+    print('  %-28s %10s %10s %10s %10s' % ('', 'p90', 'перепад', 'ст.откл', 'CV*'))
     for name, key in [('длина предложения', 'length'), ('подчинение', 'subord'),
                       ('запятые', 'commas'), ('абзац', 'para')]:
         sa: Stats = getattr(a, key)
         sb: Stats = getattr(b, key)
-        print('  %-28s %+9.1f%% %+9.1f%% %+9.1f%%'
-              % (name, pct(sa.mean, sb.mean), pct(sa.sd, sb.sd), pct(sa.cv, sb.cv)))
+        print('  %-28s %+9.1f%% %+9.1f%% %+9.1f%% %+9.1f%%'
+              % (name, pct(sa.p90, sb.p90), pct(sa.step, sb.step),
+                 pct(sa.sd, sb.sd), pct(sa.cv, sb.cv)))
     print('  %-28s %+9.1f%%' % ('слов всего', pct(a.words, b.words)))
     print("""
-Как читать. Гипотеза уплощения (docs/roadmap-v2.1-conservation.md) предсказывает, что
-CV длины предложения СУЖАЕТСЯ, а подчинение падает. Если упало только среднее, а CV устоял,
-текст стал короче, но не площе — и гипотеза не подтверждается.""")
+Как читать. Головная метрика — p90 длины предложения: где кончается длинное дыхание текста.
+Вторичные — средний перепад соседних длин (ритм чередования) и абсолютное ст.откл. Гипотеза
+уплощения предсказывает, что все три падают. Смотреть дельту внутри пары, никогда абсолют
+между текстами.
+
+CV в вердиктах НЕ участвует. Замер на dose/ 09.08.2026: при механической рубке предложений
+разброс упал на 5 текстах из 5, а CV не сдвинулся ни на одном и на двух вырос. Причина
+арифметическая: рубка делит и ст.откл, и среднее примерно поровну, а CV — их частное.""")
 
 
 if __name__ == '__main__':
