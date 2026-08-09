@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-08-09
+
+### Added
+- **AD-18 — uppercase band vs. deliberate emphasis.** The corpus said one thing about capitals,
+  in one unconditioned line of a summary table: replace them with bold. Measured over the two
+  live corpora of the flattening experiment, the check obeyed it sixteen times, and every one of
+  the sixteen was one or two words long — a risk marker in a working plan, a word of insistence
+  in a message. Three blind judges had independently named uppercase turned into italics as a
+  reason checked text reads deader than the original. Worse than over-reach, the line did not
+  decide: two runs over the same source produced six conversions and zero, and inside one run
+  the same word was lowered in prose and kept in a status-table cell. AD-18 sets a measured
+  threshold — a band of three or more consecutive uppercase words, where a lowercase word or a
+  line break ends the run and attached punctuation does not — with four carve-outs: one or two
+  words are never flagged, abbreviations are outside the rule, machine text and status cells are
+  not prose emphasis, headings are layout. Severity Low; the replacement is offered, not
+  asserted. The trigger returns zero over all 25 files of all three corpus states, so none of
+  the sixteen conversions happens under it.
+
+### Fixed
+- **Three rules were ruled correct and held by nothing.** The set's criterion forbids LOSING a
+  finding; a carve-out REMOVES one, so it cannot fail that criterion however broken it is. B.1
+  (an amplifier at an admission) had shipped nine days earlier with no positive case; the
+  uncovered delta of the AD-7 repair was executed by none of the 29 cases; and inside the new
+  cases themselves, B.1's «binding» branch and AD-18's heading carve-out were exercised by
+  nothing. All four are now named by a case, and the audit that finds this class is one grep per
+  sub-clause over the expected files.
+- **The architecture map in the project brief still listed `commands/`**, deleted five releases
+  earlier when the two commands became skills. A stale instruction is acted on as truth; this
+  one had already produced a false reviewer finding.
+
+### Golden set
+- 28 → 31 cases. **29** — B.1 with both banks in one letter: nine amplifiers, five released
+  across all three branches of condition (1), four findings; two lemmas stand three times each
+  and split in opposite directions, so a run judging by the word rather than by attachment fails
+  both. **30** — the AD-7 delta as a minimal pair: the same wrong-example formula twice, word for
+  word, released once and flagged once, differing only in whether the text itself raised the
+  vice. **31** — AD-18 from both sides: one seven-word band, and five ways to set capitals that
+  the tool must leave alone.
+
 ## [2.0.1] - 2026-07-30
 
 ### Fixed
