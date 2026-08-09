@@ -10,6 +10,17 @@ ru-text is a Russian proofreading skill for AI agents. It works inside the agent
 
 Your words, your style and your tone it does not touch: those are not errors. And it will not rewrite your file until you ask it to.
 
+## What's new in 2.1.0
+
+This release is about what the checker **stopped** editing.
+
+- **One or two words in capitals stay.** `СРОЧНО: сервер лежит` («URGENT: the server is down») is deliberate emphasis, not sloppiness. A remark now appears only on a band of three or more consecutive capitalised words.
+- **Intensifiers at an admission, a commitment or an apology stay.** «We really did miss the deadline» is not a finding: deleting that word edits a social act rather than a style. «Our equipment is really modern» still is one.
+- **Four more carve-outs:** the passive when the product is the actor, approximate numbers spelled out, anglicisms, dates in tables.
+- **Caught more precisely:** announced sincerity, and a comma welded to a dash.
+
+The reference set grew from 28 texts to 31: every carve-out now has a text where it must fire. [What changed](CHANGELOG.md) · [Release](https://github.com/talkstream/ru-text/releases/tag/v2.1.0)
+
 ## Neuroslop
 
 Catching a model by its vocabulary is hopeless: the vocabulary is ours. Its manner gives it away. It compliments your question, and argues with something nobody said.
