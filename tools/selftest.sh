@@ -897,6 +897,55 @@ for form in 'Навык знает семнадцать таких призна�
   expect_dogfood "an unregistered count in the form «$form» is caught" "no claim is registered" "$d"
 done
 
+# A claim is about the words, not about which codepoint separates them. `notion/README.md`
+# states «в 8 категориях», and the typography gate binds that single-letter preposition with
+# U+00A0 — so a byte-exact search stopped finding a sentence that had just been made MORE
+# correct. Two gates on one line, disagreeing about a space. Both directions, because the
+# live file carries the non-breaking one and a case that only reads it proves nothing.
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '- 92 stop-words across'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+# The claim list writes an ordinary space here, so putting a NON-breaking one in the file
+# is what a byte-exact reader cannot survive. The first draft did the reverse and left file
+# and template byte-identical — a fixture written for the scenario, not for the contract.
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(old, '- 92' + chr(0xA0) + 'stop-words across'))
+PYEOF
+if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
+  ok "a claim separated by an ordinary space is still found"
+else
+  bad "a claim stops being found when its space changes codepoint"
+  (cd "$d" && ./tools/check-dogfood.sh 2>&1) | grep -F FAIL | sed 's/^/        /'
+fi
+
+# A claim deleted outright, then reassembled by two unrelated paragraphs standing next to
+# each other. The codepoint-agnostic reader collapsed newlines too, so it read the whole file
+# as one line and called the claim present — the very failure its sibling matcher documents
+# a hundred lines below.
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '- 92 stop-words across 8 categories with replacements'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+# ONLY the catalogue claim is broken. The first draft split the line in a way that destroyed
+# the CATEGORY claim too, and `verify_claims` words both failures identically — so the case
+# passed on the collateral damage and would have reported success forever while the arm it
+# was written for stayed unheld. `across 8 categories` is left contiguous on purpose.
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(old, 'Ends in - 92\n\nstop-words across 8 categories with replacements'))
+PYEOF
+# The needle names the family, not the number: writing today's 92 into it would plant the
+# hand-maintained figure this very checker exists to remove.
+expect_dogfood "a claim reassembled across a paragraph break is not counted as present" \
+  "stop-word catalogue: the corpus says" "$d"
+
+
 # The blank line as a hard boundary. Flattening the file lets a claim be found across a line
 # wrap — and, without this, lets a claim DELETED outright be satisfied by two unrelated
 # paragraphs happening to end and begin with the right words.
@@ -1056,6 +1105,38 @@ assert s.count(old) == 1, 'anchor moved; fix the fixture'
 io.open(p, 'w', encoding='utf-8').write(s.replace(old, '- 13 правил типографики'))
 PYEOF
 expect_dogfood "a Notion count left behind in the Russian half is caught" "does not say" "$d"
+
+# The Notion gate's own reader, both directions. It was left byte-exact when its sibling
+# stopped being so — two readers of one file disagreeing about what a space is — and then
+# both had to learn that a newline is NOT one.
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '- 30 anti-patterns'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, '- 30' + chr(0xA0) + 'anti-patterns'))
+PYEOF
+if (cd "$d" && ./tools/check-dogfood.sh >/dev/null 2>&1); then
+  ok "a Notion claim separated by a non-breaking space is still found"
+else
+  bad "the Notion reader still compares spaces by codepoint"
+  (cd "$d" && ./tools/check-dogfood.sh 2>&1) | grep -F FAIL | sed 's/^/        /'
+fi
+
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '- 12 typography rules (always applied)'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(old, '- 12\n\ntypography rules (always applied)'))
+PYEOF
+expect_dogfood "a Notion claim reassembled across a paragraph break is not counted as present" \
+  "does not say" "$d"
 
 printf 'selftest: build-release.sh\n'
 
@@ -1290,6 +1371,97 @@ expect_typo() { # $1=case-name  $2=needle  $3=dir
     printf '%s\n' "$out" | sed 's/^/        /'
   fi
 }
+
+# The Notion setup guide joined the checked list, and it is the only bilingual page there.
+# Two cases, one per direction: a defect on its Russian half is caught, and correct English
+# on its English half is not — «2,000+ linguistic atoms» is a comma between digit groups
+# that R32/R53 forbids in Russian and English style requires.
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'Шаблон навыка' + chr(0xA0) + '— сжатая'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'Шаблон навыка — сжатая'))
+PYEOF
+expect_typo "a defect on the Notion guide's Russian half is caught" "R16/R44" "$d"
+
+# The tilde carve-out. The only tilde case plants into README.md — monolingual, and on a line
+# carrying Cyrillic — a path the bilingual skip can never reach, so nothing distinguished
+# «checked before the skip» from «checked after it». Here it sits on the English half.
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+anchor = '## Setup'
+assert s.count(anchor) >= 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(anchor, 'A placeholder that outlived a tool round-trip: 5~000 atoms.\n\n' + anchor, 1))
+PYEOF
+expect_typo "a stray tilde on the English half is still caught" "stray-tilde" "$d"
+
+# The per-file conjunct. Drop `path in BILINGUAL` and the skip goes GLOBAL: every Cyrillic-free
+# line of README.md and INSTALL.md silently loses R32/R53, R16/R44 and the ellipsis rule. The
+# header states that contract in words — «on a monolingual Russian page a line without Cyrillic
+# can still be a digit group that R32/R53 governs» — and a sentence is not a mechanism.
+d=$(fresh_copy)
+printf '\n| MCP | 2,000 | 5 000 |\n' >> "$d/README.md"
+expect_typo "a digit group on a Cyrillic-free line of a monolingual page is still checked" \
+  "R32/R53" "$d"
+
+# A tilde that is a home directory is followed by a slash, and the carve-out now runs on both
+# halves of a bilingual page — so the one thing keeping `~/.agents/skills` out of the report is
+# a single lookahead nothing exercised.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+# Written by codepoint: the first draft of this fixture broke R30 twice on its own single-letter
+# prepositions, so the case failed on the fixture rather than on the thing it tests.
+nb = chr(0xA0)
+line = '\nНавык лежит в' + nb + 'каталоге ~/.agents/skills и' + nb + 'читается оттуда.\n'
+io.open(sys.argv[1], 'a', encoding='utf-8').write(line)
+PYEOF
+if (cd "$d" && ./tools/check-typography.sh >/dev/null 2>&1); then
+  ok "a tilde that opens a home directory is not reported as a mangled space"
+else
+  bad "a home directory is reported as a stray tilde"
+  (cd "$d" && ./tools/check-typography.sh 2>&1) | sed 's/^/        /'
+fi
+
+# --print is the scope contract in machine-readable form, and nothing ran it. The bilingual
+# list was added to it in the same session that found the file missing from the checked list.
+d=$(fresh_copy)
+out=$(cd "$d" && ./tools/check-typography.sh --print 2>&1) && status=0 || status=$?
+if [ "$status" -ne 0 ]; then
+  bad "check-typography --print exits non-zero"
+# INSTALL.md, not notion/README.md: the latter appears in BOTH blocks, so the bilingual
+# list alone satisfied it and the checked-files half was held by nothing.
+elif printf '%s' "$out" | grep -qF 'INSTALL.md' \
+  && printf '%s' "$out" | grep -qF 'bilingual'; then
+  ok "check-typography --print discloses the checked files and the bilingual ones"
+else
+  bad "check-typography --print does not disclose the scope it advertises"
+  printf '%s\n' "$out" | sed 's/^/        /'
+fi
+
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+anchor = '## Setup'
+assert s.count(anchor) >= 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(anchor, 'A set of 3,000+ atoms is described below - see the guide.\n\n' + anchor, 1))
+PYEOF
+if (cd "$d" && ./tools/check-typography.sh >/dev/null 2>&1); then
+  ok "correct English on the Notion guide's English half is not flagged"
+else
+  bad "English prose on a bilingual page is measured by Russian rules"
+  (cd "$d" && ./tools/check-typography.sh 2>&1) | sed 's/^/        /'
+fi
 
 d=$(fresh_copy)
 if (cd "$d" && ./tools/check-typography.sh >/dev/null 2>&1); then

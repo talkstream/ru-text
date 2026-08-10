@@ -66,33 +66,33 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 
 # ru-text для Notion
 
-Два способа использовать ru-text с Notion: как навык Notion AI (автономный) или через MCP-мост (с Claude Code).
+Два способа использовать ru-text с Notion: как навык Notion AI (автономный) или через MCP-мост (с Claude Code).
 
 ## Способ А: навык Notion AI
 
-Любая страница Notion превращается в ассистента по качеству русского текста. Нужен Notion Business или Enterprise.
+Любая страница Notion превращается в ассистента по качеству русского текста. Нужен Notion Business или Enterprise.
 
 ### Настройка
 
 1. Откройте [`ru-text-notion-skill.md`](ru-text-notion-skill.md) на GitHub
 2. Скопируйте содержимое полностью
-3. Создайте новую страницу Notion в рабочем пространстве
+3. Создайте новую страницу Notion в рабочем пространстве
 4. Вставьте содержимое (Notion автоматически конвертирует Markdown)
-5. Откройте настройки страницы (меню с тремя точками) → **Use with AI** → **Use as AI skill**
+5. Откройте настройки страницы (меню с тремя точками) → **Use with AI** → **Use as AI skill**
 6. Назовите навык «ru-text»
 
 ### Использование
 
 1. Выделите текст на любой странице Notion
 2. Нажмите **Ask AI** на панели выделения
-3. Выберите навык «ru-text» в меню
-4. Notion AI применит правила типографики, отметит стоп-слова и предложит улучшения
+3. Выберите навык «ru-text» в меню
+4. Notion AI применит правила типографики, отметит стоп-слова и предложит улучшения
 
 ### Что входит
 
-Шаблон навыка — сжатая выборка из корпуса:
+Шаблон навыка — сжатая выборка из корпуса:
 - 12 правил типографики (применяются всегда)
-- 92 стоп-слова в 8 категориях с заменами
+- 92 стоп-слова в 8 категориях с заменами
 - 30 антипаттернов (канцелярит, пассивный залог, многословие, плеоназмы)
 - Признаки ИИ-текста (нейрослоп): 4 категории, 9 примеров
 - Чеклист качества
@@ -105,13 +105,13 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 
 ### Настройка
 
-1. Установите ru-text в Claude Code: `/plugin install ru-text@claude-community`
+1. Установите ru-text в Claude Code: `/plugin install ru-text@claude-community`
 2. Подключите Notion MCP-сервер ([инструкция](https://developers.notion.com/guides/mcp/get-started-with-mcp))
-3. Предоставьте Claude Code доступ к нужным страницам Notion
+3. Предоставьте Claude Code доступ к нужным страницам Notion
 
 ### Использование
 
-Попросите Claude Code работать с содержимым Notion:
+Попросите Claude Code работать с содержимым Notion:
 
 ```
 Прочитай мою страницу Notion «Текст для лендинга» и примени правила ru-text.
@@ -124,6 +124,6 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 
 ### Требования
 
-- Claude Code с установленным плагином ru-text
-- Notion MCP-сервер подключён и авторизован
+- Claude Code с установленным плагином ru-text
+- Notion MCP-сервер подключён и авторизован
 - Любой тарифный план Notion (MCP работает со всеми планами)

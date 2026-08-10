@@ -33,6 +33,36 @@
 #                                  dash takes an ordinary space, so the rule does not apply
 #   README.en.md, INSTALL.en.md  — English; guillemets and NBSP are not its conventions
 #
+# `notion/README.md` was not on either list, and that was an omission rather than a decision:
+# the exclusion note above names `notion/ru-text-notion-skill.md`, the template full of
+# deliberate breakage, and the setup guide beside it was never considered. It is ordinary
+# prose in the project's voice and it held fifteen violations of the rules it documents. It
+# is BILINGUAL — an English half, then a Russian one — so lines carrying no Cyrillic are
+# skipped for it by name: «2,000+ linguistic atoms» is correct English and a comma between
+# digit groups is only a defect in Russian. The skip is per-file and stated, not a global
+# rule, because on a monolingual Russian page a line without Cyrillic can still be a digit
+# group that R32/R53 governs. ONE check survives the skip: the stray literal `~`, which is
+# not a rule of Russian but a placeholder for U+00A0 that outlived a tool round-trip, and is
+# just as wrong in English.
+#
+# ── arms that are true today but held by nothing ─────────────────────────────────────
+#
+# Written down rather than rediscovered. Each was mutated and survived the suite, and each
+# survived because the tree happens not to contain the input that would separate it — not
+# because the arm is unnecessary. A count, not an opinion, and the count is what expires:
+#
+#   `Ёё` in CYRILLIC          — 0 lines where ё or Ё is the only Cyrillic
+#   `english_half` on `raw`   — 0 lines where blanking code would flip the verdict
+#   `.strip()` on a claim     — 0 of 9 claim templates carry edge whitespace
+#   `flat(phrase)` in says()  — 0 of 6 Notion phrases are altered by it
+#   claim_present's OSError   — unreachable: verify_claims tests `[ ! -f ]` first
+#   filter(None, BILINGUAL)   — 0 empty entries in the list today
+#   flat() applied to `want`  — 0 of 9 claim templates are altered by it
+#
+# This list is maintained BY MUTATION, not by proof: it holds what someone has actually
+# mutated and watched survive. Five rows were written first and a sixth and seventh were
+# found the same way an hour later. Read it as «these are known», never as «these are all».
+#
 # ── what is checked ──────────────────────────────────────────────────────────────────
 #
 # R16/R44  the space before an em dash is non-breaking, so the dash cannot open a line
@@ -55,7 +85,11 @@ cd "$(dirname "$0")/.."
 # Every file whose prose speaks as the project. Adding one is a deliberate act; see the scope
 # note above before you do, because the wrong file here makes this checker cry wolf.
 FILES='README.md
-INSTALL.md'
+INSTALL.md
+notion/README.md'
+
+# Files whose English half must not be measured by Russian rules. One name, one reason.
+BILINGUAL='notion/README.md'
 
 fail=0
 ok()  { printf '  ok    %s\n' "$1"; }
@@ -64,15 +98,19 @@ bad() { fail=$((fail + 1)); printf '  FAIL  %s\n' "$1"; }
 if [ "${1:-}" = "--print" ]; then
   printf 'files checked, and why only these — see the header:\n'
   printf '%s\n' "$FILES" | sed 's/^/  /'
+  printf 'bilingual — lines with no Cyrillic are not measured by Russian rules:\n'
+  printf '%s\n' "$BILINGUAL" | sed 's/^/  /'
   exit 0
 fi
 
 printf 'check-typography: the product obeys its own typography\n'
 
-report=$(python3 - $FILES <<'PY'
-import io, re, sys
+report=$(BILINGUAL="$BILINGUAL" python3 - $FILES <<'PY'
+import io, os, re, sys
 
 NB = '\u00a0'
+BILINGUAL = set(filter(None, os.environ.get('BILINGUAL', '').split('\n')))
+CYRILLIC = re.compile(r'[А-Яа-яЁё]')
 # BOTH cases. The first version listed lowercase only, and a check that never tests «В» or
 # «У» at the start of a sentence is not strict — it is blind exactly where a sentence most
 # often begins. It reported INSTALL.md clean while the file held six of them.
@@ -102,6 +140,12 @@ for path in sys.argv[1:]:
         # do not publish. Skipping the line here is what lets those two stay identical.
         if raw.lstrip().startswith('> Установи навык'):
             continue
+        # On a bilingual page a line with no Cyrillic is the English half, and RUSSIAN rules
+        # do not govern it. Named files only — see the header. The stray tilde is exempt from
+        # the exemption: it is not a Russian rule but a placeholder for U+00A0 that survived a
+        # tool round-trip, and it is just as wrong on an English line — on this very file,
+        # which a normaliser has just touched.
+        english_half = path in BILINGUAL and not CYRILLIC.search(raw)
 
         # Inline code and link targets carry paths, flags and commands. `~/.agents/skills` is
         # a tilde that belongs; a hyphen in `-g` is not a dash. Blank them, keeping offsets so
@@ -109,6 +153,17 @@ for path in sys.argv[1:]:
         s = re.sub(r'`[^`]*`', lambda m: ' ' * len(m.group(0)), raw)
         s = re.sub(r'\]\([^)]*\)', lambda m: ' ' * len(m.group(0)), s)
         s = re.sub(r'https?://\S+', lambda m: ' ' * len(m.group(0)), s)
+
+        # Not a corpus rule, and therefore NOT waived on an English line: a placeholder for
+        # U+00A0 that survived a tool round-trip is wrong in either language, and this is the
+        # file a normaliser has just touched. Checked before the bilingual skip, deliberately.
+        for m in re.finditer(r'~(?!/)', s):
+            out.append('%s\t%d\tstray-tilde\ta literal ~ where a non-breaking space belongs\t%s'
+                       % (path, n, s[max(0, m.start() - 40):m.start() + 20].strip()))
+
+        # Everything below is a rule of RUSSIAN typography and does not govern an English line.
+        if english_half:
+            continue
 
         for m in re.finditer('—', s):
             if m.start() > 0 and s[m.start() - 1] == ' ':
@@ -151,11 +206,6 @@ for path in sys.argv[1:]:
             out.append('%s\t%d\tellipsis\tthree periods instead of …\t%s'
                        % (path, n, s[max(0, m.start() - 30):m.start() + 20].strip()))
 
-        # Not a corpus rule. The defect that shipped twice: a placeholder for U+00A0 that
-        # survived a tool round-trip. A tilde that is a home directory is followed by a slash.
-        for m in re.finditer(r'~(?!/)', s):
-            out.append('%s\t%d\tstray-tilde\ta literal ~ where a non-breaking space belongs\t%s'
-                       % (path, n, s[max(0, m.start() - 40):m.start() + 20].strip()))
 
 print('\n'.join(out))
 PY

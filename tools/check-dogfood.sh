@@ -104,6 +104,27 @@ EOF
   fi
 }
 
+claim_present() { # $1=phrase  $2=file — true when the file states the phrase
+  WANT="$1" python3 - "$2" <<'PYC'
+import io, os, re, sys
+# `[^\S\n]` — every kind of space EXCEPT the newline. Collapsing newlines too was the
+# defect: `grep -qF` was line-scoped, and dropping that scope let a deleted claim be
+# satisfied by two unrelated paragraphs standing next to each other. The tell matcher
+# 120 lines below treats a blank line as a hard boundary for exactly this reason; these
+# two must not disagree about what a claim is.
+# ONE arm, not two. Excluding the newline from the class is what keeps the match inside a
+# line; iterating over lines as well was a second, redundant guard, and a redundant guard is
+# a mutation that survives and reads like coverage.
+flat = lambda t: re.sub(r'[^\S\n]+', ' ', t)
+want = flat(os.environ['WANT']).strip()
+try:
+    body = io.open(sys.argv[1], encoding='utf-8').read()
+except OSError:
+    sys.exit(1)
+sys.exit(0 if want in flat(body) else 1)
+PYC
+}
+
 verify_claims() { # $1=label  $2=value  $3=claim list
   missing=''
   n=0
@@ -114,7 +135,12 @@ verify_claims() { # $1=label  $2=value  $3=claim list
     want=$(printf '%s' "$tmpl" | sed "s/%s/$2/")
     if [ ! -f "$f" ]; then
       printf 'MISSING-FILE\t%s\n' "$f"
-    elif grep -qF -- "$want" "$f"; then
+    # Spaces compared as spaces, whatever their codepoint. `notion/README.md` states «в 8
+    # категориях», and the typography gate binds that single-letter preposition with U+00A0
+    # — so a byte-exact search for the claim stopped finding a sentence that had just been
+    # made MORE correct. Two gates on one line, disagreeing about a space: the claim is about
+    # the words, so the words are what it compares.
+    elif claim_present "$want" "$f"; then
       printf 'OK\t%s\n' "$f"
     else
       printf 'STALE\t%s\t%s\n' "$f" "$want"
@@ -232,8 +258,13 @@ except OSError:
     die('%s is missing, and it is the only place the template states its size' % README)
 
 def says(text, phrase):
-    return re.search(r'(?<![0-9A-Za-zА-Яа-яЁё])%s(?![0-9A-Za-zА-Яа-яЁё])' % re.escape(phrase),
-                     text, re.UNICODE) is not None
+    # Spaces compared as spaces here too. This reader was left byte-exact when its sibling
+    # stopped being so, and one non-breaking space in the Notion README turned it red — a
+    # second reader of the same file, disagreeing with the first about what a space is.
+    flat = lambda t: re.sub(r'[^\S\n]+', ' ', t)
+    pat = re.compile(r'(?<![0-9A-Za-zА-Яа-яЁё])%s(?![0-9A-Za-zА-Яа-яЁё])' % re.escape(flat(phrase)),
+                     re.UNICODE)
+    return pat.search(flat(text)) is not None
 
 stale = ['%s does not say «%s»' % (README, c) for c in CLAIMS if not says(body, c)]
 # The template describes its own size in a heading, and that heading is a consumer like any
