@@ -169,8 +169,28 @@ when those directories already exist — it never creates them.
 A one-shot install has no update mechanism: the agent installed the skill and forgot about
 it. Come back every few months.
 
-For a copy install, re-run the same command; it overwrites the directory — including any
-edits you made.
+A copy install — **re-running the same command does NOT overwrite the directory.** `cp -r`
+places the new version inside the old one, the previous release stays on top, and the agent
+reads the file on top, so it goes on working from the older corpus. Verified by command:
+after a repeat, `ru-text/ru-text/SKILL.md` appears.
+
+Update by replacing the contents instead. This command leaves no nested copies and does not
+depend on what was in the directory before:
+
+```bash
+rsync -a --delete ru-text/skills/ru-text/ ~/.agents/skills/ru-text/
+```
+
+The trailing slashes on both paths are required. Substitute your own destination — the one you
+installed to. The replacement also removes any edits you made. No `rsync`? Delete the
+destination directory by hand and copy again; what matters is that the old directory is gone.
+
+After updating, make sure the skill is installed **exactly once**: a copy in a neighbouring
+directory stays alive and feeds the agent the older corpus.
+
+```bash
+find ~ -name SKILL.md -path '*ru-text*' -not -path '*/node_modules/*' 2>/dev/null
+```
 
 ```bash
 npx skills add talkstream/ru-text -y        # skills CLI, project scope; installs three skills

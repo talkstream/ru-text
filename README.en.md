@@ -10,16 +10,16 @@ ru-text is a Russian proofreading skill for AI agents. It works inside the agent
 
 Your words, your style and your tone it does not touch: those are not errors. And it will not rewrite your file until you ask it to.
 
-## What's new in 2.1.0
+## What's new in 2.2.0
 
-This release is about what the checker **stopped** editing.
+The skill is quieter. It used to activate on any Russian output and **report** its edits; now it fixes typography silently and offers the deeper reading on request.
 
-- **One or two words in capitals stay.** `СРОЧНО: сервер лежит` («URGENT: the server is down») is deliberate emphasis, not sloppiness. A remark now appears only on a band of three or more consecutive capitalised words.
-- **Intensifiers at an admission, a commitment or an apology stay.** «We really did miss the deadline» is not a finding: deleting that word edits a social act rather than a style. «Our equipment is really modern» still is one.
-- **Four more carve-outs:** the passive when the product is the actor, approximate numbers spelled out, anglicisms, dates in tables.
-- **Caught more precisely:** announced sincerity, and a comma welded to a dash.
+- **No more lists of edits nobody asked for.** Ask for a translation and you get a translation; ask for a plan and you get a plan. Typography is still fixed everywhere — you just stop hearing about it.
+- **The stop-word table now carries the condition** it never had: it applies when the text is being written or edited on request.
+- **Reinstalling does not update, and the docs now say so.** Repeating the install command places the new version inside the old one, the previous release stays on top, and the agent reads that. Measured; [INSTALL.en.md](INSTALL.en.md) gives the replacement and the command that proves the skill is installed exactly once.
+- **The Notion guide** claimed more AI-text tells than it holds. Corrected; the figure is now counted by a gate rather than remembered — the exact numbers are in the [CHANGELOG](CHANGELOG.md).
 
-The reference set grew from 28 texts to 31: every carve-out now has a text where it must fire. [What changed](CHANGELOG.md) · [Release](https://github.com/talkstream/ru-text/releases/tag/v2.1.0)
+The activating decision is made by the skill's description, not by the install prompt — so editing the prompt changes nothing for anyone already installed. Updating is the only way to get this. [What changed](CHANGELOG.md) · [Release](https://github.com/talkstream/ru-text/releases/tag/v2.2.0)
 
 ## Neuroslop
 
@@ -136,7 +136,7 @@ The fast pass does not judge the tells of machine writing: each of them carries 
 
 ## Updating
 
-A one-shot install has no update mechanism: the agent installed the skill and forgot about it. There is one signal — the repository's releases: Watch → Custom → Releases. When a release notification arrives, ask your agent to run the install again. What changed is written in the [CHANGELOG](CHANGELOG.md); the commands for each platform are in [INSTALL.en.md](INSTALL.en.md#updating).
+A one-shot install has no update mechanism: the agent installed the skill and forgot about it. There is one signal — the repository's releases: Watch → Custom → Releases. When a release notification arrives, ask your agent to update the skill. Re-running the install command is no use: where the skill is installed by copying, it does not update but places the new version inside the old one. What changed is written in the [CHANGELOG](CHANGELOG.md); the commands for each platform are in [INSTALL.en.md](INSTALL.en.md#updating).
 
 The ru-text pin in the Claude Code community marketplace trails the current version by months. `claude plugins list` will show the version you have; if it is old, install the skill by copying: three commands in [INSTALL.en.md](INSTALL.en.md#the-shared-directory).
 

@@ -4,7 +4,7 @@
 **Repo:** https://github.com/talkstream/ru-text
 **Site:** https://ru-text.org
 **Sponsors:** https://github.com/sponsors/talkstream
-**Version:** 2.1.0 | **License:** MIT | **Platforms:** Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, Google Antigravity, OpenClaw, Notion
+**Version:** 2.2.0 | **License:** MIT | **Platforms:** Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, Google Antigravity, OpenClaw, Notion
 
 Over 2,000 independently formulated linguistic atoms across 7 thematic areas. No verbatim quotes, full source attribution.
 

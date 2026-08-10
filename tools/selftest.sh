@@ -20,10 +20,31 @@ export LC_ALL=C
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 TMPROOT=$(mktemp -d "${TMPDIR:-/tmp}/ru-text-selftest.XXXXXX")
-trap 'rm -rf "$TMPROOT"' EXIT INT TERM
+# The trap does two jobs, and the second exists because the first one hid a disaster: an EXIT
+# handler RESETS the status, so a suite that aborted mid-run — `set -eu` on an unset name, a
+# syntax error, a killed child — exited ZERO and every caller read it as a pass. `finished` is
+# set on the last line of this file, so anything that stops the run short is reported here and
+# exits non-zero. gates.sh ALSO requires the summary line, and that is not redundant: CI does
+# not call gates.sh (.github/workflows/gates.yml runs this file directly), so a guard living
+# only there would protect the local path and leave CI on the old footing.
+finished=0
+trap 'st=$?; rm -rf "$TMPROOT"; if [ "$finished" -ne 1 ]; then printf "selftest: ABORTED before the summary — the run did not finish\\n" >&2; exit 1; fi; exit $st' EXIT
+trap 'rm -rf "$TMPROOT"; exit 130' INT TERM
 
 pass=0
 fail=0
+# Initialised, and it was not. Under `set -eu` an unset name in $(( )) aborts bash 3.2 —
+# which IS /bin/sh on macOS — and the EXIT trap then resets the status, so the suite died
+# at case 145 printing no summary and exiting ZERO. gates.sh read that as a pass. The trigger
+# is any `skip`, and the only live one fires when build-og --check fails: an OG rebuild would
+# have turned the whole verification chain green-while-dead. Measured 10.08.2026.
+#
+# HELD BY: `gates.sh` requiring a summary line, which covers the CLASS — any abort, any
+# cause — and has its own case. This initialisation itself is a latent arm: no `skip` fires
+# on this tree locally (0 today), so removing the line changes nothing a case can see. It
+# fires on CI, where dash tolerates the unset name anyway. Written down rather than left to
+# be rediscovered by mutation.
+skipped=0
 note() { printf '  %s\n' "$1"; }
 ok()   { pass=$((pass + 1)); printf '  ok    %s\n' "$1"; }
 bad()  { fail=$((fail + 1)); printf '  FAIL  %s\n' "$1"; }
@@ -1188,7 +1209,13 @@ printf 'selftest: gates.sh\n'
 # forever. The copy's selftest is replaced by a stub whose exit code the case chooses:
 # what is under test here is the ORCHESTRATION — that a red checker stops the run, that a
 # green tree does not — never the checker being stubbed.
-stub_selftest() { printf '#!/bin/sh\nexit %s\n' "$2" > "$1/tools/selftest.sh"; chmod +x "$1/tools/selftest.sh"; }
+# The stub prints a summary line as well as choosing an exit code, because gates.sh now
+# requires one: a run that printed no summary did not finish, whatever it exited with.
+stub_selftest() {
+  printf '#!/bin/sh\nprintf "selftest: 1 passed, %s failed\\n"\nexit %s\n' "$2" "$2" \
+    > "$1/tools/selftest.sh"
+  chmod +x "$1/tools/selftest.sh"
+}
 
 d=$(fresh_copy); stub_selftest "$d" 0
 if "$d/tools/gates.sh" >/dev/null 2>&1; then
@@ -1203,6 +1230,18 @@ if "$d/tools/gates.sh" >/dev/null 2>&1; then
   bad "gates.sh passed although a checker exited non-zero"
 else
   ok "a red checker stops gates.sh"
+fi
+
+# A suite that DIED mid-run: status 0, no summary. Not hypothetical — an uninitialised
+# counter aborted this very file under `set -eu`, and its EXIT trap turned the abort into
+# a zero. gates.sh read it as a pass, and every gate below it ran on a lie.
+d=$(fresh_copy)
+printf '#!/bin/sh\nprintf "  ok    one case\\n"\nexit 0\n' > "$d/tools/selftest.sh"
+chmod +x "$d/tools/selftest.sh"
+if "$d/tools/gates.sh" >/dev/null 2>&1; then
+  bad "gates.sh passed although the selftest exited 0 without finishing"
+else
+  ok "a selftest that exits 0 without a summary stops gates.sh"
 fi
 
 # The no-loss gate is the LAST step, so a script that quietly stopped earlier would still
@@ -1845,4 +1884,5 @@ if [ "${skipped:-0}" -gt 0 ]; then
 else
   printf 'selftest: %d passed, %d failed\n' "$pass" "$fail"
 fi
+finished=1
 [ "$fail" -eq 0 ]

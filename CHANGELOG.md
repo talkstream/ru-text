@@ -5,6 +5,70 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-08-10
+
+The narrowing of 2.1.0 never reached anyone. `2bcbe74` landed on main AFTER the v2.1.0 tag —
+by one hour and fifty-seven minutes — so the release, its assets and every catalogue pinned to
+it carry the previous description, the one the narrowing was written to replace. On the day this
+was found, `git diff --name-only v2.1.0 HEAD -- skills/ru-text` named exactly one file,
+`SKILL.md`, and the published `ru-text-skill.zip` still holds «Also any Russian output» at line
+5. This release is the delivery.
+
+A minor version rather than a patch, deliberately: the skill now decides differently when to
+speak and says less when it does. That is a change in behaviour a user will notice, not a
+repair, whatever the smallness of the diff.
+
+### Changed
+- **The skill speaks less, and in one place reaches less.** Its `description` now reads
+  «Typography silently on any Russian output; deeper editing on request», the always-on line
+  reads «Apply to ALL Russian text output — silently: fix, don't announce», and the top
+  stop-word table is gated «when writing or editing on request» — a gate it never had, which
+  is a narrowing and is named as one. Typography itself still applies to any Russian output;
+  what changed there is the volume, not the reach. The skill was loud where it was merely
+  present.
+
+  The activating decision is made by `description` in the frontmatter, not by the install
+  prompt — so editing the prompt changes nothing for anyone who has already installed. If you
+  are already on 2.1.0 or earlier, updating is the only way to get this.
+- **The install prompt asks for a narrower job.** «…вызывай его для любых задач с русским
+  текстом» became «…когда работа идёт над качеством русского текста… или по прямому упоминанию
+  ru-text», in both READMEs and in the sandbox probe that hands the string to a fresh agent —
+  all three byte-identical, which is itself a gate.
+- **Notion setup guide.** «9 признаков ИИ-текста (нейрослоп) в 4 категориях» over a section
+  holding four tells and nine example rows — a tell count more than double the truth. Now
+  «Признаки ИИ-текста (нейрослоп): 4 категории, 9 примеров», in both language halves, and
+  measured by a gate rather than remembered.
+
+### Fixed
+- **The install guides no longer promise something that does not happen — in BOTH languages.**
+  They said the install command could be repeated to update. It cannot: `cp -r` places the new
+  version INSIDE the old one, the previous release stays on top, and the agent reads the file
+  on top — so the skill goes on running an older corpus. Measured on two labelled versions;
+  after a repeat, `ru-text/ru-text/SKILL.md` appears. Eight platforms install by copying and
+  are affected — Cline, Codex CLI, Continue.dev, Cursor, GitHub Copilot, Google Antigravity,
+  JetBrains Junie and Windsurf, counted from `tools/install-paths.tsv` rather than remembered.
+  Both `INSTALL.md` and `INSTALL.en.md` now say `rsync -a --delete` and give the command that
+  proves the skill is installed exactly once.
+
+  `INSTALL.en.md` carried the disproved instruction eleven days longer than the Russian half,
+  because the correction of 30.07 was applied to one file and not its pair — and the «Updating»
+  paragraph of BOTH READMEs still told the reader to run the install again. All four places are
+  corrected here. Nothing cross-checks the two install guides; that they can drift for eleven
+  days unnoticed is now known and unguarded.
+- **Fifteen typographic defects in `notion/README.md`** — fourteen R30, one R16/R44 — in a
+  page that documents those very rules. The file was on neither the checked list nor the
+  exclusion list of the typography gate; the exclusion note names the Notion TEMPLATE, full
+  of deliberately broken examples, and the setup guide beside it was never considered.
+- **Three stale counts in the roadmaps** saying «sixteen tells» in the present tense over a
+  reference that holds seventeen.
+
+### Internal
+- The number of machine-text tells, the Notion template's own size, and the typography of the
+  Notion guide are now gates rather than hand-maintained figures. Selftest 108 → 158 cases.
+- The prose-shape ruler was normalised by a quantity that falls together with what it
+  measures, so it was blind to chopping; the headline metric is now the 90th percentile of
+  sentence length, monotone against dose on five texts of five.
+
 ## [2.1.0] - 2026-08-09
 
 ### Added

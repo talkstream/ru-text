@@ -73,7 +73,16 @@ fi
 # ── 2. Selftest — every checker must be able to fail ────────────────────────────────
 # Runs first among the gates. If the checkers cannot fail, their passing below means
 # nothing at all.
-tools/selftest.sh || fail "selftest"
+# The exit code is not enough, and that is not a hypothetical: an uninitialised counter made
+# the suite abort mid-run under `set -eu`, and the EXIT trap turned the abort into status 0.
+# A run that printed no summary line did not finish, whatever it exited with. The line is
+# required by SHAPE, not by its numbers — a count baked in here would be one more
+# hand-maintained figure.
+selftest_out=$(tools/selftest.sh 2>&1) || { printf '%s\n' "$selftest_out"; fail "selftest"; }
+printf '%s\n' "$selftest_out"
+printf '%s\n' "$selftest_out" | grep -qE '^selftest: [0-9]+ passed' \
+  || fail "selftest exited 0 without printing a summary — it did not finish"
+
 
 # ── 3. The paid-MCP corpus contract ─────────────────────────────────────────────────
 tools/check-frozen.sh || fail "check-frozen"
