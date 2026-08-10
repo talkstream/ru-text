@@ -9,7 +9,7 @@ contradict each other under a single heading.
 
 On 28.07.2026 four evidence channels were read blind to each other and every candidate was
 screened by a second agent against the corpus, by command. The finding was not where it was
-expected. Style is covered thoroughly — info-style, канцелярит, anti-patterns, sixteen tells
+expected. Style is covered thoroughly — info-style, канцелярит, anti-patterns, seventeen tells
 of machine prose, 96 typography rules, 88 punctuation rules. **Grammar in the narrow sense
 is close to empty**: government, participial commas, declension of compound numerals and
 surnames, verb aspect. Verified absent with greps recorded in the dossier.

@@ -49,6 +49,10 @@ fresh_copy() {
     [ -f "$ROOT/$f" ] && cp "$ROOT/$f" "$d/$f" 2>/dev/null
   done
   cp -R "$ROOT/notion" "$d/notion" 2>/dev/null || true
+  # docs/ joined the list when the roadmaps stopped being exempt from the tell sweep: two of
+  # them state the count in the present tense, so they are consumers, and a copy without them
+  # fails every case with «does not say» — a failure about the fixture, not about the case.
+  cp -R "$ROOT/docs" "$d/docs" 2>/dev/null || true
   # The images the manifests point at. check-assets.sh reads them, and a copy without them
   # reports every reference as missing — a failure about the fixture, not about the case.
   cp -R "$ROOT/assets" "$d/assets" 2>/dev/null || true
@@ -739,6 +743,319 @@ s = re.sub(r'(?m)^(## B\. Каталог стоп-слов.*\n)', r'\1\nвыду
 io.open(p, 'w', encoding='utf-8').write(s)
 PY
 expect_dogfood "the corpus growing past its claims is caught" "and these do not" "$d"
+
+# The number of machine-text tells, stated six times across two READMEs and measured nowhere.
+# The count is not the number of rules in the file: AD-18 is a rule about human emphasis and
+# says so in its own body, so «eighteen rules, seventeen tells» are both true and a reader
+# counting headings gets the other number. A handoff note spent a session calling this a
+# contradiction. Three mutations: the corpus moving, one claim left behind, and a statement
+# nobody registered.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/references/addenda.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '**Not a neuroslop tell, deliberately.**'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, '**A tell like any other.**'))
+PYEOF
+expect_dogfood "a rule that stopped excluding itself is counted" "the corpus holds 18" "$d"
+
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'справочнике семнадцать таких признаков'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'справочнике шестнадцать таких признаков'))
+PYEOF
+expect_dogfood "one README left behind when the tells move is caught" "the corpus holds 17" "$d"
+
+d=$(fresh_copy)
+printf 'Навык знает семнадцать признаков машинного текста.\n' > "$d/CONTRIBUTING.md"
+( cd "$d" && git add -A ) >/dev/null 2>&1
+expect_dogfood "an unregistered statement of the tell count is caught" "no claim is registered" "$d"
+
+# The minimal pair for the hole a reviewer opened: the SAME sentence, inside a file that is
+# on the claim list. The first version skipped claimant files wholesale, so a claim could rot
+# inside the very README the checker was reading — the substring test found the phrase
+# somewhere in the file and nothing looked at the rest of it. Registered claims are now
+# subtracted from the LINE, and the sweep knows every number it can spell, not just today's:
+# a site left behind states the OLD count, which the current value's patterns cannot see.
+d=$(fresh_copy)
+printf '\nВ справочнике шестнадцать признаков машинного текста.\n' >> "$d/README.md"
+expect_dogfood "a stale count left inside a claimant README is caught" "no claim is registered" "$d"
+
+# Every claim row, one at a time. Mutating all six at once proves nothing: a checker holding
+# one row would still fail. A reviewer showed the list could be cut from six rows to two and
+# the fixtures stayed green — four of the six sites were pinned by nothing.
+for claim in 'семнадцать признаков машинного текста|семнадцать признаков письма машины' \
+             'справочнике семнадцать таких признаков|справочнике ровно столько таких признаков' \
+             '17 признаков машинного текста с|17 признаков письма машины с' \
+             'seventeen tells of machine-written text|seventeen marks of machine-written text' \
+             'holds seventeen such tells in all|holds seventeen such items in all' \
+             'seventeen tells of machine writing, with|seventeen tells of machine prose, with'; do
+  old=${claim%%|*}
+  new=${claim#*|}
+  d=$(fresh_copy)
+  for f in README.md README.en.md; do
+    python3 - "$d/$f" "$old" "$new" <<'PYEOF'
+import io, sys
+p, old, new = sys.argv[1], sys.argv[2], sys.argv[3]
+s = io.open(p, encoding='utf-8').read()
+if old in s:
+    io.open(p, 'w', encoding='utf-8').write(s.replace(old, new, 1))
+PYEOF
+  done
+  expect_dogfood "a tell claim rephrased away is caught: ${old}" "the corpus holds 17" "$d"
+done
+
+# Every form the sweep must see, one at a time, in a file no claim list mentions. The pattern
+# set could be cut from four to one and the fixtures stayed green.
+for form in 'Навык знает семнадцать признаков.' \
+            'The skill knows seventeen tells.' \
+            'Всего 17 признаков машинного письма.' \
+            'It carries 17 tells.'; do
+  d=$(fresh_copy)
+  printf '%s\n' "$form" > "$d/CONTRIBUTING.md"
+  ( cd "$d" && git add -A ) >/dev/null 2>&1
+  expect_dogfood "an unregistered count in the form «$form» is caught" "no claim is registered" "$d"
+done
+
+# A heading whose dot was forgotten. `## AD-19 Foo` used to be invisible to the parser, so a
+# rule added with a typo was silently uncounted — a wrong PASS produced by a slip of the hand.
+d=$(fresh_copy)
+printf '\n## AD-19 A rule added with the dot forgotten\n\nBody.\n' \
+  >> "$d/skills/ru-text/references/addenda.md"
+expect_dogfood "an AD heading missing its dot is still counted" "the corpus holds 18" "$d"
+
+# The Notion template's own size, which was stated four times in two languages and measured
+# nowhere. One of the four overstated by more than double: «9 признаков в 4 категориях» over
+# a section holding four tells and nine examples.
+d=$(fresh_copy)
+python3 - "$d/notion/ru-text-notion-skill.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '### Пустой зачин'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, '### Пустой зачин\n\nA fifth tell.\n\n### Ещё один признак'))
+PYEOF
+expect_dogfood "a tell added to the Notion template its README did not count is caught" "does not say" "$d"
+
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '- 30 anti-patterns'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, '- 31 anti-patterns'))
+PYEOF
+expect_dogfood "a Notion count left behind in the English half is caught" "does not say" "$d"
+
+# «восемнадцать» CONTAINS «семнадцать», letter for letter. A plain substring test therefore
+# accepted a README claiming EIGHTEEN over a reference holding seventeen, and passed silently:
+# the sweep would have caught the word, but the claim was subtracted from the line first. The
+# same collision runs through the table — восемь⊃семь, одиннадцать⊃один, тринадцать⊃три.
+d=$(fresh_copy)
+python3 - "$d/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'и семнадцать признаков машинного текста'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'и восемнадцать признаков машинного текста'))
+PYEOF
+expect_dogfood "a claim whose numeral CONTAINS the true one is caught" "the corpus holds 17" "$d"
+
+# A claim written across a line break. Claims are prose and prose wraps: the roadmap says
+# «seventeen tells\nof machine prose», and a checker reading line by line calls it missing.
+d=$(fresh_copy)
+python3 - "$d/docs/roadmap-v3-grammar.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'seventeen tells'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'a good number of tells'))
+PYEOF
+expect_dogfood "a wrapped claim rephrased away is caught" "the corpus holds 17" "$d"
+
+# The rest of the sweep's forms, and the rest of the window. The pattern set was pinned at
+# two values out of the eleven it covers, and the «таких» / «such» alternative at none.
+for form in 'Навык знает семнадцать таких признаков.' \
+            'The skill holds seventeen such tells.' \
+            'Раньше их было пятнадцать признаков.' \
+            'Двадцать признаков — потолок.' \
+            'Навык знает девять признаков ИИ-текста.' \
+            'Once there were five tells.'; do
+  d=$(fresh_copy)
+  printf '%s\n' "$form" > "$d/CONTRIBUTING.md"
+  ( cd "$d" && git add -A ) >/dev/null 2>&1
+  expect_dogfood "an unregistered count in the form «$form» is caught" "no claim is registered" "$d"
+done
+
+# The blank line as a hard boundary. Flattening the file lets a claim be found across a line
+# wrap — and, without this, lets a claim DELETED outright be satisfied by two unrelated
+# paragraphs happening to end and begin with the right words.
+d=$(fresh_copy)
+python3 - "$d/README.en.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'The reference holds seventeen such tells in all.'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(old, 'The reference holds seventeen such\n\ntells in all.'))
+PYEOF
+expect_dogfood "a claim split by a blank line is not counted as present" "the corpus holds 17" "$d"
+
+# The offset map. Both writing fixtures above are one line long, so nothing proved the sweep
+# reports the line a wrapped hit actually sits on rather than the first line of the file.
+d=$(fresh_copy)
+printf 'Первая строка ни о чём.\n\nВторая строка ни о чём.\n\nЗдесь их семнадцать\nпризнаков.\n' \
+  > "$d/CONTRIBUTING.md"
+( cd "$d" && git add -A ) >/dev/null 2>&1
+out=$(cd "$d" && ./tools/check-dogfood.sh 2>&1) && status=0 || status=$?
+if [ "$status" -eq 0 ]; then
+  bad "a wrapped unregistered count is not caught at all"
+elif printf '%s' "$out" | grep -qF 'CONTRIBUTING.md:5'; then
+  ok "a wrapped unregistered count is reported on the line it starts at"
+else
+  bad "a wrapped unregistered count is reported on the wrong line"
+  printf '%s\n' "$out" | grep -F 'CONTRIBUTING.md' | sed 's/^/        /'
+fi
+
+# The exemption list names two lines of ordinary prose that put a numeral beside «признак».
+# A list of exceptions that is not itself checked becomes a list of lies.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/references/info-style.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'Три признака слабого текста'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'Признаки слабого текста'))
+PYEOF
+expect_dogfood "an exemption naming a line that is gone is caught" "drop the exemption" "$d"
+
+# The other direction, and the one that makes an exemption dangerous: a phrase that occurs
+# twice silences two lines while the checker only ever needed one silenced. One entry could
+# then hide a real stale claim that happened to be worded the same way.
+d=$(fresh_copy)
+printf '\nТри признака слабого текста: повтор той же формулировки ниже по файлу.\n' \
+  >> "$d/skills/ru-text/references/info-style.md"
+expect_dogfood "an exemption that silences more than one line is caught" "not a phrase" "$d"
+
+# The skip list and the extension filter, each of which could be widened or narrowed with the
+# suite green. One case per boundary, in a file no claim mentions.
+d=$(fresh_copy)
+printf '\nЗдесь семнадцать признаков.\n' >> "$d/INSTALL.md"
+expect_dogfood "an unregistered count in a top-level file outside the skip list is caught" \
+  "no claim is registered" "$d"
+
+d=$(fresh_copy)
+printf '\n# seventeen tells are described here\n' >> "$d/skills/ru-text/agents/openai.yaml"
+expect_dogfood "an unregistered count in a YAML file is caught" "no claim is registered" "$d"
+
+# Past twenty the checker refuses instead of demanding «двадцать один признаков», which is
+# ungrammatical — in the repository whose subject is grammar.
+d=$(fresh_copy)
+python3 - "$d/skills/ru-text/references/addenda.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+s += ''.join('\n## AD-%d. Filler\n\nBody.\n' % k for k in range(20, 24))
+io.open(p, 'w', encoding='utf-8').write(s)
+PYEOF
+expect_dogfood "a count past the word table is refused, not guessed" "knows no word form" "$d"
+
+# Outside a git checkout the sweep cannot run, and must say so rather than emit a traceback.
+d=$(fresh_copy)
+mv "$d/.git" "$d/.git-disabled"
+expect_dogfood "a copy that is not a git checkout is named, not crashed on" "not a git checkout" "$d"
+
+# --print is advertised as «what it measured, and every place that claims it», and no case
+# ever ran it. A branch nobody executes is a branch nobody maintains.
+d=$(fresh_copy)
+out=$(cd "$d" && ./tools/check-dogfood.sh --print 2>&1) && status=0 || status=$?
+if [ "$status" -ne 0 ]; then
+  bad "--print exits non-zero"
+elif printf '%s' "$out" | grep -qF 'machine-text tells: 17' \
+  && printf '%s' "$out" | grep -qF 'seventeen tells of machine writing'; then
+  ok "--print lists the tell count and every place that states it"
+else
+  bad "--print does not list the tell claims it advertises"
+  printf '%s\n' "$out" | sed 's/^/        /'
+fi
+
+# The Notion gate measures four numbers, and three of them could be replaced by the constant
+# they were measuring with the suite green. One case per number: change the TEMPLATE and the
+# README's figure must stop matching — which a constant cannot notice.
+d=$(fresh_copy)
+python3 - "$d/notion/ru-text-notion-skill.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '| Ruble symbol after number | 1500 руб | 1 500 ₽ |'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(old, old + '\n| Degree sign | 20 C | 20 °C |'))
+PYEOF
+expect_dogfood "a typography row the Notion README did not count is caught" "does not say" "$d"
+
+d=$(fresh_copy)
+python3 - "$d/notion/ru-text-notion-skill.md" <<'PYEOF'
+import io, re, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+head = '### Плеоназмы (убрать лишнее слово)'
+assert s.count(head) == 1, 'anchor moved; fix the fixture'
+i = s.index(head)
+j = s.index('\n\n', s.index('|---', i))
+io.open(p, 'w', encoding='utf-8').write(s[:j] + '\n| совместное сотрудничество | сотрудничество |' + s[j:])
+PYEOF
+expect_dogfood "an anti-pattern row the Notion README did not count is caught" "does not say" "$d"
+
+d=$(fresh_copy)
+python3 - "$d/notion/ru-text-notion-skill.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '| Объясню чётко, по делу. | Объясню. |'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(
+    s.replace(old, old + '\n| Скажу коротко и ясно. | Скажу. |'))
+PYEOF
+expect_dogfood "a tell example the Notion README did not count is caught" "does not say" "$d"
+
+# The template's own heading is a consumer too: «Top 30» over thirty-one rows is the same
+# defect one level in, and it sits inside the file the gate measures.
+d=$(fresh_copy)
+python3 - "$d/notion/ru-text-notion-skill.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '## Anti-Patterns: Top 30'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, '## Anti-Patterns: Top 29'))
+PYEOF
+expect_dogfood "a template heading that miscounts its own section is caught" "does not head its section" "$d"
+
+# The Russian half of the Notion README was held by nothing: «сверяет с обеими половинами»
+# was true of the code and false of the cases.
+d=$(fresh_copy)
+python3 - "$d/notion/README.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = '- 12 правил типографики'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, '- 13 правил типографики'))
+PYEOF
+expect_dogfood "a Notion count left behind in the Russian half is caught" "does not say" "$d"
 
 printf 'selftest: build-release.sh\n'
 

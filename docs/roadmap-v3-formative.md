@@ -1,7 +1,7 @@
 # v3.0 — the formative direction
 
 Everything ru-text does today is a refusal. Stop-words, канцелярит, anti-patterns, the
-sixteen tells of machine-written prose: the corpus is a list of what not to write, and it
+seventeen tells of machine-written prose: the corpus is a list of what not to write, and it
 is good at it. v3.0 adds the other half — what a living, literate Russian sentence *does*,
 stated so that a checker can point at it.
 
@@ -93,6 +93,6 @@ other.
 
 ## What is NOT in this direction
 
-The sixteen tells of machine-written prose, the stop-word catalogue, the anti-patterns, the
+The seventeen tells of machine-written prose, the stop-word catalogue, the anti-patterns, the
 typography and the punctuation. Those are v2.0 and they are finished. This file is only for
 the half that says what to do.

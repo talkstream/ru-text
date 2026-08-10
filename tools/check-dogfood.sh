@@ -159,6 +159,334 @@ guard_complete() { # $1=label  $2=value  $3=claim list
   fi
 }
 
+# The Notion template states its own size four times, in two languages, and none of it was
+# measured. Three of the four were accurate; the fourth was not, and it overstated in the
+# direction that flatters — «9 признаков ИИ-текста в 4 категориях» over a section holding
+# FOUR tells with nine example rows. A reader counting tells would have found less than half
+# of what the line promised. The unit is stated here rather than inferred: typography and
+# anti-patterns are counted as table rows, because there each row IS the rule; tells are
+# counted as sections, because there a row is an EXAMPLE of a tell, not a tell.
+#
+# No completeness sweep, and the reason is not «it seemed like enough»: these numbers
+# describe one artefact and are quoted in one file, its own README, twice — once per
+# language. The «<n> признаков» form, the one that actually went wrong, is swept by the
+# tell guard above across the whole tree.
+notion_report() {
+  python3 - <<'PYN'
+import io, re, sys
+
+TEMPLATE = 'notion/ru-text-notion-skill.md'
+README = 'notion/README.md'
+
+def die(msg, detail=()):
+    sys.stdout.write('  FAIL  %s\n' % msg)
+    for line in detail:
+        sys.stdout.write('        %s\n' % line)
+    sys.exit(1)
+
+try:
+    lines = io.open(TEMPLATE, encoding='utf-8').read().split('\n')
+except OSError:
+    die('%s is missing, and notion/README.md states its size' % TEMPLATE)
+
+def section(head):
+    for i, line in enumerate(lines):
+        if line.startswith(head):
+            end = next((j for j in range(i + 1, len(lines)) if lines[j].startswith('## ')),
+                       len(lines))
+            return lines[i + 1:end]
+    die('%s no longer has a section «%s»' % (TEMPLATE, head))
+
+def rows(body):
+    """Table data rows: a header line followed by a separator, then rows until the table ends."""
+    n, i = 0, 0
+    while i < len(body):
+        if re.match(r'^\|', body[i]) and i + 1 < len(body) and re.match(r'^\|[\s:|-]+\|$',
+                                                                       body[i + 1]):
+            i += 2
+            while i < len(body) and re.match(r'^\|', body[i]):
+                n += 1
+                i += 1
+        else:
+            i += 1
+    return n
+
+typo = rows(section('## Typography Rules'))
+anti = rows(section('## Anti-Patterns'))
+tells_body = section('## AI-Text Tells')
+tell_cats = len([l for l in tells_body if l.startswith('### ')])
+tell_rows = rows(tells_body)
+
+CLAIMS = [
+    '- %d typography rules' % typo,
+    '- %d правил типографики' % typo,
+    '- %d anti-patterns' % anti,
+    '- %d антипаттернов' % anti,
+    'AI-text tells (neuroslop): %d categories, %d examples' % (tell_cats, tell_rows),
+    'Признаки ИИ-текста (нейрослоп): %d категории, %d примеров' % (tell_cats, tell_rows),
+]
+
+try:
+    body = io.open(README, encoding='utf-8').read()
+except OSError:
+    die('%s is missing, and it is the only place the template states its size' % README)
+
+def says(text, phrase):
+    return re.search(r'(?<![0-9A-Za-zА-Яа-яЁё])%s(?![0-9A-Za-zА-Яа-яЁё])' % re.escape(phrase),
+                     text, re.UNICODE) is not None
+
+stale = ['%s does not say «%s»' % (README, c) for c in CLAIMS if not says(body, c)]
+# The template describes its own size in a heading, and that heading is a consumer like any
+# other: «## Anti-Patterns: Top 30» over thirty-one rows is the same defect one level in.
+selfhead = '## Anti-Patterns: Top %d' % anti
+if not says('\n'.join(lines), selfhead):
+    stale.append('%s does not head its section «%s»' % (TEMPLATE, selfhead))
+if stale:
+    die('the Notion template holds %d typography rows, %d anti-pattern rows and %d tells '
+        'in %d examples, and these do not say so:' % (typo, anti, tell_cats, tell_rows),
+        stale)
+
+sys.stdout.write('  ok    the Notion template states its true size (%d / %d / %d tells in %d)\n'
+                 % (typo, anti, tell_cats, tell_rows))
+PYN
+}
+
+tells_report() { # $1 = verify | print
+  python3 - "$1" <<'PYT'
+import bisect, io, re, subprocess, sys
+
+ADDENDA = 'skills/ru-text/references/addenda.md'
+EXCLUDES = 'Not a neuroslop tell'
+MODE = sys.argv[1]
+
+RU = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять',
+      'десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать',
+      'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать', 'двадцать']
+EN = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
+      'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
+      'seventeen', 'eighteen', 'nineteen', 'twenty']
+
+# Six claims, five of them spelled out. A checker that only knew the numeral would have to
+# ask the prose to change, and the prose is right: Russian editorial practice spells small
+# numbers in running text. So the checker learns the word forms instead.
+#
+# The table stops at twenty ON PURPOSE. Past it Russian agreement changes — «двадцать один
+# признак», not «признаков» — and a checker that demanded «двадцать один признаков» would
+# be requiring an ungrammatical sentence in the repository whose subject is grammar. Past
+# twenty it refuses and says a person must choose the wording.
+CLAIMS = [
+    ('README.md',    '{RU} признаков машинного текста'),
+    ('README.md',    'справочнике {RU} таких признаков'),
+    ('README.md',    '{N} признаков машинного текста'),
+    ('README.en.md', '{EN} tells of machine-written text'),
+    ('README.en.md', 'holds {EN} such tells in all'),
+    ('README.en.md', '{EN} tells of machine writing'),
+    # The roadmaps describe the corpus in the present tense — «Those are v2.0 and they are
+    # finished» — so they are consumers, not history, and the wholesale `docs/` exemption
+    # was hiding three of them at the previous count.
+    ('docs/roadmap-v3-formative.md', '{EN} tells of machine-written prose:'),
+    ('docs/roadmap-v3-formative.md', 'The {EN} tells of machine-written prose,'),
+    ('docs/roadmap-v3-grammar.md', '{EN} tells of machine prose'),
+]
+
+def die(msg, detail=()):
+    sys.stdout.write('  FAIL  %s\n' % msg)
+    for line in detail:
+        sys.stdout.write('        %s\n' % line)
+    sys.exit(1)
+
+try:
+    text = io.open(ADDENDA, encoding='utf-8').read()
+except OSError:
+    die('%s is missing — the tell count cannot be read' % ADDENDA)
+
+# `\b` after the number, not a literal dot: `## AD-19 Uppercase` with the dot forgotten
+# used to be silently uncounted, which is a wrong PASS produced by a typo.
+parts = re.split(r'(?m)^(## AD-\d+\b[^\n]*)$', text)
+rules = [(parts[i].strip(), parts[i + 1]) for i in range(1, len(parts), 2)]
+if not rules:
+    die('%s no longer holds any AD- rule headings — the tell count cannot be read' % ADDENDA)
+
+excluded = [h for h, b in rules if EXCLUDES in b]
+n = len(rules) - len(excluded)
+if not 0 <= n <= 20:
+    die('the reference holds %d tells, and this checker knows no word form it can demand '
+        'for that number — extend the table by hand, minding Russian agreement' % n)
+ru, en = RU[n], EN[n]
+
+wants = [(path, tmpl.replace('{RU}', ru).replace('{EN}', en).replace('{N}', str(n)))
+         for path, tmpl in CLAIMS]
+
+if MODE == 'print':
+    sys.stdout.write('machine-text tells: %d (%d rules less %d not a tell)\n\n'
+                     % (n, len(rules), len(excluded)))
+    sys.stdout.write('— places that state the tell count —\n')
+    for path, want in wants:
+        sys.stdout.write('  %-46s %s\n' % (path, want))
+    sys.exit(0)
+
+# Bounded on both ends, and this is not decoration: «восемнадцать» CONTAINS «семнадцать»
+# letter for letter, so a plain substring test passed a README claiming eighteen over a
+# reference holding seventeen — a silent wrong PASS, measured. The same collision runs all
+# through the table: восемь⊃семь, одиннадцать⊃один, тринадцать⊃три, двадцать⊃два.
+# Case-insensitive, because a stale count most often opens a sentence: «Двадцать признаков…»
+# went straight past a case-sensitive net, and a net that only catches mid-sentence claims
+# catches the easy half.
+def bounded(phrase):
+    return re.compile(r'(?<![0-9A-Za-zА-Яа-яЁё])%s(?![0-9A-Za-zА-Яа-яЁё])' % re.escape(phrase),
+                      re.UNICODE | re.IGNORECASE)
+
+def flatten(text):
+    """Runs of whitespace to one space, keeping an offset back into the original.
+
+    Claims are PROSE, and prose wraps: «seventeen tells\nof machine prose» is one claim
+    written across two lines, and a checker reading line by line calls it missing. Matching
+    on the flattened text finds it; the offset map is what still lets the sweep name a line.
+    """
+    out, offsets, prev_space = [], [], False
+    for i, ch in enumerate(text):
+        if ch.isspace() or ch == '\u00a0':
+            if not prev_space:
+                out.append(' ')
+                offsets.append(i)
+            elif text[i] == '\n' and out and out[-1] == ' ' \
+                    and text.count('\n', offsets[-1], i + 1) >= 2:
+                # A blank line is a hard boundary, not a space: without it a claim deleted
+                # outright is satisfied by two unrelated paragraphs standing next to each
+                # other, and the gate goes green over a claim nobody makes any more. The
+                # upgrade happens HERE, on seeing the second newline, and not on a lookahead
+                # from the first: a lookahead of three characters also fires on a one-character
+                # line, marking a boundary where no blank line exists. No case can pin that
+                # difference — a one-character line breaks every pattern here anyway, so the
+                # divergence is unreachable — which is exactly why the condition had to go
+                # rather than be kept «just in case».
+                out[-1] = '\x00'
+            prev_space = True
+        else:
+            out.append(ch)
+            offsets.append(i)
+            prev_space = False
+    return ''.join(out), offsets
+
+stale = []
+for path, want in wants:
+    try:
+        body = io.open(path, encoding='utf-8').read()
+    except OSError:
+        stale.append('%s is missing, and it states the tell count' % path)
+        continue
+    if not bounded(want).search(flatten(body)[0]):
+        stale.append('%s does not say «%s»' % (path, want))
+if stale:
+    die('machine-text tells: the corpus holds %d (%d rules less %d not a tell), '
+        'and these do not say so:' % (n, len(rules), len(excluded)), stale)
+
+# The sweep looks for EVERY number the checker can spell, not only the current one. Sweeping
+# for the current value alone leaves the failure that actually happens uncaught: the corpus
+# moves, most sites are updated, and one is left behind saying the OLD number — which the
+# current value's patterns cannot see. It is scoped to number+noun, never a bare numeral or
+# a bare word: both READMEs cite «17 USC §102(b)», and both count thirteen platforms and
+# nine reference files in ordinary prose.
+# EVERY number the checker can spell, not a window around today's. A window of five was
+# tried and is wrong on this repository's own history: the tell count ran 1 -> 5 -> 7 -> 9
+# -> 17 -> 18 across the tags, so the last real movement was EIGHT. Worse, the only find
+# this sweep has ever made — «9 признаков ИИ-текста» in the Notion README over four tells —
+# sits at a distance of eight and a window of five silences it. The ordinary prose a full
+# sweep catches is not silenced by narrowing the net; it is named once, below.
+patterns = []
+for k in range(21):
+    patterns.append(re.compile(r'(?<![^\W\d_])%s\s+(?:таких\s+)?призна' % re.escape(RU[k]),
+                               re.UNICODE | re.IGNORECASE))
+    patterns.append(re.compile(r'(?<![^\W\d_])%s\s+(?:such\s+)?tells?(?![^\W\d_])'
+                               % re.escape(EN[k]), re.UNICODE | re.IGNORECASE))
+    patterns.append(re.compile(r'(?<![0-9A-Za-zА-Яа-яЁё])%d\s+(?:таких\s+)?призна' % k,
+                               re.UNICODE | re.IGNORECASE))
+    patterns.append(re.compile(r'(?<![0-9A-Za-zА-Яа-яЁё])%d\s+(?:such\s+)?tells?(?![^\W\d_])'
+                               % k, re.UNICODE | re.IGNORECASE))
+
+# Registered claims are subtracted from the LINE, not exempted by file. Skipping the two
+# claimant files wholesale is what let a stale sentence rot inside the very README the
+# checker was reading — the substring test said the phrase was present somewhere, and
+# nothing looked at the rest of the file.
+# Lines that put a numeral beside «признак» and are claims about nothing this checker
+# measures. Named ONE AT A TIME, with the reason, because a wholesale skip runs in both
+# directions: `docs/` was exempt for a season and hid three real stale claims while it
+# hid these two. Each entry is checked for still being there, so the list cannot rot.
+EXEMPT = [
+    ('docs/damage-disposition-proposal.md', 'различает их один признак',
+     'inside a verbatim quotation of the author — rewriting it would falsify the quote'),
+    ('skills/ru-text/references/info-style.md', 'Три признака слабого текста',
+     'corpus content: §C counts weaknesses of a text, not tells of a machine'),
+]
+
+registered = {}
+for path, want in wants:
+    registered.setdefault(path, []).append(want)
+gone = []
+for path, phrase, _why in EXEMPT:
+    try:
+        # EXACTLY one. The comment above says «named one at a time», and a substitution that
+        # blanks every occurrence does not keep that promise: one two-word entry would silence
+        # three unrelated stale sentences, and removing two of them would leave the gate quiet.
+        # Both entries occur once today, so this is the promise made enforceable while it is
+        # still true rather than after it stops being.
+        hits = len(bounded(phrase).findall(flatten(io.open(path, encoding='utf-8').read())[0]))
+        if hits == 0:
+            gone.append('%s no longer says «%s» — drop the exemption' % (path, phrase))
+        elif hits > 1:
+            gone.append('%s says «%s» %d times — an exemption names one line, not a phrase'
+                        % (path, phrase, hits))
+    except OSError:
+        gone.append('%s is gone, and an exemption still names it' % path)
+    registered.setdefault(path, []).append(phrase)
+if gone:
+    die('machine-text tells: an exemption names a line that is no longer there:', gone)
+
+try:
+    tracked = subprocess.check_output(['git', 'ls-files']).decode('utf-8').split('\n')
+except (subprocess.CalledProcessError, OSError):
+    die('this is not a git checkout, so the sweep for unregistered claims cannot run')
+
+# CHANGELOG.md records what the numbers WERE and must keep saying them; tools/ describes past
+# parser bugs by their numbers. Both are accounts of the past, and a checker that fails on an
+# accurate history gets switched off.
+#
+# `docs/` used to be here and no longer is. It was exempted wholesale for the same reason, and
+# the exemption ran in both directions: it hid three present-tense sentences in the roadmaps
+# saying «sixteen tells» over a reference that holds seventeen. A directory is not evidence
+# about the tense of the sentences inside it.
+SKIP = re.compile(r'^(CHANGELOG\.md|tools/|\.github/)')
+loose = []
+for path in tracked:
+    if not path or SKIP.match(path) or not re.search(r'\.(md|json|ya?ml|sha256)$', path):
+        continue
+    try:
+        body = io.open(path, encoding='utf-8').read()
+    except (OSError, UnicodeDecodeError):
+        continue
+    flat, offsets = flatten(body)
+    for want in registered.get(path, []):
+        # Same width, so the offset map stays aligned: a claim is blanked, never removed.
+        flat = bounded(want).sub(lambda m: ' ' * (m.end() - m.start()), flat)
+    starts = [0]
+    for i, ch in enumerate(body):
+        if ch == '\n':
+            starts.append(i + 1)
+    for pat in patterns:
+        for m in pat.finditer(flat):
+            at = offsets[m.start()] if m.start() < len(offsets) else len(body)
+            line_no = bisect.bisect_right(starts, at)
+            loose.append('%s:%d: %s' % (path, line_no,
+                                        body.split('\n')[line_no - 1].strip()[:100]))
+if loose:
+    die('machine-text tells: a count of tells appears where no claim is registered — '
+        'add a row or rephrase the line:', loose)
+
+sys.stdout.write('  ok    machine-text tells: %d place(s) state %d, and the reference agrees\n'
+                 % (len(CLAIMS), n))
+PYT
+}
+
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT INT TERM
 
@@ -171,6 +499,8 @@ if [ "${1:-}" = "--print" ]; then
   printf '%s\n' "$CATALOG_CLAIMS" | while IFS='|' read -r f tmpl; do
     printf '  %-46s %s\n' "$f" "$(printf '%s' "$tmpl" | sed "s/%s/$CAT/")"
   done
+  printf '\n'
+  tells_report print
   exit 0
 fi
 
@@ -218,6 +548,9 @@ elif [ "$skill_words" -le "$skill_budget" ]; then
 else
   bad "SKILL.md is $skill_words words, over the stated budget of $skill_budget — trim it, or move the budget on purpose"
 fi
+
+if tells_report verify; then :; else fail=$((fail + 1)); fi
+if notion_report; then :; else fail=$((fail + 1)); fi
 
 prompt_of() { # $1=file — the install prompt as one line, or empty
   python3 - "$1" <<'PYX'

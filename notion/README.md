@@ -28,7 +28,7 @@ The skill template is a condensed subset of the corpus:
 - 12 typography rules (always applied)
 - 92 stop-words across 8 categories with replacements
 - 30 anti-patterns (bureaucratic language, passive voice, bloat, pleonasms)
-- 9 AI-text tells (neuroslop) across 4 categories
+- AI-text tells (neuroslop): 4 categories, 9 examples
 - Quality checklist
 
 For the full set of 2,000+ linguistic atoms across 7 domains, use the [complete plugin](https://github.com/talkstream/ru-text) with Claude Code, Codex CLI, Gemini CLI, Cursor, or OpenClaw.
@@ -94,7 +94,7 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 - 12 правил типографики (применяются всегда)
 - 92 стоп-слова в 8 категориях с заменами
 - 30 антипаттернов (канцелярит, пассивный залог, многословие, плеоназмы)
-- 9 признаков ИИ-текста (нейрослоп) в 4 категориях
+- Признаки ИИ-текста (нейрослоп): 4 категории, 9 примеров
 - Чеклист качества
 
 Полный набор из более чем 2 000 лингвистических атомов в 7 доменах доступен через [полную версию плагина](https://github.com/talkstream/ru-text) для Claude Code, Codex CLI, Gemini CLI, Cursor или OpenClaw.
