@@ -185,6 +185,62 @@ guard_complete() { # $1=label  $2=value  $3=claim list
   fi
 }
 
+# The two install guides, and nothing compared them until now. `62a164f` corrected «re-running
+# the same command updates it» — a claim that is false, and false in the direction that leaves
+# people on an old corpus — in `INSTALL.md` alone. `INSTALL.en.md` carried the disproved
+# instruction for ELEVEN more days, while the English README had already begun telling readers
+# the file was fixed.
+#
+# Prose translates and must differ; COMMANDS do not. So the invariant is the set of commands
+# each guide quotes, compared as sets: a command present in one and absent from the other is a
+# correction applied to half the audience. Trailing comments are stripped before comparing —
+# they are prose and are supposed to differ.
+guides_agree() {
+  python3 - <<'PYG'
+import io, re, sys
+
+FILES = ('INSTALL.md', 'INSTALL.en.md')
+
+def commands(path):
+    try:
+        lines = io.open(path, encoding='utf-8').read().split('\n')
+    except OSError:
+        return None
+    out, fence = [], False
+    for line in lines:
+        if line.lstrip().startswith('```'):
+            fence = not fence
+            continue
+        if fence:
+            stripped = re.sub(r'\s*#.*$', '', line).strip()
+            if stripped:
+                out.append(stripped)
+    return out
+
+sets = {}
+for path in FILES:
+    got = commands(path)
+    if got is None:
+        sys.stdout.write('  FAIL  %s is missing, and its pair quotes commands it must match\n' % path)
+        sys.exit(1)
+    sets[path] = set(got)
+
+only_ru = sorted(sets['INSTALL.md'] - sets['INSTALL.en.md'])
+only_en = sorted(sets['INSTALL.en.md'] - sets['INSTALL.md'])
+if only_ru or only_en:
+    sys.stdout.write('  FAIL  the install guides quote different commands — a correction '
+                     'applied to one half:\n')
+    for c in only_ru:
+        sys.stdout.write('        only in INSTALL.md:    %s\n' % c[:110])
+    for c in only_en:
+        sys.stdout.write('        only in INSTALL.en.md: %s\n' % c[:110])
+    sys.exit(1)
+
+sys.stdout.write('  ok    both install guides quote the same %d command(s)\n'
+                 % len(sets['INSTALL.md']))
+PYG
+}
+
 # The Notion template states its own size four times, in two languages, and none of it was
 # measured. Three of the four were accurate; the fourth was not, and it overstated in the
 # direction that flatters — «9 признаков ИИ-текста в 4 категориях» over a section holding
@@ -581,6 +637,7 @@ else
 fi
 
 if tells_report verify; then :; else fail=$((fail + 1)); fi
+if guides_agree; then :; else fail=$((fail + 1)); fi
 if notion_report; then :; else fail=$((fail + 1)); fi
 
 prompt_of() { # $1=file — the install prompt as one line, or empty

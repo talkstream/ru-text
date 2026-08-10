@@ -685,6 +685,24 @@ io.open(p, 'w', encoding='utf-8').write(
 PYEOF
 expect_dogfood "an install prompt that drifted between files is caught" "must quote it identically" "$d"
 
+# The two install guides, which nothing compared. `62a164f` corrected «re-running the command
+# updates it» in INSTALL.md and not in INSTALL.en.md, and the English half carried the
+# disproved instruction for eleven days while the English README began asserting it was fixed.
+# Prose translates; COMMANDS do not, so the set of commands each file quotes must be the same,
+# and a command that exists in one guide and not the other is a half-applied correction.
+d=$(fresh_copy)
+python3 - "$d/INSTALL.en.md" <<'PYEOF'
+import io, sys
+p = sys.argv[1]
+s = io.open(p, encoding='utf-8').read()
+old = 'rsync -a --delete ru-text/skills/ru-text/ ~/.agents/skills/ru-text/'
+assert s.count(old) == 1, 'anchor moved; fix the fixture'
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'cp -r ru-text/skills/ru-text ~/.agents/skills/'))
+PYEOF
+expect_dogfood "a command that exists in one install guide and not the other is caught" \
+  "the install guides quote different commands" "$d"
+
+
 # The golden set's own size, stated in prose. Two AD-17 cases landed and the figure stayed at
 # 22 — a hand-maintained number in the file that documents the measurement, which is the defect
 # this release spent two days removing from the READMEs.
