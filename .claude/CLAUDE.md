@@ -4,7 +4,7 @@
 **Repo:** https://github.com/talkstream/ru-text
 **Site:** https://ru-text.org
 **Sponsors:** https://github.com/sponsors/talkstream
-**Version:** 2.2.0 | **License:** MIT | **Platforms:** Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, Google Antigravity, OpenClaw, Notion
+**Version:** 2.3.0 | **License:** MIT | **Platforms:** Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, Google Antigravity, OpenClaw, Notion
 
 Over 2,000 independently formulated linguistic atoms across 7 thematic areas. No verbatim quotes, full source attribution.
 
@@ -56,6 +56,29 @@ claude plugins marketplace update ru-text   # refresh marketplace cache
 - NEVER imply source authors endorse this plugin
 - NEVER use author names in section headers as if they endorse (e.g., "Nora Gal's principles" → "Clean language principles, cf. N. Gal")
 - IP notice references: Article 1259(5) of the Russian Civil Code, 17 USC §102(b), Berne Convention
+
+### How a rule earns its place
+
+**A rule is justified by the LETTER of the corpus and by an inventory checked against the
+blind key — never by the outcome of a single run.** Adopted 11.08.2026, after a carve-out
+shipped with a justification that did not survive its own control: «one pass removed these
+words six times» was true and useless, because the same prompt on the same file released them
+in all three corpus snapshots tried, including the one whose run produced the removals.
+
+Practically, three tests before a rule is written:
+
+- **Does the corpus TEXT command something wrong?** That is checkable by reading, it is
+  deterministic, and it stays true tomorrow. It is the only ground that holds.
+- **Is the inventory direction-checked against the key?** A blind judge's VOTE is a fact; the
+  causal story he writes beside it is a hypothesis, because he does not know which side was
+  the intervention. One signal on this line was withdrawn when its attribution turned out
+  inverted — the judge had described the untouched original as the damaged side.
+- **Would the claim survive a second run?** If it rests on «the tool does X», it is a property
+  of a coin whose bias nobody has measured. Say what the text now permits and forbids; never
+  how often the model will do it.
+
+Corollary for release notes and README: claims about the corpus text ship; claims about run
+outcomes do not.
 
 ### Content
 - New rules from experience → `addenda.md` (AD-1, AD-2, …), NOT domain files

@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-08-11
+
+### Added
+- **B.2 — a carve-out for the live register.** Three entries of the stop-word catalogue —
+  `ну|убрать`, `кстати|убрать или встроить в структуру`, `как-то|убрать или уточнить` —
+  command deletion without any condition, and in live speech that command is wrong. In the
+  разговорный register of §F — a message to a colleague, a support chat, a personal blog —
+  those three entries no longer apply. Everywhere else they apply as before.
+
+  Three things in the rule are there because a measurement demanded them. **The unit is the
+  SEGMENT, not the file,** and the register signs must be named in the remark: one document
+  carries both registers routinely — a work-chat message with a client letter drafted inside
+  it is the ordinary case. **Incidentality is refused in both directions:** in a live register
+  even the «кстати» that opens the central fact is released, and in a published one even the
+  honestly incidental «кстати» stays a finding. **The neuroslop cluster takes the tie-break**
+  — three or more distinct addenda tells in a segment and the carve-out does not apply — so
+  machine text cannot wear a conversational coat to free its own evidence.
+
+  Four golden cases pin its four branches: register for «ну» (32), the crossed axes where
+  register and incidentality order opposite verdicts (33), «как-то» (34), and slop imitating
+  chat (35). The set grows 31 → 35.
+
+  Why the three entries and not the catalogue: three blind judges, reading twenty pairs
+  without knowing which side was which, independently named deletions of exactly these words
+  as a reason a checked text reads deader than the original.
+
+  ⚠ **What this release does NOT claim.** It does not claim the check now produces livelier
+  text, and it does not claim these words survive more often. A controlled measurement — the
+  same prompt and file across three corpus snapshots, including the one whose run produced the
+  original deletions — released the words in all three arms. The corpus version is not the
+  cause, and no frequency claim is supported in either direction. What changed, and what is
+  checkable by reading a diff, is the letter of the catalogue.
+
+### Fixed
+- **Two install guides that nothing compared.** A correction of 30.07 — «re-running the
+  install command does not update a copy install» — went into `INSTALL.md` alone, and
+  `INSTALL.en.md` carried the disproved instruction for eleven more days. Prose translates and
+  must differ; COMMANDS do not, so a gate now compares the set of commands each guide quotes.
+  Both quote the same 21 today.
+- **The register carve-out was first called B.1, and B.1 was taken** — by the carve-out for an
+  amplifier at an admission, which golden case 29 references eleven times. Renamed, with the
+  reason recorded so the skipped number is not read as an accident.
+
+### Internal
+- The two install guides are compared by the set of commands each quotes — the gate that
+  would have caught the eleven-day drift above. Selftest 158 → 159 cases.
+- `docs/roadmap-v2.1-conservation.md` carries the third panel, the rule it produced, the claim
+  that was withdrawn and the standard adopted after it: **a rule is justified by the letter of
+  the corpus and by an inventory checked against the blind key — never by the outcome of a
+  single run.**
+
 ## [2.2.0] - 2026-08-10
 
 The narrowing of 2.1.0 never reached anyone. `2bcbe74` landed on main AFTER the v2.1.0 tag —
@@ -61,6 +112,14 @@ repair, whatever the smallness of the diff.
   of deliberately broken examples, and the setup guide beside it was never considered.
 - **Three stale counts in the roadmaps** saying «sixteen tells» in the present tense over a
   reference that holds seventeen.
+- **The selftest could exit ZERO without finishing.** *(Recorded after the fact: this shipped
+  in 2.2.0 and was left out of this entry; the omission was found while preparing 2.3.0 and is
+  written here rather than misattributed to the later release.)* A counter was incremented and
+  never initialised; under `set -eu` that aborts bash 3.2 — which is `/bin/sh` on macOS — and
+  the EXIT trap then reset the status. A run that died mid-way reported nothing and returned
+  success, and `gates.sh` read it as a pass. The suite now cannot exit zero without reaching
+  its summary, for any caller including CI, and `gates.sh` additionally requires the summary
+  line.
 
 ### Internal
 - The number of machine-text tells, the Notion template's own size, and the typography of the

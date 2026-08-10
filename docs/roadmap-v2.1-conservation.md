@@ -441,6 +441,67 @@ A carve-out is a change to a rule's SCOPE, so the acceptance test is not «does 
 but «which existing finding does it lose» — and that test has to run before the wording is
 argued about.
 
+## The third panel, the rule it produced, and the claim that was withdrawn
+
+**Panel 3 (09.08.2026)** judged ru-text 2.1.0 — AD-18, the carve-outs, the repaired dash
+budget — on ten pairs, three of them the anchor texts panel 1 had used. Result: **6 pairs of
+10 for the unchecked side, 3 unanimous, and one pair unanimous the OTHER way — the first
+across three panels.** Votes 18 : 12 : 0, against 24 : 4 : 2 in panel 1. On the anchor
+bridge, unanimity against the check went from 3 of 3 to 0 of 3.
+
+The pre-registered rule put that in a grey zone and prescribed +5 pairs. The extension was
+**cancelled by arithmetic**: «shift proven» required ≤ 2 unanimous-for-before and there were
+already 3, so the only reachable outcomes were «did not move» and a final «not proven» — and
+both prescribe the same next step. Five pairs would have bought a label and changed no action.
+
+**A confound found in the same reading, and it works against the newer version:** judges
+identified the unchecked side by TYPOS. 2.1.0 fixes typos and the run that built panels 1–2
+did not, so the channel did not exist before.
+
+### What shipped from it: B.2, the live-register carve-out
+
+Three catalogue entries — `ну`, `кстати`, `как-то` — command deletion without condition, and
+in live speech that command is wrong. Three blind judges independently named such deletions
+as a reason checked text reads deader. The carve-out releases those three entries in the
+разговорный register of §F, refuses incidentality as a criterion in both directions, and
+gives the neuroslop cluster the tie-break so machine text cannot wear a conversational coat
+to free its own evidence. Four golden cases pin its four branches.
+
+### The claim that was withdrawn, and why the record says so here
+
+The rule was first justified by a run outcome: one pass over twenty pairs had removed those
+lemmas six times. **A controlled measurement on 11.08 retired that justification.** The same
+adversarial prompt on the same file, differing only in which corpus snapshot the run reads,
+released the particles in all three arms — current main with the rule, v2.2.0 without it, and
+**v2.1.0, the exact version whose run produced the six removals.** The checking procedure had
+not changed in between. So the corpus version is not the cause, and the removals were one
+sampling of a decision that varies run to run.
+
+What stands: the catalogue no longer commands the deletion, and that is checked by reading a
+diff. What does not stand: any claim that the rule changes how often the particles survive.
+Four samples — one removing, three releasing — support no frequency claim in either direction.
+Two of the three arms released the particles **against** the letter of the catalogue, which
+does not excuse the old wording; it indicts it. Without the carve-out the correct outcome
+depended on the model disobeying the corpus.
+
+### Panel 4 is cancelled, and the condition was pre-registered
+
+A process audit had written the condition down in advance: if the change does not move the
+outcome, a panel judging that outcome is meaningless. The condition fired in a stronger form
+than written — the defect does not reproduce at all — so a panel would have judged a single
+roll of the same coin. **Measuring the base rate is deliberately not bought:** N repeats give
+a 95% upper bound near 3/N, so ten sessions buy «no more than ~30%» and twenty buy «~15%», and
+no remaining decision depends on that number.
+
+### The standard adopted after it
+
+**A rule is justified by the letter of the corpus and by an inventory checked against the
+blind key — never by the outcome of a single run.** Everything on this line that rests on
+reading text survives: the withdrawal of the «voice» signal (its attribution turned out
+inverted when checked against the key), the phantom removals produced by a literal
+non-breaking space in a counter, «all six removals follow §B» by grep, AD-18, the gates.
+Everything that rested on «the tool does X» has been withdrawn.
+
 ## The trap, stated so it is not walked into
 
 «Write livelier» is not a rule, and it lands hardest on the two registers the author has

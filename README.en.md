@@ -10,16 +10,18 @@ ru-text is a Russian proofreading skill for AI agents. It works inside the agent
 
 Your words, your style and your tone it does not touch: those are not errors. And it will not rewrite your file until you ask it to.
 
-## What's new in 2.2.0
+## What's new in 2.3.0
 
-The skill is quieter. It used to activate on any Russian output and **report** its edits; now it fixes typography silently and offers the deeper reading on request.
+The stop-word catalogue no longer commands the deletion of «ну», «кстати» and «как-то» unconditionally. In the conversational register — social media, a personal blog, a support chat, a message to a colleague — those three entries no longer apply. Everywhere else they apply as before.
 
-- **No more lists of edits nobody asked for.** Ask for a translation and you get a translation; ask for a plan and you get a plan. Typography is still fixed everywhere — you just stop hearing about it.
-- **The stop-word table now carries the condition** it never had: it applies when the text is being written or edited on request.
-- **Reinstalling does not update, and the docs now say so.** Repeating the install command places the new version inside the old one, the previous release stays on top, and the agent reads that. Measured; [INSTALL.en.md](INSTALL.en.md) gives the replacement and the command that proves the skill is installed exactly once.
-- **The Notion guide** claimed more AI-text tells than it holds. Corrected; the figure is now counted by a gate rather than remembered — the exact numbers are in the [CHANGELOG](CHANGELOG.md).
+- **The unit is the segment, not the file.** One document carries both registers: a work-chat message often contains a client letter in draft. The skill has to name the register signs in its remark.
+- **Incidentality does not decide.** In live speech even the «кстати» that opens the main fact is released; in a business letter even the honestly incidental «кстати» stays a finding.
+- **Machine text cannot hide behind a conversational coat.** Three or more neuroslop tells in a segment and the carve-out does not apply.
+- **Four reference cases hold the rule's four branches.** The set grows from 31 to 35.
 
-The activating decision is made by the skill's description, not by the install prompt — so editing the prompt changes nothing for anyone already installed. Updating is the only way to get this. [What changed](CHANGELOG.md) · [Release](https://github.com/talkstream/ru-text/releases/tag/v2.2.0)
+Why these three words: in one run over 20 pairs of live texts the skill cut them six times. Three judges on our blind panel, without knowing which side was which, independently named such cuts as a reason a checked text reads deader than the original.
+
+⚠ **What this release does not claim:** that text is now livelier, or that these words survive more often. A controlled measurement across three corpus snapshots — including the one whose run cut them — left them in place in all three snapshots, so the corpus version is not the cause and no claim about frequency is supported. But two runs of the three did that AGAINST the letter of the catalogue: the correct outcome rested on the model disobeying the corpus. What changed is the letter of the instruction, and that is visible in a diff. [What changed](CHANGELOG.md) · [Release](https://github.com/talkstream/ru-text/releases/tag/v2.3.0)
 
 ## Neuroslop
 
