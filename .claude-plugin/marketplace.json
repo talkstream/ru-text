@@ -12,6 +12,7 @@
   "plugins": [
     {
       "name": "ru-text",
+      "displayName": "ru-text",
       "source": "./",
       "version": "2.3.0",
       "description": "Russian text quality for AI agents — neuroslop cleanup, typography, information style, editorial standards, UX writing, business correspondence. 2,000+ linguistic atoms, loaded on demand.",
