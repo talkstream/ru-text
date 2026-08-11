@@ -43,6 +43,33 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.agents\skills" | Out-Null
 Copy-Item -Recurse ru-text\skills\ru-text "$env:USERPROFILE\.agents\skills\ru-text"
 ```
 
+## One command
+
+Two public installers take the skill straight from this repository, with no cloning. Both read
+the `main` branch, so what they install is always current: they pin nothing, and there is
+nothing to update on their side.
+
+**skills** — the Vercel Labs catalogue. Installs all three skills at once:
+
+```bash
+npx skills add talkstream/ru-text
+```
+
+Without flags it asks which skills to install and into which agents; `-y --all` answers for
+you, and `-g` installs at user level instead of into the project. By default they land in
+`.agents/skills/` inside the project, with links from `.claude/skills/`.
+
+**skillsbd** — the NeuralDeep catalogue. Installs one named skill:
+
+```bash
+npx skillsbd add talkstream/ru-text/ru-text
+```
+
+It goes to `.skills/ru-text/`. The corpus references come across in full either way.
+
+Verified 12.08.2026 by a sandboxed run: both commands exited 0, and `skills` reported
+«Found 3 skills → Installed 3 skills».
+
 ## Exceptions
 
 These platforms either do not read the shared directory, or read more than it.

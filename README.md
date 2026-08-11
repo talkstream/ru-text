@@ -18,6 +18,8 @@ ru-text — навык вычитки русского текста для ИИ
 
 Обычно этого достаточно: где его площадка держит навыки, агент знает лучше, чем инструкция, написанная год назад. Работает в Claude Code, Codex и ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw и Notion.
 
+Если привычнее команда — навык ставят два установщика: `npx skills add talkstream/ru-text` кладёт в проект все три навыка, `npx skillsbd add talkstream/ru-text/ru-text` — один, в свой каталог. Подробности и флаги — в [INSTALL.md](INSTALL.md#одной-командой).
+
 В ChatGPT эта фраза не нужна — там есть карточка в каталоге плагинов:
 
 [![Установить в ChatGPT и Codex](https://img.shields.io/badge/%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%82%D1%8C_%D0%B2_ChatGPT_%D0%B8_Codex-000000?style=for-the-badge)](https://chatgpt.com/plugins/plugins_6a6b66a0142c81918659256b4a12adba)

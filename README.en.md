@@ -20,6 +20,8 @@ Hand this sentence to your AI agent:
 
 That is usually enough: the agent knows where its platform keeps skills better than a year-old instruction does. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
 
+If you would rather run a command, two installers do it: `npx skills add talkstream/ru-text` puts all three skills into the project, and `npx skillsbd add talkstream/ru-text/ru-text` installs one into a directory of its own. Details and flags are in [INSTALL.en.md](INSTALL.en.md#one-command).
+
 In ChatGPT you do not need that sentence — there is a card in the plugin directory:
 
 [![Install in ChatGPT and Codex](https://img.shields.io/badge/Install_in_ChatGPT_and_Codex-000000?style=for-the-badge)](https://chatgpt.com/plugins/plugins_6a6b66a0142c81918659256b4a12adba)
