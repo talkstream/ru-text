@@ -65,11 +65,11 @@ Hand this sentence to your AI agent:
 
 That is usually enough: the agent knows where its platform keeps skills better than a year-old instruction does. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
 
-In ChatGPT and Codex you do not need it — there is a card in the plugin directory:
+In ChatGPT you do not need that sentence — there is a card in the plugin directory:
 
 [![Install in ChatGPT and Codex](https://img.shields.io/badge/Install_in_ChatGPT_and_Codex-000000?style=for-the-badge)](https://chatgpt.com/plugins/plugins_6a6b66a0142c81918659256b4a12adba)
 
-Open it and press the plus button. The skill then works in ChatGPT — on the web, in the app and on the phone — and in Codex inside the desktop app.
+Open it and press the plus button. The skill then works in ChatGPT — in the browser, in the desktop app and on the phone. Codex runs it inside that same desktop app; in Codex CLI it is the sentence above that installs it.
 
 Skills are picked up when a session starts, so start a new one.
 
