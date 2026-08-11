@@ -805,9 +805,9 @@ python3 - "$d/README.md" <<'PYEOF'
 import io, sys
 p = sys.argv[1]
 s = io.open(p, encoding='utf-8').read()
-old = 'справочнике семнадцать таких признаков'
+old = 'Всего таких признаков 17'
 assert s.count(old) == 1, 'anchor moved; fix the fixture'
-io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'справочнике шестнадцать таких признаков'))
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'Всего таких признаков 16'))
 PYEOF
 expect_dogfood "one README left behind when the tells move is caught" "the corpus holds 17" "$d"
 
@@ -829,11 +829,11 @@ expect_dogfood "a stale count left inside a claimant README is caught" "no claim
 # Every claim row, one at a time. Mutating all six at once proves nothing: a checker holding
 # one row would still fail. A reviewer showed the list could be cut from six rows to two and
 # the fixtures stayed green — four of the six sites were pinned by nothing.
-for claim in 'семнадцать признаков машинного текста|семнадцать признаков письма машины' \
-             'справочнике семнадцать таких признаков|справочнике ровно столько таких признаков' \
+for claim in '17 признаков машинного текста (нейрослоп)|17 признаков письма машины (нейрослоп)' \
+             'Всего таких признаков 17|Всего таких признаков ровно столько' \
              '17 признаков машинного текста с|17 признаков письма машины с' \
              'seventeen tells of machine-written text|seventeen marks of machine-written text' \
-             'holds seventeen such tells in all|holds seventeen such items in all' \
+             'There are seventeen such tells in all|There are seventeen such items in all' \
              'seventeen tells of machine writing, with|seventeen tells of machine prose, with'; do
   old=${claim%%|*}
   new=${claim#*|}
@@ -894,18 +894,20 @@ io.open(p, 'w', encoding='utf-8').write(s.replace(old, '- 31 anti-patterns'))
 PYEOF
 expect_dogfood "a Notion count left behind in the English half is caught" "does not say" "$d"
 
-# «восемнадцать» CONTAINS «семнадцать», letter for letter. A plain substring test therefore
-# accepted a README claiming EIGHTEEN over a reference holding seventeen, and passed silently:
-# the sweep would have caught the word, but the claim was subtracted from the line first. The
-# same collision runs through the table — восемь⊃семь, одиннадцать⊃один, тринадцать⊃три.
+# A claim whose numeral CONTAINS the true one. The collision was found on the word forms —
+# «восемнадцать» holds «семнадцать» letter for letter, and a substring test passed a README
+# claiming EIGHTEEN over a reference holding seventeen. The Russian sites state the count in
+# digits now (§G.1 of editorial-grammar: ten and up are digits), so the case is pinned on the
+# digit form, where the same collision lives: «117» contains «17». The word forms `bounded()`
+# still knows are what catches a stale claim that arrives spelled out.
 d=$(fresh_copy)
 python3 - "$d/README.md" <<'PYEOF'
 import io, sys
 p = sys.argv[1]
 s = io.open(p, encoding='utf-8').read()
-old = 'и семнадцать признаков машинного текста'
+old = 'Всего таких признаков 17'
 assert s.count(old) == 1, 'anchor moved; fix the fixture'
-io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'и восемнадцать признаков машинного текста'))
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, 'Всего таких признаков 117'))
 PYEOF
 expect_dogfood "a claim whose numeral CONTAINS the true one is caught" "the corpus holds 17" "$d"
 
@@ -993,10 +995,10 @@ python3 - "$d/README.en.md" <<'PYEOF'
 import io, sys
 p = sys.argv[1]
 s = io.open(p, encoding='utf-8').read()
-old = 'The reference holds seventeen such tells in all.'
+old = 'There are seventeen such tells in all.'
 assert s.count(old) == 1, 'anchor moved; fix the fixture'
 io.open(p, 'w', encoding='utf-8').write(
-    s.replace(old, 'The reference holds seventeen such\n\ntells in all.'))
+    s.replace(old, 'There are seventeen such\n\ntells in all.'))
 PYEOF
 expect_dogfood "a claim split by a blank line is not counted as present" "the corpus holds 17" "$d"
 

@@ -361,12 +361,17 @@ EN = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'n
 # признак», not «признаков» — and a checker that demanded «двадцать один признаков» would
 # be requiring an ungrammatical sentence in the repository whose subject is grammar. Past
 # twenty it refuses and says a person must choose the wording.
+#
+# The Russian sites state the count in DIGITS, and that is the corpus talking about itself:
+# `editorial-grammar.md` §G.1 gives «10+ | digits» for narrative text, and seventeen is past
+# ten. The word forms above are kept because English prose spells it out and because a stale
+# claim may still arrive spelled — the sweep must recognise both to catch it.
 CLAIMS = [
-    ('README.md',    '{RU} признаков машинного текста'),
-    ('README.md',    'справочнике {RU} таких признаков'),
-    ('README.md',    '{N} признаков машинного текста'),
+    ('README.md',    '{N} признаков машинного текста (нейрослоп)'),
+    ('README.md',    'Всего таких признаков {N}'),
+    ('README.md',    '{N} признаков машинного текста с'),
     ('README.en.md', '{EN} tells of machine-written text'),
-    ('README.en.md', 'holds {EN} such tells in all'),
+    ('README.en.md', 'There are {EN} such tells in all'),
     ('README.en.md', '{EN} tells of machine writing'),
     # The roadmaps describe the corpus in the present tense — «Those are v2.0 and they are
     # finished» — so they are consumers, not history, and the wholesale `docs/` exemption
