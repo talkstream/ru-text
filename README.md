@@ -59,6 +59,12 @@ ru-text — навык вычитки русского текста для ИИ
 
 Обычно этого достаточно: где его площадка держит навыки, агент знает лучше, чем инструкция, написанная год назад. Работает в Claude Code, Codex и ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw и Notion.
 
+В ChatGPT и Codex она не нужна — там есть карточка в каталоге плагинов:
+
+[![Установить в ChatGPT и Codex](https://img.shields.io/badge/%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%82%D1%8C_%D0%B2_ChatGPT_%D0%B8_Codex-000000?style=for-the-badge)](https://chatgpt.com/plugins/plugins_6a6b66a0142c81918659256b4a12adba)
+
+Откройте её и нажмите «плюс». Дальше навык доступен в ChatGPT — в вебе, в приложении и на телефоне — и в Codex внутри десктопного приложения.
+
 Навыки подхватываются при старте сессии, поэтому начните новую.
 
 Проверьте на живом тексте: дайте агенту абзац и попросите «вычитай». В ответе придут исправленный вариант и список правок. Списка нет — навык не поднялся, смотрите [INSTALL.md](INSTALL.md).

@@ -65,6 +65,12 @@ Hand this sentence to your AI agent:
 
 That is usually enough: the agent knows where its platform keeps skills better than a year-old instruction does. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
 
+In ChatGPT and Codex you do not need it — there is a card in the plugin directory:
+
+[![Install in ChatGPT and Codex](https://img.shields.io/badge/Install_in_ChatGPT_and_Codex-000000?style=for-the-badge)](https://chatgpt.com/plugins/plugins_6a6b66a0142c81918659256b4a12adba)
+
+Open it and press the plus button. The skill then works in ChatGPT — on the web, in the app and on the phone — and in Codex inside the desktop app.
+
 Skills are picked up when a session starts, so start a new one.
 
 Then try it on real text: give the agent a paragraph and ask it to "вычитай" ("proofread this"). What comes back is a corrected version and a list of edits. No list — the skill did not load; see [INSTALL.en.md](INSTALL.en.md).
