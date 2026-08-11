@@ -7,7 +7,7 @@ description: >
 metadata:
   openclaw:
     always: true
-    emoji: "\U0001F4DD"
+    emoji: "📝"
     homepage: "https://ru-text.org"
 ---
 
