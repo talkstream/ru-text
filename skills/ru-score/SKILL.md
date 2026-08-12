@@ -24,6 +24,13 @@ alongside it. Locate that folder once, then read the named files from it:
 
 - Look for a directory named `references` whose parent directory is named `ru-text`, and
   which contains `info-style.md`. Every file named below sits in that folder.
+- **Search with file tools, never with a shell.** `Glob` on a pattern like
+  `**/ru-text/references/info-style.md`, or whatever file search the host offers, then
+  `Read`. This command has no use for a command line: `Bash` is on its `disallowed-tools`
+  list, and hosts that do not implement that field still refuse it — measured in Claude
+  Cowork on 12.08.2026, where an opening `ls` returned «Permission to use Bash has been
+  denied» in red before the search found the corpus anyway. The call bought nothing and
+  cost the reader a scare.
 - In Claude Code the plugin root is also available directly, which saves the search.
 - **Do not guess a path.** If the folder cannot be found, say so and stop — a check run
   against remembered rules instead of the corpus is not this command, and reporting one
