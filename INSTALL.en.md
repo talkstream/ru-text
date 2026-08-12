@@ -159,16 +159,21 @@ and ask Claude Code to read and edit pages.
 
 These take the skill as an archive, and the archive is already built: `ru-text-skill.zip`
 from the [latest release](https://github.com/talkstream/ru-text/releases/latest). It holds a
-single top-level folder, `ru-text/` — the shape both surfaces require — and 284 KB against
-their 30 MB ceiling.
+single top-level folder, `ru-text/` — the shape both surfaces require — and 284 KB unpacked against their 30 MB ceiling, which is measured unpacked too.
 
-**claude.ai and the app.** Settings → Features → upload the archive. It needs a paid plan
+**claude.ai and the app.** Customize → Skills → «+ Create skill» → «Upload a skill»
+([claude.ai/customize/skills](https://claude.ai/customize/skills); [help article](https://support.claude.com/en/articles/12512180-use-skills-in-claude)). It needs a paid plan
 (Pro, Max, Team or Enterprise) with code execution enabled. The skill is yours alone: it is
 not shared with a team and admins cannot manage it centrally.
 
 **The Claude API.** The same archive goes to `POST /v1/skills` with the `skills-2025-10-02`
 beta header; the skill then joins a request through `container.skills` alongside the code
-execution tool. The store is private to your workspace — there is no public catalogue.
+execution tool, which needs a second header of its own, `code-execution-2025-08-25`
+([documentation](https://platform.claude.com/docs/en/build-with-claude/skills-guide)). The store is private to your workspace — there is no public catalogue.
+
+⚠ We checked the archive shape against the documentation but have uploaded to neither
+claude.ai nor the API: «a single top-level entry» comes from their text, not from our own
+run.
 
 ⚠ Only the main `ru-text` skill goes there. `ru-check` and `ru-score` do not pass and are
 not needed: their slash invocation, forked context and tool restrictions are Claude Code
@@ -182,7 +187,7 @@ why this repository ships a link at `.claude/skills/ru-text` pointing at `skills
 One corpus, no copy.
 
 The other route is the same archive through the Skills API, then a reference to the skill in
-the agent's configuration, up to twenty skills per agent.
+the agent's configuration ([documentation](https://platform.claude.com/docs/en/managed-agents/skills)).
 
 ⚠ We have not run this channel live: the link resolves in a clone, but how Anthropic's
 repository mount treats it is something we did not measure.
@@ -227,6 +232,13 @@ when those directories already exist — it never creates them.
 
 A one-shot install has no update mechanism: the agent installed the skill and forgot about
 it. Come back every few months.
+
+Three of the newer channels update differently, and it is worth knowing in advance. On
+claude.ai an update is re-uploading the archive over the old one. On the Claude API it is a
+new version through the same Skills API — and a version there is a complete snapshot, not a
+delta. For Managed Agents with a mounted repository the update happens on its own, but only
+when a session starts: commits pushed mid-session are not picked up by that session.
+
 
 A copy install — **re-running the same command does NOT overwrite the directory.** `cp -r`
 places the new version inside the old one, the previous release stays on top, and the agent
