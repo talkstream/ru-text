@@ -2,6 +2,10 @@ content/originals/
 .DS_Store
 .claude/*
 !.claude/CLAUDE.md
+# Managed Agents mount a repository and read skills ONLY from this path, so the link
+# below is shipped rather than ignored. It points at skills/ru-text — one corpus, not two.
+!.claude/skills
+!.claude/skills/*
 *.pen
 scratchpad/
 .playwright-mcp/

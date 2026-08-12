@@ -155,6 +155,38 @@ menu, or type `@ru-text` in an agent chat.
 Claude Code, connect the [Notion MCP server](https://developers.notion.com/guides/mcp/get-started-with-mcp),
 and ask Claude Code to read and edit pages.
 
+### claude.ai, the Claude app and the Claude API
+
+These take the skill as an archive, and the archive is already built: `ru-text-skill.zip`
+from the [latest release](https://github.com/talkstream/ru-text/releases/latest). It holds a
+single top-level folder, `ru-text/` — the shape both surfaces require — and 284 KB against
+their 30 MB ceiling.
+
+**claude.ai and the app.** Settings → Features → upload the archive. It needs a paid plan
+(Pro, Max, Team or Enterprise) with code execution enabled. The skill is yours alone: it is
+not shared with a team and admins cannot manage it centrally.
+
+**The Claude API.** The same archive goes to `POST /v1/skills` with the `skills-2025-10-02`
+beta header; the skill then joins a request through `container.skills` alongside the code
+execution tool. The store is private to your workspace — there is no public catalogue.
+
+⚠ Only the main `ru-text` skill goes there. `ru-check` and `ru-score` do not pass and are
+not needed: their slash invocation, forked context and tool restrictions are Claude Code
+mechanics that these surfaces do not have. Frontmatter there accepts exactly six fields, and
+those two commands carry fields outside that list.
+
+### Managed Agents
+
+An agent with a mounted repository reads skills only from a root `.claude/skills/`, which is
+why this repository ships a link at `.claude/skills/ru-text` pointing at `skills/ru-text`.
+One corpus, no copy.
+
+The other route is the same archive through the Skills API, then a reference to the skill in
+the agent's configuration, up to twenty skills per agent.
+
+⚠ We have not run this channel live: the link resolves in a clone, but how Anthropic's
+repository mount treats it is something we did not measure.
+
 ### NeuralDeep
 
 A Russian-language skills catalogue:
