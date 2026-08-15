@@ -28,7 +28,13 @@
 # Deliberately excluded, each for a stated reason:
 #   skills/ru-text/references/*  — rule examples; a violation there is the specimen
 #   notion/ru-text-notion-skill.md — same, condensed
-#   tools/golden/*               — fixtures; several are broken on purpose
+#   tools/golden/[0-9]*         — fixtures; several are broken on purpose
+#     ⚠ The exclusion used to read `tools/golden/*` and swallowed the set's README with
+#     it — ordinary prose in the project's own voice, guarded by nothing. Found
+#     16.08.2026 by a /ru-text:ru-check run, and it is the third time this file makes
+#     the same mistake: `notion/README.md` was omitted the same way and held fifteen
+#     violations of the rules it documents. A glob that covers a directory covers the
+#     prose in it too — name the fixtures, not their parent.
 #   CHANGELOG.md                 — English prose quoting Russian fragments; an English em
 #                                  dash takes an ordinary space, so the rule does not apply
 #   README.en.md, INSTALL.en.md  — English; guillemets and NBSP are not its conventions
@@ -86,7 +92,8 @@ cd "$(dirname "$0")/.."
 # note above before you do, because the wrong file here makes this checker cry wolf.
 FILES='README.md
 INSTALL.md
-notion/README.md'
+notion/README.md
+tools/golden/README.md'
 
 # Files whose English half must not be measured by Russian rules. One name, one reason.
 BILINGUAL='notion/README.md'
