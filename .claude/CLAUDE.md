@@ -84,8 +84,25 @@ detector from a transformer is reading, not matching. Calling it a check would m
 promise without a mechanism, which is the exact debt this repository spends its gates
 retiring. It is review discipline, and it is named as such.
 
-**Routing rule for new work:** deterministic correcting code is born in the private service
-repository, from its first commit. It is never written public-first — one public commit is
+**The predicate's second edge: detection is also the product.** A reviewer asking only «does
+this file write corrected text?» would wave through a deterministic stop-word linter over
+arbitrary prose — neither side of the line above claims it: it fixes nothing, and its input is
+not hard-wired. Declined all the same. What may not ship here is deterministic code that
+APPLIES this corpus — its rules, its dictionaries, or a derivative of them — to text from
+outside this repository, whether the output is a correction or a report: reporting is the other
+half of what the paid `ru_check` sells.
+
+The word *deterministic* is load-bearing — the skills in this repository apply the corpus
+through a model, and they stay exactly where they are. Two other neighbours also stay: gates
+that apply the corpus to THIS repository's own files (`check-typography.sh`), and instruments
+that read arbitrary text but apply no corpus rule to it and propose no change
+(`measure-prose-shape.py` counts sentence-length variance; the AD-6 mention in its docstring is
+motivation, not a pattern it matches). Same status as the predicate itself: no machine gate, and
+there will not be one — «applies the corpus» and «arbitrary input» are read, not matched.
+
+**Routing rule for new work:** deterministic code that applies the corpus to outside text —
+correcting it or reporting on it — is born in the private service repository, from its first
+commit. It is never written public-first — one public commit is
 irreversible, and moving it afterwards buys nothing: what shipped under MIT stays shipped —
 in every release tag and in every clone.
 

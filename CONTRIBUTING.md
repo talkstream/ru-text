@@ -45,14 +45,16 @@ Use [conventional commits](https://www.conventionalcommits.org/):
 ## What this repository accepts, and what it does not
 
 This repository holds **the corpus — rules written as prose — and the tools that check this
-repository against itself**. A couple of them take a directory argument so a selftest can run
-against a throwaway copy, but the files they read inside it are hard-wired all the same, and
-none of them takes arbitrary text and hands back a corrected version.
+repository against itself**. Some tools take a directory or file argument, but what none of them
+does is apply the rules to your text: no script here reads outside prose and hands back either a
+corrected version or a list of findings against the corpus.
 
-That is a deliberate line, not an accident of history, so a pull request that crosses it will
-be declined however good it is: **a deterministic corrector for arbitrary user text does not
-belong here.** If you want to build one from these rules, you are free to — the corpus is MIT,
-and that includes commercial use. It simply lives in your repository rather than this one.
+That is a deliberate line, not an accident of history, so a pull request that crosses it will be
+declined however good it is: **a deterministic tool that applies these rules to arbitrary user
+text — correcting it or reporting on it — does not belong here.** (The skills are not that: they
+work through the model reading the rules.) If you want to build one from these rules, you are
+free to — the corpus is MIT, and that includes commercial use. It simply lives in your
+repository rather than this one.
 
 What is very welcome: new rules and corrections to existing ones (see the rule-acceptance
 criteria in `skills/ru-text/references/addenda.md`), counter-examples that keep a rule from
