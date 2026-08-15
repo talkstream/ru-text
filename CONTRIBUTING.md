@@ -42,6 +42,22 @@ Use [conventional commits](https://www.conventionalcommits.org/):
 - `feat:` for new rules or features
 - `docs:` for README/documentation changes
 
+## What this repository accepts, and what it does not
+
+This repository holds **the corpus — rules written as prose — and the tools that check this
+repository against itself**. Every script under `tools/` reads files whose paths are hard-wired
+here; none of them takes arbitrary text and hands back a corrected version.
+
+That is a deliberate line, not an accident of history, so a pull request that crosses it will
+be declined however good it is: **a deterministic corrector for arbitrary user text does not
+belong here.** If you want to build one from these rules, you are free to — the corpus is MIT,
+and that includes commercial use. It simply lives in your repository rather than this one.
+
+What is very welcome: new rules and corrections to existing ones (see the rule-acceptance
+criteria in `skills/ru-text/references/addenda.md`), counter-examples that keep a rule from
+firing on live speech, translations, and reports of false positives with the text that caused
+them.
+
 ## Code of Conduct
 
 Be respectful. We're here to make Russian text better, not to argue about it. This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md) — please read it before participating.

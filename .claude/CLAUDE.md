@@ -57,6 +57,41 @@ claude plugins marketplace update ru-text   # refresh marketplace cache
 - NEVER use author names in section headers as if they endorse (e.g., "Nora Gal's principles" → "Clean language principles, cf. N. Gal")
 - IP notice references: Article 1259(5) of the Russian Civil Code, 17 USC §102(b), Berne Convention
 
+### What belongs in this repository, and what does not
+
+**Paid is whatever deterministically FIXES arbitrary user text. Public is the corpus — rules
+in prose — and detectors whose input set is hard-wired into this repository.**
+
+Adopted 16.08.2026, after two adversarial panels and an arbiter were asked to find the leak
+and found none: no file here has ever transformed text, and the history says so —
+`git log --all --diff-filter=A --pretty=format: --name-only -- '*.ts' '*.js' '*.mjs'` is
+empty. The twelve scripts under `tools/` are discipline gates: `check-typography.sh` hard-wires
+three filenames in `FILES` and takes no arguments at all, and its own header records that the
+same patterns over the corpus files report 53 «violations» that are all correct content.
+`check-dogfood.sh` does not detect stop-words in prose — it counts them in the reference and
+verifies the documentation quotes the right number.
+
+Three more obvious phrasings were tried and each broke on a real file. «Prose vs code» would
+exile `check-typography.sh`, the very gate that enforces this repository's own typography
+claim. «Needed by the skill vs needed by the service» would exile `check-frozen.sh`, which
+exists *for* the paid service yet guards public bytes.
+
+The surviving predicate is settled by one question a reviewer can grep: **does this file write
+corrected text?** ⚠ There is no machine gate for it and there will not be one — telling a
+detector from a transformer is reading, not matching. Calling it a check would make it a
+promise without a mechanism, which is the exact debt this repository spends its gates
+retiring. It is review discipline, and it is named as such.
+
+**Routing rule for new work:** deterministic correcting code is born in the private service
+repository, from its first commit. It is never written public-first — one public commit is
+irreversible, and moving it afterwards buys nothing: what shipped under MIT stays shipped, in
+14 release tags and in every clone.
+
+⚠ **The risk runs the other way.** Nothing already published can be recalled, so the danger is
+not the past but the temptation to publish the engine for convenience — a wasm demo on the
+site, an npm package «so people can try it». That would close the only moat the paid side has,
+and it needs an explicit decision, never a convenience.
+
 ### How a rule earns its place
 
 **A rule is justified by the LETTER of the corpus and by an inventory checked against the

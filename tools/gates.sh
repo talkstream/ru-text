@@ -99,6 +99,13 @@ tools/check-dogfood.sh || fail "check-dogfood"
 # and that claim was checked by remembering to ask a model — which failed twice in one day.
 tools/check-typography.sh || fail "check-typography"
 
+# ── 5b2. The one-way boundary with the private contour ──────────────────────────────
+# Runs before the slow gates because what it guards is irreversible: a hostname, a repo
+# name or a token reaching a public commit cannot be recalled from 14 release tags and
+# every clone. Measured across all 144 commits of every branch — never happened; until now
+# nothing but attention was holding it.
+tools/check-private.sh || fail "check-private"
+
 # ── 5c. The images a manifest points at ─────────────────────────────────────────────
 # Added the day the OpenAI plugin portal refused an upload over a 981x993 logo that had
 # shipped in five releases. Nothing in the repository had ever looked at an image file.

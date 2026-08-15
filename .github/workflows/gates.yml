@@ -74,6 +74,14 @@ jobs:
         # and in one afternoon a literal ~ and a missing non-breaking space both shipped.
         run: tools/check-typography.sh
 
+      - name: check-private — no identifier of the private contour in tracked files
+        # Guards an irreversible event rather than a fixable one: a hostname, a repo name
+        # or a token in a public commit cannot be recalled from the release tags or from
+        # any clone. The deny-list holds identifiers only — this repository legitimately
+        # discusses the paid service, and a gate that reds on the subject would be off
+        # within a week.
+        run: tools/check-private.sh
+
       - name: check-assets — manifest images exist, are square, and fit the limit
         run: tools/check-assets.sh
 

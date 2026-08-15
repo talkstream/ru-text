@@ -626,6 +626,24 @@ else
   bad "the golden set says $stated cases and holds $golden_cases"
 fi
 
+# ⚖ The public half of the set is FROZEN at 35 by a director's decision of 16.08.2026: new
+# cases keep being written, privately, alongside the paid engine. The reason is stated in
+# tools/golden/README.md without euphemism — the set is calibration material, not merely
+# tests, and calibration for an MIT corpus is a separate asset.
+#
+# The number is hard-wired here on purpose. Reading it back from the README would make the
+# guard circular: growing the set and editing the sentence would satisfy both halves, which
+# is exactly the freeze this is supposed to prevent. Raising it is a deliberate edit to this
+# line, visible in review, and it needs the same decision that set it.
+GOLDEN_FROZEN_AT=35
+if [ "$golden_cases" -gt "$GOLDEN_FROZEN_AT" ]; then
+  bad "the golden set is frozen at $GOLDEN_FROZEN_AT public cases and now holds $golden_cases — new cases are kept private (tools/golden/README.md)"
+elif [ "$golden_cases" -lt "$GOLDEN_FROZEN_AT" ]; then
+  bad "the golden set holds $golden_cases, fewer than the frozen $GOLDEN_FROZEN_AT — a case was removed, and nothing here authorises that"
+else
+  ok "the golden set is at its frozen size ($GOLDEN_FROZEN_AT public cases)"
+fi
+
 # The one file loaded on every turn, so its size is a per-turn cost and the only claim in this
 # repository that was BOTH stated twice and checked nowhere. It read «under 600 words» while the
 # file stood at 615, and the always-on dash fix of 01.08.2026 took it to 640 — a budget nobody
