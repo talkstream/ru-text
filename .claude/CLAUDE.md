@@ -65,8 +65,10 @@ in prose — and detectors whose input set is hard-wired into this repository.**
 Adopted 16.08.2026, after two adversarial panels and an arbiter were asked to find the leak
 and found none: no file here has ever transformed text, and the history says so —
 `git log --all --diff-filter=A --pretty=format: --name-only -- '*.ts' '*.js' '*.mjs'` is
-empty. The twelve scripts under `tools/` are discipline gates: `check-typography.sh` hard-wires
-three filenames in `FILES` and takes no arguments at all, and its own header records that the
+empty. The scripts under `tools/` are discipline gates — the count is deliberately not
+stated here, because a hand-maintained number goes stale in the commit that adds a file, and
+this one did. `check-typography.sh` hard-wires three filenames in `FILES` and takes no
+arguments at all, and its own header records that the
 same patterns over the corpus files report 53 «violations» that are all correct content.
 `check-dogfood.sh` does not detect stop-words in prose — it counts them in the reference and
 verifies the documentation quotes the right number.
@@ -84,8 +86,8 @@ retiring. It is review discipline, and it is named as such.
 
 **Routing rule for new work:** deterministic correcting code is born in the private service
 repository, from its first commit. It is never written public-first — one public commit is
-irreversible, and moving it afterwards buys nothing: what shipped under MIT stays shipped, in
-14 release tags and in every clone.
+irreversible, and moving it afterwards buys nothing: what shipped under MIT stays shipped —
+in every release tag and in every clone.
 
 ⚠ **The risk runs the other way.** Nothing already published can be recalled, so the danger is
 not the past but the temptation to publish the engine for convenience — a wasm demo on the

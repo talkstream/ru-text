@@ -45,8 +45,9 @@ Use [conventional commits](https://www.conventionalcommits.org/):
 ## What this repository accepts, and what it does not
 
 This repository holds **the corpus — rules written as prose — and the tools that check this
-repository against itself**. Every script under `tools/` reads files whose paths are hard-wired
-here; none of them takes arbitrary text and hands back a corrected version.
+repository against itself**. A couple of them take a directory argument so a selftest can run
+against a throwaway copy, but the files they read inside it are hard-wired all the same, and
+none of them takes arbitrary text and hands back a corrected version.
 
 That is a deliberate line, not an accident of history, so a pull request that crosses it will
 be declined however good it is: **a deterministic corrector for arbitrary user text does not

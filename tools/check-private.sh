@@ -25,13 +25,26 @@
 # The public repository legitimately discusses the paid service: tools/check-frozen.sh
 # names the contract it guards, and the corpus explains to a reader why §B is frozen.
 # Banning the subject would red the tree today over seven tracked files —
-#   git grep -niE 'paid.{0,15}MCP' -- '*.sh' '*.md'
+#   git grep -liE 'paid.{0,15}MCP' -- '*.sh' '*.md'   # → 6 files, 7 lines
 # — and a gate that reds without a cause is a gate its author learns to disable. So the
 # list holds only strings that NAME the private contour and can carry no innocent reading.
 #
-# Scope is TRACKED FILES ONLY (`git ls-files` is what `git grep` walks), because that is
-# what a push publishes. An ignored scratchpad or a local .env is not this gate's business,
-# and scanning them would red the gate on every machine that happens to hold one.
+# Scope is TRACKED FILES AT HEAD (`git grep` walks what `git ls-files` lists). An ignored
+# scratchpad or a local .env is not this gate's business, and scanning them would red the
+# gate on every machine that happens to hold one.
+#
+# ⚠ Two limits of that scope, stated because a green line must not be read as more than it is.
+#
+# 1. A push publishes HISTORY, not HEAD. Commit an identifier, fix it in the next commit,
+#    push both — this gate is green and the string is public forever. That is not
+#    hypothetical: on 16.08.2026 the first draft of this very file carried real ones, and
+#    what saved it was rebuilding the commit before the push, not any check. Guarding the
+#    range would take a CI scan of the pushed revisions; until that exists, the rule is
+#    a human one — never push over a commit you have not read.
+# 2. Commit MESSAGES are outside `git grep` entirely, and the repository already carries an
+#    identifier in one (`git log --all -i --grep='ru-text-mcp'` → 94b99ec, 01.08.2026). It
+#    predates this gate, main is protected, and the string is mild — the service is named
+#    in the public offer — but no mechanism holds that line either.
 
 set -eu
 export LC_ALL=C
@@ -65,7 +78,10 @@ echo "check-private: no private-contour identifiers in tracked files"
 # No look-ahead and no `\b`: git grep speaks POSIX ERE, rejects `(?!…)` outright and silently
 # matches NOTHING on a word boundary — both verified against a throwaway repository, not
 # assumed. The IP pattern therefore fences itself with explicit non-digit neighbours, which
-# also keeps it off a four-part version string.
+# fences it from matching inside a longer digit chain. ⚠ It does NOT keep the pattern off
+# a four-part version string — `echo 'version 1.2.3.4' | grep -cE …` → 1, measured. The
+# tree holds no such string today, and if one appears the gate will red honestly and be
+# told so; claiming a protection it lacks would be worse.
 #
 # The sibling repository is named by a SHAPE instead: this owner's public repository
 # is `ru-text` exactly, so any `talkstream/ru-text-<suffix>` is by construction another one.
@@ -92,7 +108,10 @@ printf '%s\n' "$PATTERNS" | while IFS='|' read -r label regex; do
   # surface is two files, not the whole repository.
   #
   # -I skips binary files: a font or a PNG matching a hex pattern is noise, not a leak.
-  hits=$(git grep -nIE "$regex" -- . ':!tools/check-private.sh' ':!tools/selftest-check-private.sh' 2>/dev/null || true)
+  # -i: the latin patterns were case-sensitive, so «YooKassa» — the brand's own spelling —
+  # and «SELECTEL» walked through. Cyrillic variants stay listed explicitly: case folding
+  # for Cyrillic is not something to rely on across grep builds.
+  hits=$(git grep -niIE "$regex" -- . ':!tools/check-private.sh' ':!tools/selftest-check-private.sh' 2>/dev/null || true)
   if [ -n "$hits" ]; then
     printf '  FAIL  %s\n' "$label"
     printf '%s\n' "$hits" | sed 's/^/          /'

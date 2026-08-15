@@ -90,6 +90,11 @@ case_run "sibling repository"  "git clone git@github.com:talkstream/ru-text-exam
 case_run "service sub-domain"  "curl https://service.ru-text.org/v1/check"                 "service sub-domain"
 case_run "IP address literal"  "ssh root@203.0.113.10"                                    "any IP address literal"
 case_run "payment provider"    "оплата через ЮKassa"                                      "payment provider"
+# ⚠ Регистр латиницы: до 16.08.2026 образцы шли без -i, и «YooKassa» — как пишет сам
+# бренд — проходило насквозь. Случай стоит отдельно от предыдущего, потому что
+# кириллическая и латинская руки ловятся разными половинами образца.
+case_run "provider, brand casing" "payments via YooKassa"                                 "payment provider"
+case_run "provider, upper case"   "хостинг SELECTEL"                                      "hosting provider"
 case_run "hosting provider"    "хостинг Selectel, СПб"                                    "hosting provider"
 case_run "admin token"         "export ADMIN_TOKEN=stand-in"                              "admin token variable"
 case_run "deploy key material" "-----BEGIN OPENSSH PRIVATE KEY-----"                      "deploy key material"

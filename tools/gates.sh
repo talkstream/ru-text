@@ -79,9 +79,20 @@ fi
 # required by SHAPE, not by its numbers — a count baked in here would be one more
 # hand-maintained figure.
 selftest_out=$(tools/selftest.sh 2>&1) || { printf '%s\n' "$selftest_out"; fail "selftest"; }
+
 printf '%s\n' "$selftest_out"
 printf '%s\n' "$selftest_out" | grep -qE '^selftest: [0-9]+ passed' \
   || fail "selftest exited 0 without printing a summary — it did not finish"
+
+# The boundary gate has its own selftest, kept separate because tools/selftest.sh needs a
+# copy of the tree while this one needs a throwaway git repository. Until this line existed
+# nobody called it, and «the selftest proves all nine cases» was a promise without a
+# mechanism — the very class of defect the boundary work was written against. Found by the
+# arbiter reviewing that work, which is the second time this repository has shipped the
+# thing it was busy prohibiting.
+private_out=$(tools/selftest-check-private.sh 2>&1) \
+  || { printf '%s\n' "$private_out"; fail "selftest-check-private"; }
+echo "gates: ok    boundary gate proves it can red (9 cases)"
 
 
 # ── 3. The paid-MCP corpus contract ─────────────────────────────────────────────────

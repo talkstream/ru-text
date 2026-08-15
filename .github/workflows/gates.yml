@@ -74,6 +74,12 @@ jobs:
         # and in one afternoon a literal ~ and a missing non-breaking space both shipped.
         run: tools/check-typography.sh
 
+      - name: selftest-check-private — the boundary gate proves it can red
+        # Nine cases, including the control that the mere SUBJECT of the paid service stays
+        # allowed. Without this step the gate's own claim rested on someone having run it
+        # once by hand — the promise-without-a-mechanism this whole change set is against.
+        run: tools/selftest-check-private.sh
+
       - name: check-private — no identifier of the private contour in tracked files
         # Guards an irreversible event rather than a fixable one: a hostname, a repo name
         # or a token in a public commit cannot be recalled from the release tags or from
