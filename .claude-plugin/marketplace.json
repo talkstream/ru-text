@@ -2,7 +2,7 @@
   "name": "ru-text",
   "metadata": {
     "description": "Russian text quality for AI agents — neuroslop cleanup, typography, information style, editorial standards, UX writing, business correspondence. Scores text 0–10. 2,000+ linguistic atoms.",
-    "version": "2.3.0"
+    "version": "2.4.0"
   },
   "owner": {
     "name": "Arseniy Kamyshev",
@@ -14,7 +14,7 @@
       "name": "ru-text",
       "displayName": "ru-text",
       "source": "./",
-      "version": "2.3.0",
+      "version": "2.4.0",
       "description": "Russian text quality for AI agents — neuroslop cleanup, typography, information style, editorial standards, UX writing, business correspondence. Scores text 0–10. 2,000+ linguistic atoms.",
       "category": "productivity",
       "homepage": "https://github.com/talkstream/ru-text",

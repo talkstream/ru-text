@@ -14,7 +14,7 @@ Apply to ALL Russian text without exception.
 | Nested quotes: lapki | «"вложенные"» | «„вложенные“» |
 | Em dash with spaces | слово - слово | слово — слово |
 | En dash for ranges, no spaces | 10-15 дней | 10–15 дней |
-| Non-breaking space after single-letter prepositions | в начале (breakable) | в\u00A0начале |
+| Non-breaking space after single-letter words | в начале (breakable) | в\u00A0начале |
 | Ellipsis: single character | ... | … |
 | Digit groups with thin spaces | 1000000 | 1 000 000 |
 | Decimal comma (not dot) | 3.14 | 3,14 |
@@ -268,7 +268,7 @@ Before delivering Russian text, verify:
 
 - Quotes: «» primary, „“ nested
 - Dashes: — in text, – in ranges, - only in compounds; max 1–2 per paragraph
-- Non-breaking space after в, к, с, о, у, и, а
+- Non-breaking space after в, к, с, о, у, и, а, я
 - Ellipsis: … (single char)
 - Abbreviations: т. д., т. п. (with non-breaking space)
 - No double spaces, no space before punctuation

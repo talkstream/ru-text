@@ -74,7 +74,7 @@
 # R16/R44  the space before an em dash is non-breaking, so the dash cannot open a line
 # R32/R53  digit groups take a non-breaking space, never a comma, a period or a plain space
 # R31      initials bind to the surname they belong to
-# R30      a single-letter preposition does not end a line
+# R30      a single-letter word does not end a line — all eight, «я» included
 # R1/R2    guillemets, not straight quotes, around Russian text
 # R-ellipsis a single … character, not three periods
 # plus: a stray literal `~`, which is not a rule but the exact defect that shipped twice —

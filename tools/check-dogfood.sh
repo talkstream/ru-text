@@ -84,6 +84,95 @@ notion/README.md|в %s категориях'
 NAME_CLAIMS='README.md	онбординг	skills/ru-text/references/ux-writing.md
 README.en.md	onboarding	skills/ru-text/references/ux-writing.md'
 
+# ── A summary must not narrow the rule it summarises ──────────────────────────────────
+#
+# Reported from outside on 17.08.2026: the always-on checklist listed «в, к, с, о, у, и, а»
+# while R30 of the full corpus lists «в, к, с, о, у, и, а, я» — and every executing layer
+# (this repository's own typography gate, the frozen golden set, the paid engine) binds all
+# eight. Three summaries carried the short list: the checklist, the ru-check skill and the
+# Notion template. It shipped that way from v1.4.0 and nothing could see it, because a
+# summary is prose and prose is not compared to its source.
+#
+# The enumerations ARE comparable, and that is what this checks: the letters a summary
+# names must be exactly the letters the rule names. Not a superset, not a subset — a
+# summary that quietly ADDS a letter is the same defect wearing the other coat.
+#
+# ⚠ What it does NOT check: whether the prose around the letters says the right thing. That
+# is read, not matched. This guards the one part a script can hold, and the guard is named
+# here so nobody mistakes it for the whole.
+#
+# Format: summary file <TAB> marker in it <TAB> source file <TAB> marker in the source.
+ENUMERATIONS='skills/ru-text/SKILL.md	NBSP after	skills/ru-text/references/typography.md	R30. После
+skills/ru-check/SKILL.md	ordinary space after	skills/ru-text/references/typography.md	R30. После
+notion/ru-text-notion-skill.md	Non-breaking space after	skills/ru-text/references/typography.md	R30. После'
+
+verify_enumerations() {
+  bad=''
+  n=0
+  while IFS='	' read -r sfile smark rfile rmark; do
+    [ -n "$sfile" ] || continue
+    if [ ! -f "$sfile" ] || [ ! -f "$rfile" ]; then
+      bad="$bad${bad:+
+}$sfile or $rfile is gone — the pair cannot be compared"
+      continue
+    fi
+    n=$((n + 1))
+    got=$(SFILE="$sfile" SMARK="$smark" RFILE="$rfile" RMARK="$rmark" python3 <<'PYE'
+import io, os, re, sys
+
+def letters(path, marker):
+    """The comma-separated single Cyrillic letters that follow the marker, in order.
+
+    ⚠ EVERY occurrence of the marker is tried, not the first. In SKILL.md the phrase «NBSP
+    after» appears twice — once as a table label with no letters at all, once in the
+    checklist with the list — and taking the first one made the pair report «the summary
+    moved» while the summary sat right there. A blind guard that says «blind» is better
+    than one that says nothing, but a guard that reads the file properly is better still.
+    """
+    text = io.open(path, encoding='utf-8').read()
+    start = 0
+    while True:
+        i = text.find(marker, start)
+        if i < 0:
+            return None
+        tail = text[i + len(marker):]
+        m = re.match(r'\s*((?:[а-яёА-ЯЁ]\s*,\s*)+[а-яёА-ЯЁ])', tail)
+        if m:
+            return [c for c in m.group(1) if c.isalpha()]
+        start = i + len(marker)
+
+a = letters(os.environ['SFILE'], os.environ['SMARK'])
+b = letters(os.environ['RFILE'], os.environ['RMARK'])
+if a is None:
+    print('NOMARK-SUMMARY')
+elif b is None:
+    print('NOMARK-RULE')
+elif a != b:
+    print('DIFF %s vs %s' % (''.join(a), ''.join(b)))
+else:
+    print('OK')
+PYE
+)
+    case "$got" in
+      OK) ;;
+      NOMARK-SUMMARY) bad="$bad${bad:+
+}$sfile no longer states «$smark …» — the summary moved, and the pair went blind" ;;
+      NOMARK-RULE) bad="$bad${bad:+
+}$rfile no longer states «$rmark …» — the rule moved, and the pair went blind" ;;
+      *) bad="$bad${bad:+
+}$sfile lists ${got#DIFF } — summary vs rule in $rfile" ;;
+    esac
+  done <<EOF
+$ENUMERATIONS
+EOF
+  if [ -z "$bad" ]; then
+    ok "every summary lists the same letters as the rule it summarises"
+  else
+    bad "a summary does not list the same letters as its rule:"
+    printf '%s\n' "$bad" | sed 's/^/        /'
+  fi
+}
+
 verify_names() {
   bad=''
   while IFS='	' read -r claimant phrase target; do
@@ -602,6 +691,7 @@ verify_claims "stop-word catalogue" "$CAT" "$CATALOG_CLAIMS"
 guard_complete "stop-word catalogue" "$CAT" "$CATALOG_CLAIMS"
 verify_claims "catalogue categories" "$CATEG" "$CATEGORY_CLAIMS"
 verify_names
+verify_enumerations
 
 # The install prompt is quoted in three places: both READMEs and the sandbox probe. A probe that
 # feeds an agent a different string than the one we publish tests nothing, and the divergence is

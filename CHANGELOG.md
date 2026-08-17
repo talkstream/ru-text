@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-08-17
+
+### Fixed
+- **R30 lost a letter in every summary of itself.** The full corpus lists eight single-letter
+  words that bind to the next word — `в, к, с, о, у, и, а, я` — and three summaries listed
+  seven, dropping «я»: the always-on Quality Checklist of `SKILL.md`, the `ru-check` skill and
+  the Notion template. Reported from outside on 17.08.2026;
+  `grep -rn 'в, к, с' --include='*.md' .` finds the list in five places — the rule, this entry
+  and those three.
+
+  **The long list is the correct one, and it is the summaries that were fixed.** Three layers
+  execute the rule and all three bound all eight: this repository's own typography gate
+  (`tools/check-typography.sh`, `PREP`), the frozen golden set, and the paid engine, which is
+  private and cannot be checked from here. So the short list contradicted the product's
+  behaviour, not only its reference. Ководство § 62 forbids leaving any single-letter word at
+  the end of a line, not only prepositions and conjunctions: «на строчке не могут остаться…
+  одно-, двух- и некоторая часть трехбуквенных слов».
+
+  The heading of section C.1 was fixed too: it said «однобуквенных предлогов/союзов» while its
+  own list contained «я», a pronoun. Both readings shipped in the same commit and lived to
+  v1.4.0 — that they were copied from the heading is not shown, only that the same narrowing
+  appears in all three.
+
+  A fourth narrowing surfaced in the same sweep and is fixed here: the header of
+  `tools/check-typography.sh` described R30 as «a single-letter preposition does not end a
+  line», while the code beneath binds all eight. That line names no letters, so the new gate
+  cannot hold it — it is read, not matched.
+
+- **Four more places where the always-on file and the corpus disagreed.** The ruble row showed
+  «1500 руб → 1 500 ₽» — that is the ₽-over-«руб.» rule of `ux-writing.md` § L.6, a
+  UX-register rule that does not govern a general table, while R69 legitimises «1 500 руб.»
+  in ordinary text; the row now shows what the always-on rules do command, grouping and a
+  non-breaking space. The dash and digit-group examples were typed with ORDINARY spaces, so a
+  model copying the example produced exactly the defect the row teaches against; both now carry
+  the real code points. And the checklist never asked for the non-breaking space before the em
+  dash that R16 and R44 require.
+
+- **`anti-patterns.md` credited `typography.md` with two rules it does not have.** «Double
+  spaces» and «inconsistent ё» were listed as «all covered in typography.md». Double spaces have
+  no rule anywhere in the corpus and stay as hygiene the checklist asks for; ё is governed, but
+  by `ux-writing.md` § L.3–L.5. ⚠ The first repair of that sentence said the corpus has no rule
+  for either — the same error one layer down, caught by proofreading before release.
+
+### Internal
+- **A summary can no longer narrow its rule in silence.** `tools/check-dogfood.sh` compares the
+  letters a summary names against the letters the rule names, in both directions: a summary that
+  drops a letter and one that invents a letter fail alike, and changing the rule's list fails all
+  three summaries at once until they follow. ⚠ It guards the enumeration, not the prose around
+  it — that prose is read rather than matched, and the checker says so in its own header.
+
 ## [2.3.0] - 2026-08-11
 
 ### Added
