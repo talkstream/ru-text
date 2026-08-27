@@ -158,7 +158,11 @@ if [ -f "$og" ]; then
   elif [ "$baked" = "$line" ]; then
     ok "the social image says $baked, and the manifests are on the $line line"
   else
-    bad "the social image says $baked but the manifests are on $line — rebuild it: tools/build-og.sh"
+    # ⚠ «Rebuild it» было НЕПОЛНЫМ советом и стоило лишнего шага: версия зашита в ИСХОДНИКЕ
+    # `assets/og/og.html` (`<span class="ver">`), а `build-og.sh` только рендерит его в картинки.
+    # Пересборка без правки исходника печатает PASS и оставляет гейт красным — совет, ведущий по
+    # кругу. Названы оба действия и в правильном порядке.
+    bad "the social image says $baked but the manifests are on $line — edit <span class=\"ver\"> in assets/og/og.html, THEN run tools/build-og.sh"
   fi
 fi
 
