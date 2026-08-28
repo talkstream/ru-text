@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Единственный хук репозитория. Живёт в .githooks/, а не в .git/hooks/, чтобы попадать в
+# репозиторий и работать у любого клона — .git/hooks не версионируется.
+#
+# Включение: git config core.hooksPath .githooks
+exec "$(dirname "$0")/../tools/check-trailer.sh" "$@"
