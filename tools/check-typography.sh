@@ -38,6 +38,21 @@
 #   CHANGELOG.md                 — English prose quoting Russian fragments; an English em
 #                                  dash takes an ordinary space, so the rule does not apply
 #   README.en.md, INSTALL.en.md  — English; guillemets and NBSP are not its conventions
+#   skills/*/SKILL.md            — English prose whose Russian fragments are mostly SPECIMENS:
+#                                  the letter list «в, к, с, о, у, и, а, я», the deliberately
+#                                  breakable «в начале», the stop-word column «в настоящее
+#                                  время». Adding them to FILES would cry wolf on every one
+#                                  ⚠ FOURTH occurrence of the same omission — see the three
+#                                  cases above. All three skills were on NEITHER list until
+#                                  28.08.2026, and the audit that finally read them found two
+#                                  real defects hiding among the specimens: an ordinary space
+#                                  after «и» in the triage-report template (R30) and a straight
+#                                  quote for the nested closing mark (R4), the latter invisible
+#                                  to this gate by construction — its R1/R2 pattern demands
+#                                  Cyrillic beside the mark and «„\"» has none. Four more sat
+#                                  in ru-score's «Ч — Чистота языка» legends. Excluded, but
+#                                  excluded KNOWINGLY: their Russian prose is thin and is
+#                                  guarded by /ru-text:ru-check runs, not by this script
 #
 # `notion/README.md` was not on either list, and that was an omission rather than a decision:
 # the exclusion note above names `notion/ru-text-notion-skill.md`, the template full of
