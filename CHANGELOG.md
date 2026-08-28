@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-08-27
+
+### Added
+
+- **R49 and R50 look at the same spot from opposite sides, and the corpus never said so.** One
+  demands the spaces around an ellipsis be removed, the other demands a space be added; what
+  orders them is the case of the letter on the right — lowercase or a digit continues the
+  sentence (R49), an uppercase letter starts a new one (R50). Without that split the two rules
+  eat each other's edits and the text settles nowhere.
+- **Three carve-outs where the space stays**: a range (`А…Я`, `10…20 °C` — the left side is an
+  index, not a word), a dialogue reply (`— Я думал … —` — a dash on the right, and eating that
+  space turns an infelicity into an error), and an empty ellipsis at the start of a line.
+
+## [2.6.0] - 2026-08-27
+
+### Added
+
+- **R53 said «no commas between groups» and would break R54 if taken literally.** The rule reads
+  «разряды разделяются пробелами… запятые и точки не используются», but the very next rule
+  requires a comma as the DECIMAL separator — so `1,500` is legal under both readings at once,
+  «полторы тысячи» and «одна целая пятьсот тысячных», and nothing in the text tells them apart.
+- **The ambiguity is resolved by counting groups, and only there**: `1,500,000` has two groups,
+  and a decimal comma occurs once — commas out, spaces in. A single comma is left alone. The
+  carve-out sits under R53 rather than R32, because R53 carries the full wording.
+
+## [2.5.0] - 2026-08-27
+
+### Added
+
+- **R74 said «no dot after a unit» and stayed silent about the dot that ends a sentence.** Applied
+  literally it merges two sentences: `Вес 5 кг. Брутто указано` would become `Вес 5 кг Брутто
+  указано`. The carve-out now sits next to the rule, in the same file.
+- **Two exemptions, each a minimal pair**: the dot goes only when the sentence continues
+  (a lowercase letter to the right); it stays when the sentence closes, and end of text is not a
+  continuation. **Multi-letter units only** — `кг`, `км`, `мин`, `га`.
+
 ## [2.4.0] - 2026-08-17
 
 ### Fixed
