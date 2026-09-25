@@ -9,7 +9,9 @@
 # One definition, two callers — the same rule the MCP refresh script is held to.
 #
 # Guards the contract between this repository and the paid ru-text MCP service, which
-# pins a snapshot of the corpus and parses one section of it byte-for-byte. Break any
+# pins a snapshot of the corpus and parses two sections of it byte-for-byte: §B, the
+# stop-word catalog of info-style.md, and §E.1, the pleonasm table of editorial-grammar.md
+# (since 2.8.0). selftest.sh holds the count: one `*_sha256` key per `section_*` extraction. Break any
 # check here and the paid service either mis-parses the catalog or silently serves a
 # corpus that no longer matches what it claims.
 #
@@ -51,6 +53,7 @@ if [ "${1:-}" = "--print" ]; then PRINT=1; shift; fi
 ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}
 REF="$ROOT/skills/ru-text/references"
 INFO="$REF/info-style.md"
+GRAMMAR="$REF/editorial-grammar.md"
 EXPECT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/frozen.sha256"
 
 fail=0
@@ -88,6 +91,32 @@ section_b() {
   ' "$INFO"
 }
 
+# §E.1 the same way, heading to the next heading of ANY level: §E.2 follows as `###`, and its
+# rows carry one separator, so reading past the heading would count tautologies as pleonasms.
+# Carve-out prose between the heading and the table is INSIDE the section on purpose — it
+# moves the checksum by design, and the baseline is re-stamped with --print in the same
+# commit that returns it.
+section_e1() {
+  awk '
+    /^### E\.1\. Pleonasms/ { ine = 1; print; next }
+    ine && /^#/ { exit }
+    ine { print }
+  ' "$GRAMMAR"
+}
+
+# Rows of §E.1 that pass the table predicate — exactly two separators and three non-empty
+# parts — header included. The MCP parser reports this number as `windowRows`, and the gap
+# to the accepted entries must be exactly the header.
+pleonasm_window() {
+  section_e1 | awk -F'|' 'NF == 3 && $1 != "" && $2 != "" && $3 != ""'
+}
+
+# The accepted entries: the same predicate without the header `wrong|correct|why`. A port of
+# the MCP's parsePleonasms, for the same reason parse_catalog ports its catalog parser.
+parse_pleonasms() {
+  pleonasm_window | awk '!/^wrong\|correct\|why$/'
+}
+
 # A port of the MCP's parse.ts, so this repository can prove the catalog still parses to
 # the same size without installing that project. If the two ever disagree, one of them
 # has drifted and the mismatch is the finding.
@@ -110,11 +139,18 @@ if [ "$PRINT" -eq 1 ]; then
   pr=$(parse_catalog | grep '^является|' || true)
   ce=$(parse_catalog | wc -l | tr -d ' ')
   sb=$(section_b | $SHA256 | cut -d' ' -f1)
-  if [ -z "$pr" ] || [ "$ce" -eq 0 ] || [ -z "$sb" ]; then
+  se=$(section_e1 | $SHA256 | cut -d' ' -f1)
+  pe=$(parse_pleonasms | wc -l | tr -d ' ')
+  pw=$(pleonasm_window | wc -l | tr -d ' ')
+  pp=$(parse_pleonasms | grep '^свободная вакансия|' || true)
+  if [ -z "$pr" ] || [ "$ce" -eq 0 ] || [ -z "$sb" ] || [ -z "$se" ] || [ "$pe" -eq 0 ] || [ -z "$pp" ]; then
     echo "check-frozen --print: refusing to emit a baseline from a corpus that is missing pieces" >&2
     [ -z "$pr" ] && echo "  the probe row (является|…) is not in §B" >&2
     [ "$ce" -eq 0 ] && echo "  §B parses to zero entries" >&2
     [ -z "$sb" ] && echo "  §B produced no checksum — is a sha256 tool on PATH?" >&2
+    [ -z "$se" ] && echo "  §E.1 produced no checksum" >&2
+    [ "$pe" -eq 0 ] && echo "  §E.1 parses to zero entries" >&2
+    [ -z "$pp" ] && echo "  the probe row (свободная вакансия|…) is not in §E.1" >&2
     exit 1
   fi
   printf 'files=%s\n' "$(find "$REF" -name '*.md' -type f | wc -l | tr -d ' ')"
@@ -122,6 +158,10 @@ if [ "$PRINT" -eq 1 ]; then
   printf 'table_headers=%s\n' "$(grep -c '^слово|замена$' "$INFO" | tr -d ' ')"
   printf 'catalog_entries=%s\n' "$ce"
   printf 'probe_row=%s\n' "$pr"
+  printf 'section_e1_sha256=%s\n' "$se"
+  printf 'pleonasm_entries=%s\n' "$pe"
+  printf 'pleonasm_window_rows=%s\n' "$pw"
+  printf 'pleonasm_probe_row=%s\n' "$pp"
   exit 0
 fi
 
@@ -189,6 +229,49 @@ if want=$(expect probe_row); then
   have=$(parse_catalog | grep '^является|' || true)
   [ "$have" = "$want" ] && ok "probe row unchanged: $have" \
                         || bad "probe row is '$have', expected '$want'"
+else
+  fail=1
+fi
+
+# ── 7. §E.1 byte identity ─────────────────────────────────────────────────────
+# Moves on every carve-out returned as prose — by design, re-stamped in the same commit. It is
+# NOT the guard against a substituted row: 8–10 are, and they do not move on prose.
+if want=$(expect section_e1_sha256); then
+  have=$(section_e1 | $SHA256 | cut -d' ' -f1)
+  if [ "$have" = "$want" ]; then
+    ok "§E.1 «Pleonasms» byte-identical ($(section_e1 | wc -l | tr -d ' ') lines)"
+  else
+    bad "§E.1 changed: $have, expected $want"
+  fi
+else
+  fail=1
+fi
+
+# ── 8. §E.1 entries, the parse reimplemented ──────────────────────────────────
+if want=$(expect pleonasm_entries); then
+  have=$(parse_pleonasms | wc -l | tr -d ' ')
+  [ "$have" = "$want" ] && ok "$have pleonasm entries parse out of §E.1" \
+                        || bad "$have pleonasm entries parse out of §E.1, expected $want"
+else
+  fail=1
+fi
+
+# ── 9. §E.1 window rows: the header and nothing else ──────────────────────────
+# Carve-out prose with two pipes would pass the predicate and raise BOTH this and 8 by one,
+# so the gap alone cannot see it; the absolute count and 8 together can.
+if want=$(expect pleonasm_window_rows); then
+  have=$(pleonasm_window | wc -l | tr -d ' ')
+  [ "$have" = "$want" ] && ok "$have rows of §E.1 pass the table predicate" \
+                        || bad "$have rows of §E.1 pass the table predicate, expected $want"
+else
+  fail=1
+fi
+
+# ── 10. one exact §E.1 row ────────────────────────────────────────────────────
+if want=$(expect pleonasm_probe_row); then
+  have=$(parse_pleonasms | grep '^свободная вакансия|' || true)
+  [ "$have" = "$want" ] && ok "pleonasm probe row unchanged: $have" \
+                        || bad "pleonasm probe row is '$have', expected '$want'"
 else
   fail=1
 fi

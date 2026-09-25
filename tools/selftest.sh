@@ -164,6 +164,49 @@ d=$(fresh_copy)
 grep -v '^catalog_entries=' "$d/tools/frozen.sha256" > "$d/t" && mv "$d/t" "$d/tools/frozen.sha256"
 expect_fail "a baseline key gone missing is caught" "catalog_entries is not recorded" "$d"
 
+# ── 6b. §E.1, the pleonasm table (since 2.8.0) ────────────────────────────────
+# One case per check, each failing for its own stated reason.
+d=$(fresh_copy)
+perl -i -pe 's{^памятный сувенир\|сувенир\|.*$}{памятный сувенир|сувенир|souvenir}' "$d/skills/ru-text/references/editorial-grammar.md"
+expect_fail "a byte changed inside §E.1 is caught" "§E.1 changed" "$d"
+
+d=$(fresh_copy)
+grep -v '^прейскурант цен|' "$d/skills/ru-text/references/editorial-grammar.md" > "$d/t" && mv "$d/t" "$d/skills/ru-text/references/editorial-grammar.md"
+expect_fail "a deleted pleonasm row is caught" "53 pleonasm entries" "$d"
+
+# Carve-out prose that happens to carry two pipes passes the row predicate. The gap between
+# window rows and entries stays one — both grow — so only the absolute counts see it.
+d=$(fresh_copy)
+perl -i -pe 's{^wrong\|correct\|why$}{Проза: «дешевле|дороже» и «выше|ниже» правилом не ловятся.\n\nwrong|correct|why}' "$d/skills/ru-text/references/editorial-grammar.md"
+expect_fail "prose with two pipes inside §E.1 is caught" "56 rows of §E.1" "$d"
+
+d=$(fresh_copy)
+perl -i -pe 's{^свободная вакансия\|вакансия\|.*$}{свободная вакансия|вакансия|free position}' "$d/skills/ru-text/references/editorial-grammar.md"
+expect_fail "a reworded pleonasm probe row is caught" "pleonasm probe row is" "$d"
+
+d=$(fresh_copy)
+grep -v '^pleonasm_entries=' "$d/tools/frozen.sha256" > "$d/t" && mv "$d/t" "$d/tools/frozen.sha256"
+expect_fail "a missing §E.1 baseline key is caught" "pleonasm_entries is not recorded" "$d"
+
+# --print must refuse, not record an absence as the new truth.
+d=$(fresh_copy)
+grep -v '^свободная вакансия|' "$d/skills/ru-text/references/editorial-grammar.md" > "$d/t" && mv "$d/t" "$d/skills/ru-text/references/editorial-grammar.md"
+if "$d/tools/check-frozen.sh" --print "$d" >/dev/null 2>&1; then
+  bad "--print emitted a baseline from a §E.1 that lost its probe row"
+else
+  ok "--print refuses a §E.1 without its probe row"
+fi
+
+# The header names how many sections are frozen byte-for-byte; the baseline must carry one
+# checksum per extraction, or a section was added to one side only.
+sections=$(grep -c '^section_[a-z0-9]*() {' "$ROOT/tools/check-frozen.sh" | tr -d ' ')
+keys=$(grep -c '^section_[a-z0-9]*_sha256=' "$ROOT/tools/frozen.sha256" | tr -d ' ')
+if [ "$sections" -eq "$keys" ] && [ "$keys" -gt 0 ]; then
+  ok "one checksum per frozen section ($keys)"
+else
+  bad "frozen sections: $sections extractions, $keys checksums in frozen.sha256"
+fi
+
 # ── 7. the locale trap: a canary, reported per platform ───────────────────────
 # Why LC_ALL=C is exported everywhere. Under a UTF-8 locale the BSD awk on macOS reports
 # distinct Cyrillic strings as equal, and the catalog parser silently returns 84 of its 92
