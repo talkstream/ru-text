@@ -9,9 +9,10 @@
 # One definition, two callers — the same rule the MCP refresh script is held to.
 #
 # Guards the contract between this repository and the paid ru-text MCP service, which
-# pins a snapshot of the corpus and parses three sections of it byte-for-byte: §B, the
+# pins a snapshot of the corpus and parses four sections of it byte-for-byte: §B, the
 # stop-word catalog of info-style.md; §E.1, the pleonasm table of editorial-grammar.md (since
-# 2.8.0); and the passive-voice table of anti-patterns.md. selftest.sh holds the count: one
+# 2.8.0); the passive-voice table of anti-patterns.md; and the trigger-phrase blocks of the AD
+# rules in addenda.md. selftest.sh holds the count: one
 # `*_sha256` key per `section_*` extraction. Break any
 # check here and the paid service either mis-parses the catalog or silently serves a
 # corpus that no longer matches what it claims.
@@ -51,12 +52,13 @@ fi
 
 PRINT=0
 if [ "${1:-}" = "--print" ]; then PRINT=1; shift; fi
-ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}
+ROOT=${1:-$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)}
 REF="$ROOT/skills/ru-text/references"
 INFO="$REF/info-style.md"
 GRAMMAR="$REF/editorial-grammar.md"
 ANTI="$REF/anti-patterns.md"
-EXPECT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/frozen.sha256"
+ADDENDA="$REF/addenda.md"
+EXPECT="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)/frozen.sha256"
 
 fail=0
 ok()   { printf '  ok    %s\n' "$1"; }
@@ -141,6 +143,33 @@ parse_passives() {
   passive_window | awk '!/^Passive\|Active$/'
 }
 
+# The trigger-phrase blocks of addenda.md: every PLURAL `**Trigger constructions:**` header, the
+# `## AD-N.` heading it sits under, and the run of `- ` items right after it. The heading travels
+# with the block, so a block moved to another rule changes the checksum even when not one of its
+# bytes did. The SINGULAR header carries codepoint triggers and prose the service does not read,
+# and stays outside on purpose — its prose already holds two pairs of quotes a wider window would
+# take for phrases. A reader, not a corrector: which quoted phrase is a trigger is decided on the
+# service side and is not ported here.
+#
+# A top-level heading that is not an AD rule ends the rule, exactly as the service reads it: a block
+# placed after, say, `## Sources` belongs to no rule and is not read there — so it is not in this
+# window either, and the counts below move the moment a heading lands between a rule and its block.
+section_triggers() {
+  awk '
+    /^## / { head = "" }
+    /^## AD-[0-9]+\./ { head = $0 }
+    /^\*\*Trigger constructions:\*\*/ && head != "" { print head; print; inb = 1; items = 0; next }
+    inb && /^$/ && !items { next }
+    inb && /^- / { print; items = 1; next }
+    inb { inb = 0 }
+  ' "$ADDENDA"
+}
+
+# The list items of those blocks — the lines the service reads its phrases from.
+trigger_items() {
+  section_triggers | grep '^- ' || true
+}
+
 # A port of the MCP's parse.ts, so this repository can prove the catalog still parses to
 # the same size without installing that project. If the two ever disagree, one of them
 # has drifted and the mismatch is the finding.
@@ -171,8 +200,11 @@ if [ "$PRINT" -eq 1 ]; then
   ve=$(parse_passives | wc -l | tr -d ' ')
   vw=$(passive_window | wc -l | tr -d ' ')
   vp=$(parse_passives | grep '^Было принято решение|' || true)
+  st=$(section_triggers | $SHA256 | cut -d' ' -f1)
+  ti=$(trigger_items | wc -l | tr -d ' ')
+  tp=$(trigger_items | grep '^- «Отличный вопрос!»' || true)
   if [ -z "$pr" ] || [ "$ce" -eq 0 ] || [ -z "$sb" ] || [ -z "$se" ] || [ "$pe" -eq 0 ] || [ -z "$pp" ] \
-     || [ -z "$sv" ] || [ "$ve" -eq 0 ] || [ -z "$vp" ]; then
+     || [ -z "$sv" ] || [ "$ve" -eq 0 ] || [ -z "$vp" ] || [ -z "$st" ] || [ "$ti" -eq 0 ] || [ -z "$tp" ]; then
     echo "check-frozen --print: refusing to emit a baseline from a corpus that is missing pieces" >&2
     [ -z "$pr" ] && echo "  the probe row (является|…) is not in §B" >&2
     [ "$ce" -eq 0 ] && echo "  §B parses to zero entries" >&2
@@ -183,6 +215,9 @@ if [ "$PRINT" -eq 1 ]; then
     [ -z "$sv" ] && echo "  the passive table produced no checksum" >&2
     [ "$ve" -eq 0 ] && echo "  the passive table parses to zero entries" >&2
     [ -z "$vp" ] && echo "  the probe row (Было принято решение|…) is not in the passive table" >&2
+    [ -z "$st" ] && echo "  the trigger blocks produced no checksum" >&2
+    [ "$ti" -eq 0 ] && echo "  the trigger blocks of addenda.md hold zero items" >&2
+    [ -z "$tp" ] && echo "  the probe item («Отличный вопрос!» …) is not in the trigger blocks" >&2
     exit 1
   fi
   printf 'files=%s\n' "$(find "$REF" -name '*.md' -type f | wc -l | tr -d ' ')"
@@ -198,6 +233,11 @@ if [ "$PRINT" -eq 1 ]; then
   printf 'passive_entries=%s\n' "$ve"
   printf 'passive_window_rows=%s\n' "$vw"
   printf 'passive_probe_row=%s\n' "$vp"
+  printf 'section_triggers_sha256=%s\n' "$st"
+  printf 'trigger_blocks=%s\n' "$(section_triggers | grep -c '^\*\*Trigger constructions:\*\*' | tr -d ' ')"
+  printf 'trigger_blocks_any=%s\n' "$(grep -c '^\*\*Trigger construction' "$ADDENDA" | tr -d ' ')"
+  printf 'trigger_items=%s\n' "$ti"
+  printf 'trigger_probe_item=%s\n' "$tp"
   exit 0
 fi
 
@@ -208,8 +248,7 @@ printf 'check-frozen: MCP corpus contract\n'
 # reference file is a deliberate act that has to be made on both sides at once.
 if want=$(expect files); then
   have=$(find "$REF" -name '*.md' -type f | wc -l | tr -d ' ')
-  [ "$have" = "$want" ] && ok "references/ holds $have .md files" \
-                        || bad "references/ holds $have .md files, expected $want"
+  if [ "$have" = "$want" ]; then ok "references/ holds $have .md files"; else bad "references/ holds $have .md files, expected $want"; fi
 else
   fail=1
 fi
@@ -231,8 +270,7 @@ fi
 # under it parse as a stop-word whose replacement is the word «замена».
 if want=$(expect table_headers); then
   have=$(grep -c '^слово|замена$' "$INFO" | tr -d ' ')
-  [ "$have" = "$want" ] && ok "$have table headers in §B" \
-                        || bad "$have table headers in §B, expected $want"
+  if [ "$have" = "$want" ]; then ok "$have table headers in §B"; else bad "$have table headers in §B, expected $want"; fi
 else
   fail=1
 fi
@@ -240,8 +278,7 @@ fi
 # ── 4. the parse, reimplemented ───────────────────────────────────────────────
 if want=$(expect catalog_entries); then
   have=$(parse_catalog | wc -l | tr -d ' ')
-  [ "$have" = "$want" ] && ok "$have catalog entries parse out of §B" \
-                        || bad "$have catalog entries parse out of §B, expected $want"
+  if [ "$have" = "$want" ]; then ok "$have catalog entries parse out of §B"; else bad "$have catalog entries parse out of §B, expected $want"; fi
 else
   fail=1
 fi
@@ -263,8 +300,7 @@ fi
 # reworded replacement fails in this repository first, where the change was made.
 if want=$(expect probe_row); then
   have=$(parse_catalog | grep '^является|' || true)
-  [ "$have" = "$want" ] && ok "probe row unchanged: $have" \
-                        || bad "probe row is '$have', expected '$want'"
+  if [ "$have" = "$want" ]; then ok "probe row unchanged: $have"; else bad "probe row is '$have', expected '$want'"; fi
 else
   fail=1
 fi
@@ -286,8 +322,7 @@ fi
 # ── 8. §E.1 entries, the parse reimplemented ──────────────────────────────────
 if want=$(expect pleonasm_entries); then
   have=$(parse_pleonasms | wc -l | tr -d ' ')
-  [ "$have" = "$want" ] && ok "$have pleonasm entries parse out of §E.1" \
-                        || bad "$have pleonasm entries parse out of §E.1, expected $want"
+  if [ "$have" = "$want" ]; then ok "$have pleonasm entries parse out of §E.1"; else bad "$have pleonasm entries parse out of §E.1, expected $want"; fi
 else
   fail=1
 fi
@@ -297,8 +332,7 @@ fi
 # so the gap alone cannot see it; the absolute count and 8 together can.
 if want=$(expect pleonasm_window_rows); then
   have=$(pleonasm_window | wc -l | tr -d ' ')
-  [ "$have" = "$want" ] && ok "$have rows of §E.1 pass the table predicate" \
-                        || bad "$have rows of §E.1 pass the table predicate, expected $want"
+  if [ "$have" = "$want" ]; then ok "$have rows of §E.1 pass the table predicate"; else bad "$have rows of §E.1 pass the table predicate, expected $want"; fi
 else
   fail=1
 fi
@@ -306,8 +340,7 @@ fi
 # ── 10. one exact §E.1 row ────────────────────────────────────────────────────
 if want=$(expect pleonasm_probe_row); then
   have=$(parse_pleonasms | grep '^свободная вакансия|' || true)
-  [ "$have" = "$want" ] && ok "pleonasm probe row unchanged: $have" \
-                        || bad "pleonasm probe row is '$have', expected '$want'"
+  if [ "$have" = "$want" ]; then ok "pleonasm probe row unchanged: $have"; else bad "pleonasm probe row is '$have', expected '$want'"; fi
 else
   fail=1
 fi
@@ -327,8 +360,7 @@ fi
 # ── 12. passive entries, the parse reimplemented ──────────────────────────────
 if want=$(expect passive_entries); then
   have=$(parse_passives | wc -l | tr -d ' ')
-  [ "$have" = "$want" ] && ok "$have passive entries parse out of the table" \
-                        || bad "$have passive entries parse out of the table, expected $want"
+  if [ "$have" = "$want" ]; then ok "$have passive entries parse out of the table"; else bad "$have passive entries parse out of the table, expected $want"; fi
 else
   fail=1
 fi
@@ -336,8 +368,7 @@ fi
 # ── 13. passive window rows: the header and nothing else ──────────────────────
 if want=$(expect passive_window_rows); then
   have=$(passive_window | wc -l | tr -d ' ')
-  [ "$have" = "$want" ] && ok "$have rows of the passive table pass the predicate" \
-                        || bad "$have rows of the passive table pass the predicate, expected $want"
+  if [ "$have" = "$want" ]; then ok "$have rows of the passive table pass the predicate"; else bad "$have rows of the passive table pass the predicate, expected $want"; fi
 else
   fail=1
 fi
@@ -345,8 +376,52 @@ fi
 # ── 14. one exact passive row ─────────────────────────────────────────────────
 if want=$(expect passive_probe_row); then
   have=$(parse_passives | grep '^Было принято решение|' || true)
-  [ "$have" = "$want" ] && ok "passive probe row unchanged: $have" \
-                        || bad "passive probe row is '$have', expected '$want'"
+  if [ "$have" = "$want" ]; then ok "passive probe row unchanged: $have"; else bad "passive probe row is '$have', expected '$want'"; fi
+else
+  fail=1
+fi
+
+# ── 15. trigger blocks byte identity ──────────────────────────────────────────
+if want=$(expect section_triggers_sha256); then
+  have=$(section_triggers | $SHA256 | cut -d' ' -f1)
+  if [ "$have" = "$want" ]; then
+    ok "AD trigger blocks byte-identical ($(section_triggers | wc -l | tr -d ' ') lines)"
+  else
+    bad "AD trigger blocks changed: $have, expected $want"
+  fi
+else
+  fail=1
+fi
+
+# ── 16. block counts, both numbers of the header ──────────────────────────────
+# Two numbers, not one: a singular header turned plural would drag its prose quotes into the
+# window, and only the plural count moves; a new block of either kind moves the total. The plural
+# count is taken from the window, so a block cut off from its rule by a stray heading moves it too.
+if want=$(expect trigger_blocks); then
+  have=$(section_triggers | grep -c '^\*\*Trigger constructions:\*\*' | tr -d ' ')
+  if [ "$have" = "$want" ]; then ok "$have plural trigger blocks in addenda.md"; else bad "$have plural trigger blocks in addenda.md, expected $want"; fi
+else
+  fail=1
+fi
+if want=$(expect trigger_blocks_any); then
+  have=$(grep -c '^\*\*Trigger construction' "$ADDENDA" | tr -d ' ')
+  if [ "$have" = "$want" ]; then ok "$have trigger blocks of either number"; else bad "$have trigger blocks of either number, expected $want"; fi
+else
+  fail=1
+fi
+
+# ── 17. trigger items ─────────────────────────────────────────────────────────
+if want=$(expect trigger_items); then
+  have=$(trigger_items | wc -l | tr -d ' ')
+  if [ "$have" = "$want" ]; then ok "$have items in the trigger blocks"; else bad "$have items in the trigger blocks, expected $want"; fi
+else
+  fail=1
+fi
+
+# ── 18. one exact trigger item ────────────────────────────────────────────────
+if want=$(expect trigger_probe_item); then
+  have=$(trigger_items | grep '^- «Отличный вопрос!»' || true)
+  if [ "$have" = "$want" ]; then ok "trigger probe item unchanged"; else bad "trigger probe item is '$have', expected '$want'"; fi
 else
   fail=1
 fi
