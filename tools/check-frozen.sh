@@ -9,9 +9,10 @@
 # One definition, two callers — the same rule the MCP refresh script is held to.
 #
 # Guards the contract between this repository and the paid ru-text MCP service, which
-# pins a snapshot of the corpus and parses two sections of it byte-for-byte: §B, the
-# stop-word catalog of info-style.md, and §E.1, the pleonasm table of editorial-grammar.md
-# (since 2.8.0). selftest.sh holds the count: one `*_sha256` key per `section_*` extraction. Break any
+# pins a snapshot of the corpus and parses three sections of it byte-for-byte: §B, the
+# stop-word catalog of info-style.md; §E.1, the pleonasm table of editorial-grammar.md (since
+# 2.8.0); and the passive-voice table of anti-patterns.md. selftest.sh holds the count: one
+# `*_sha256` key per `section_*` extraction. Break any
 # check here and the paid service either mis-parses the catalog or silently serves a
 # corpus that no longer matches what it claims.
 #
@@ -54,6 +55,7 @@ ROOT=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}
 REF="$ROOT/skills/ru-text/references"
 INFO="$REF/info-style.md"
 GRAMMAR="$REF/editorial-grammar.md"
+ANTI="$REF/anti-patterns.md"
 EXPECT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/frozen.sha256"
 
 fail=0
@@ -117,6 +119,28 @@ parse_pleonasms() {
   pleonasm_window | awk '!/^wrong\|correct\|why$/'
 }
 
+# The passive-voice table of anti-patterns.md, heading to the next TOP-LEVEL heading: the section
+# has no subsections, and its carve-out paragraph sits inside the window on purpose — the same
+# re-stamp ritual as §B and §E.1 applies when it changes.
+section_passive() {
+  awk '
+    /^## High: Passive Voice/ { inp = 1; print; next }
+    inp && /^## / { exit }
+    inp { print }
+  ' "$ANTI"
+}
+
+# Rows with exactly one separator and two non-empty parts, header included — the MCP parser
+# reports this as `windowRows`, and the gap to the accepted entries must be the header alone.
+passive_window() {
+  section_passive | awk -F'|' 'NF == 2 && $1 != "" && $2 != ""'
+}
+
+# The accepted entries, a port of the MCP's parsePassives — a reader, not a corrector.
+parse_passives() {
+  passive_window | awk '!/^Passive\|Active$/'
+}
+
 # A port of the MCP's parse.ts, so this repository can prove the catalog still parses to
 # the same size without installing that project. If the two ever disagree, one of them
 # has drifted and the mismatch is the finding.
@@ -143,7 +167,12 @@ if [ "$PRINT" -eq 1 ]; then
   pe=$(parse_pleonasms | wc -l | tr -d ' ')
   pw=$(pleonasm_window | wc -l | tr -d ' ')
   pp=$(parse_pleonasms | grep '^свободная вакансия|' || true)
-  if [ -z "$pr" ] || [ "$ce" -eq 0 ] || [ -z "$sb" ] || [ -z "$se" ] || [ "$pe" -eq 0 ] || [ -z "$pp" ]; then
+  sv=$(section_passive | $SHA256 | cut -d' ' -f1)
+  ve=$(parse_passives | wc -l | tr -d ' ')
+  vw=$(passive_window | wc -l | tr -d ' ')
+  vp=$(parse_passives | grep '^Было принято решение|' || true)
+  if [ -z "$pr" ] || [ "$ce" -eq 0 ] || [ -z "$sb" ] || [ -z "$se" ] || [ "$pe" -eq 0 ] || [ -z "$pp" ] \
+     || [ -z "$sv" ] || [ "$ve" -eq 0 ] || [ -z "$vp" ]; then
     echo "check-frozen --print: refusing to emit a baseline from a corpus that is missing pieces" >&2
     [ -z "$pr" ] && echo "  the probe row (является|…) is not in §B" >&2
     [ "$ce" -eq 0 ] && echo "  §B parses to zero entries" >&2
@@ -151,6 +180,9 @@ if [ "$PRINT" -eq 1 ]; then
     [ -z "$se" ] && echo "  §E.1 produced no checksum" >&2
     [ "$pe" -eq 0 ] && echo "  §E.1 parses to zero entries" >&2
     [ -z "$pp" ] && echo "  the probe row (свободная вакансия|…) is not in §E.1" >&2
+    [ -z "$sv" ] && echo "  the passive table produced no checksum" >&2
+    [ "$ve" -eq 0 ] && echo "  the passive table parses to zero entries" >&2
+    [ -z "$vp" ] && echo "  the probe row (Было принято решение|…) is not in the passive table" >&2
     exit 1
   fi
   printf 'files=%s\n' "$(find "$REF" -name '*.md' -type f | wc -l | tr -d ' ')"
@@ -162,6 +194,10 @@ if [ "$PRINT" -eq 1 ]; then
   printf 'pleonasm_entries=%s\n' "$pe"
   printf 'pleonasm_window_rows=%s\n' "$pw"
   printf 'pleonasm_probe_row=%s\n' "$pp"
+  printf 'section_passive_sha256=%s\n' "$sv"
+  printf 'passive_entries=%s\n' "$ve"
+  printf 'passive_window_rows=%s\n' "$vw"
+  printf 'passive_probe_row=%s\n' "$vp"
   exit 0
 fi
 
@@ -272,6 +308,45 @@ if want=$(expect pleonasm_probe_row); then
   have=$(parse_pleonasms | grep '^свободная вакансия|' || true)
   [ "$have" = "$want" ] && ok "pleonasm probe row unchanged: $have" \
                         || bad "pleonasm probe row is '$have', expected '$want'"
+else
+  fail=1
+fi
+
+# ── 11. passive table byte identity ───────────────────────────────────────────
+if want=$(expect section_passive_sha256); then
+  have=$(section_passive | $SHA256 | cut -d' ' -f1)
+  if [ "$have" = "$want" ]; then
+    ok "passive table byte-identical ($(section_passive | wc -l | tr -d ' ') lines)"
+  else
+    bad "passive table changed: $have, expected $want"
+  fi
+else
+  fail=1
+fi
+
+# ── 12. passive entries, the parse reimplemented ──────────────────────────────
+if want=$(expect passive_entries); then
+  have=$(parse_passives | wc -l | tr -d ' ')
+  [ "$have" = "$want" ] && ok "$have passive entries parse out of the table" \
+                        || bad "$have passive entries parse out of the table, expected $want"
+else
+  fail=1
+fi
+
+# ── 13. passive window rows: the header and nothing else ──────────────────────
+if want=$(expect passive_window_rows); then
+  have=$(passive_window | wc -l | tr -d ' ')
+  [ "$have" = "$want" ] && ok "$have rows of the passive table pass the predicate" \
+                        || bad "$have rows of the passive table pass the predicate, expected $want"
+else
+  fail=1
+fi
+
+# ── 14. one exact passive row ─────────────────────────────────────────────────
+if want=$(expect passive_probe_row); then
+  have=$(parse_passives | grep '^Было принято решение|' || true)
+  [ "$have" = "$want" ] && ok "passive probe row unchanged: $have" \
+                        || bad "passive probe row is '$have', expected '$want'"
 else
   fail=1
 fi

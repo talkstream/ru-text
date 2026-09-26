@@ -18,3 +18,7 @@ section_e1_sha256=9d9469b06e8ff6e3c5f2158101065226534953a458f4cc83949c564e6f64f0
 pleonasm_entries=54
 pleonasm_window_rows=55
 pleonasm_probe_row=свободная вакансия|вакансия|вакансия = free position
+section_passive_sha256=def20d755a6cb25919acc81c1d661c6e2503609d1f888066de042ad95b046abc
+passive_entries=10
+passive_window_rows=11
+passive_probe_row=Было принято решение|Мы решили / Руководитель решил

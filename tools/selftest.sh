@@ -197,6 +197,35 @@ else
   ok "--print refuses a §E.1 without its probe row"
 fi
 
+# ── 6c. the passive-voice table of anti-patterns.md ───────────────────────────
+d=$(fresh_copy)
+perl -i -pe 's{^Работа выполняется\|.*$}{Работа выполняется|Команда работает}' "$d/skills/ru-text/references/anti-patterns.md"
+expect_fail "a byte changed inside the passive table is caught" "passive table changed" "$d"
+
+d=$(fresh_copy)
+grep -v '^Совещание проведено|' "$d/skills/ru-text/references/anti-patterns.md" > "$d/t" && mv "$d/t" "$d/skills/ru-text/references/anti-patterns.md"
+expect_fail "a deleted passive row is caught" "9 passive entries" "$d"
+
+d=$(fresh_copy)
+perl -i -pe 's{^Passive\|Active$}{Проза: «было|стало» правилом не ловится.\n\nPassive|Active}' "$d/skills/ru-text/references/anti-patterns.md"
+expect_fail "prose with one pipe inside the passive table is caught" "12 rows of the passive table" "$d"
+
+d=$(fresh_copy)
+perl -i -pe 's{^Было принято решение\|.*$}{Было принято решение|Мы решили}' "$d/skills/ru-text/references/anti-patterns.md"
+expect_fail "a reworded passive probe row is caught" "passive probe row is" "$d"
+
+d=$(fresh_copy)
+grep -v '^passive_entries=' "$d/tools/frozen.sha256" > "$d/t" && mv "$d/t" "$d/tools/frozen.sha256"
+expect_fail "a missing passive baseline key is caught" "passive_entries is not recorded" "$d"
+
+d=$(fresh_copy)
+grep -v '^Было принято решение|' "$d/skills/ru-text/references/anti-patterns.md" > "$d/t" && mv "$d/t" "$d/skills/ru-text/references/anti-patterns.md"
+if "$d/tools/check-frozen.sh" --print "$d" >/dev/null 2>&1; then
+  bad "--print emitted a baseline from a passive table that lost its probe row"
+else
+  ok "--print refuses a passive table without its probe row"
+fi
+
 # The header names how many sections are frozen byte-for-byte; the baseline must carry one
 # checksum per extraction, or a section was added to one side only.
 sections=$(grep -c '^section_[a-z0-9]*() {' "$ROOT/tools/check-frozen.sh" | tr -d ' ')
