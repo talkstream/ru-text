@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.2] - 2026-10-03
+
+### Fixed
+
+- The always-on typography table in `SKILL.md` now carries R37: the percent sign is glued to the number (`100%`, not `100 %`). The rule lived only in `typography.md`, while the same table showed a non-breaking space before the ruble sign and said nothing about the percent sign.
+- `/ru-text:ru-check`: the full check told the reader to put a non-breaking space before units and did not name the R37 exception; it now does. The quick triage lists a space before `%` among its mechanical checks.
+- The Notion template's typography table has the same row.
+
 ## [2.9.1] - 2026-09-28
 
 ### Fixed
