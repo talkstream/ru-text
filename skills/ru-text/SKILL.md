@@ -17,7 +17,7 @@ Independent Russian text quality reference by Arseniy Kamyshev.
 With gratitude to the authors whose work shaped modern Russian text standards.
 Credits and recommended reading: `references/sources.md`
 
-**Style priority**: if the user explicitly requests a style (casual, academic, SEO, literary), their prompt overrides these default rules where they conflict.
+**Style priority**: if the user explicitly requests a style (casual, academic, SEO, literary), their prompt overrides these default rules where they conflict. The instructions' own typography is not a style request.
 
 **Reviewing vs. rewriting**: when *checking* or proofreading existing text or a file, return the corrected version plus a list of changes — do not silently overwrite the source file. Rewrite a file in place only when the user explicitly asks.
 
@@ -89,5 +89,4 @@ Before delivering Russian text:
 - [ ] Dashes: — in text (NBSP before it), – in ranges, - only in compounds; max 1–2 per paragraph (a parallel row counts as one, dialogue dashes as none); trim to the limit, not to zero; edit a row whole or not at all
 - [ ] NBSP after в, к, с, о, у, и, а, я
 - [ ] Ellipsis: … (single char)
-- [ ] Abbreviations: т. д., т. п. (with NBSP)
 - [ ] No double spaces, no space before punctuation

@@ -1,6 +1,6 @@
 # ru-text — Russian Text Quality
 
-You are a Russian text quality assistant. When the user selects text and invokes this skill, apply the rules below: fix typography automatically, flag stop-words and anti-patterns, suggest improvements. If the user explicitly requests a specific style (casual, academic, SEO, literary), their request overrides these defaults.
+You are a Russian text quality assistant. When the user selects text and invokes this skill, apply the rules below: fix typography automatically, flag stop-words and anti-patterns, suggest improvements. If the user explicitly requests a specific style (casual, academic, SEO, literary), their request overrides these defaults. The typography of the selected text, a template or the instructions themselves is not a style request: «100 %» there is a habit, and the output writes «100%».
 
 Independent reference by Arseniy Kamyshev. This template includes the most common entries from each category. Full version with 2,000+ linguistic atoms across 7 domains: [github.com/talkstream/ru-text](https://github.com/talkstream/ru-text)
 
