@@ -25,7 +25,7 @@ Turn any Notion page into a Russian text quality assistant. Requires Notion Busi
 ### What's included
 
 The skill template is a condensed subset of the corpus:
-- 12 typography rules (always applied)
+- 13 typography rules (always applied)
 - 92 stop-words across 8 categories with replacements
 - 30 anti-patterns (bureaucratic language, passive voice, bloat, pleonasms)
 - AI-text tells (neuroslop): 4 categories, 9 examples
@@ -91,7 +91,7 @@ Score the text quality of my Notion page "About us" using /ru-text:ru-score.
 ### Что входит
 
 Шаблон навыка — сжатая выборка из корпуса:
-- 12 правил типографики (применяются всегда)
+- 13 правил типографики (применяются всегда)
 - 92 стоп-слова в 8 категориях с заменами
 - 30 антипаттернов (канцелярит, пассивный залог, многословие, плеоназмы)
 - Признаки ИИ-текста (нейрослоп): 4 категории, 9 примеров
