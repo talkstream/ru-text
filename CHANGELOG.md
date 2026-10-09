@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.4] - 2026-10-09
+
+### Changed
+
+- `/ru-text:ru-check` in Claude Code now runs on Sonnet at medium effort (`model: sonnet`, `effort: medium` in its `SKILL.md`) instead of the session model. `INSTALL.md` names the model and the fallback — the latest Opus when Sonnet is not available.
+
+### Fixed
+
+- `/ru-text:ru-check` and `/ru-text:ru-score` in Claude Code read the corpus from `${CLAUDE_SKILL_DIR}/../ru-text/references/` directly instead of searching for it; the search stays as the fallback on other hosts.
+
 ## [2.9.3] - 2026-10-04
 
 ### Changed
