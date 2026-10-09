@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.3] - 2026-10-09
+
+### Added
+
+- `.claude-plugin/plugin.json` carries the fields Anthropic's directory reads for the listing: `icon`, `documentationUrl`, `supportUrl`, `privacyPolicyUrl`, `termsOfServiceUrl`. Claude Code ignores them at load time.
+
+### Fixed
+
+- A compiled Python file (`tools/__pycache__/…pyc`) had been tracked since July. The directory's security scan holds code it can't read for a reviewer; the file is gone from the repository and `.gitignore` now excludes `__pycache__/` and `*.pyc`.
+
 ## [2.10.2] - 2026-10-09
 
 ### Fixed
