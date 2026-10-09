@@ -104,6 +104,11 @@ Junie в общий каталог не смотрит вовсе — ему �
 добавляется маркетплейс. Одна установка обслуживает CLI, приложение (локальные и
 SSH-сессии), VS Code и JetBrains.
 
+**Модель.** Полная вычитка `/ru-text:ru-check` в Claude Code идёт на Sonnet 5.5 с `effort`
+на уровне `medium`: так записано в `SKILL.md` команды (поля `model` и `effort`), модель
+вручную выбирать не нужно. Если Sonnet вам недоступен, переключитесь на последнюю версию
+Opus: `/model opus`.
+
 ### Codex и ChatGPT
 
 Плагины у них общие: «Plugins are available with ChatGPT Work on the web and with ChatGPT
