@@ -4,7 +4,7 @@
 **Repo:** https://github.com/talkstream/ru-text
 **Site:** https://ru-text.org
 **Sponsors:** https://github.com/sponsors/talkstream
-**Version:** 2.9.4 | **License:** MIT | **Platforms:** Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, Google Antigravity, OpenClaw, Notion
+**Version:** 2.10.0 | **License:** MIT | **Platforms:** Claude Code, GitHub Copilot, Windsurf, Cursor, Cline, JetBrains (Junie), Continue.dev, Codex CLI, Gemini CLI, Google Antigravity, OpenClaw, Notion
 
 Over 2,000 independently formulated linguistic atoms across 7 thematic areas. No verbatim quotes, full source attribution.
 
@@ -25,7 +25,7 @@ openclaw.plugin.json            → OpenClaw native plugin manifest
 gemini-extension.json           → Gemini CLI extension metadata
 (No new manifests needed — GitHub Copilot, Windsurf, Cline, JetBrains Junie, and Continue.dev read standard SKILL.md natively)
 skills/ru-text/SKILL.md         → always-on typography + routing table (≤650 words, gated, cross-platform)
-skills/ru-text/references/      → 9 domain files + addenda + sources (loaded on demand)
+skills/ru-text/references/      → 8 domain files + addenda + sources (loaded on demand)
 skills/ru-text/agents/openai.yaml → Codex skill metadata (Claude ignores)
 skills/ru-text/agents/gemini.yaml → Gemini skill metadata (Claude ignores)
 skills/ru-check/SKILL.md        → /ru-text:ru-check full-corpus check (fork context, read-only; moved from commands/ in a2d26d1)
@@ -168,7 +168,7 @@ outcomes do not.
 - **Two public installers work on this repo and are documented in INSTALL.md § «Одной командой»**: `npx skills add talkstream/ru-text` (Vercel Labs, installs all three skills, 376 installs on skills.sh) and `npx skillsbd add talkstream/ru-text/ru-text` (NeuralDeep, one skill, 162). Neither pins a version — both clone `main`, so there is nothing to update on their side. Do not confuse this with the community-marketplace pin, which lags for weeks.
 - **Outside Claude Code the frontmatter accepts exactly six keys** (`name, description, license, compatibility, metadata, allowed-tools`) — that is the claude.ai upload, the Skills API and `package_skill.py`. `ru-text` passes; `ru-check` and `ru-score` do not (`disallowed-tools`, `context: fork`, `user-invocable`) and have no business there. The Skills API in Console is a workspace-private store for API and Managed Agents, NOT a catalogue: no public listing. `anthropics/skills` is spec and examples, not a channel — no CONTRIBUTING (404).
 - Version bump in plugin.json is REQUIRED for users to get updates (Claude Code uses version for cache invalidation)
-- `${CLAUDE_PLUGIN_ROOT}` is a Claude-Code-only token. Valid contexts: `.claude-plugin/plugin.json`, hooks, MCP/LSP configs, and any other file consumed only by Claude Code. NEVER use it in `skills/ru-text/SKILL.md` body or other cross-platform skill content — Codex, Cursor, Windsurf, Cline, JetBrains Junie, Continue.dev, Gemini CLI, and GitHub Copilot do not substitute it and would render the literal `${CLAUDE_PLUGIN_ROOT}/...` string in their UI (regression fixed in v1.7.2). In skill bodies, use relative paths like `references/<filename>`; the existing Glob fallback in SKILL.md covers any nonstandard marketplace layout in Claude Code
+- `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_SKILL_DIR}` are Claude-Code-only tokens. One sanctioned exception (2.9.4): `ru-check` and `ru-score` name `${CLAUDE_SKILL_DIR}` inside a sentence scoped «In Claude Code», with an explicit fallback to the search when the token arrives unexpanded — other hosts read it as a path they skip, not a broken instruction. The rest of this note is about `${CLAUDE_PLUGIN_ROOT}`. Valid contexts: `.claude-plugin/plugin.json`, hooks, MCP/LSP configs, and any other file consumed only by Claude Code. NEVER use it in `skills/ru-text/SKILL.md` body or other cross-platform skill content — Codex, Cursor, Windsurf, Cline, JetBrains Junie, Continue.dev, Gemini CLI, and GitHub Copilot do not substitute it and would render the literal `${CLAUDE_PLUGIN_ROOT}/...` string in their UI (regression fixed in v1.7.2). In skill bodies, use relative paths like `references/<filename>`; the existing Glob fallback in SKILL.md covers any nonstandard marketplace layout in Claude Code
 - `content/originals/` contains pre-compaction backups — gitignored, do not delete
 - marketplace.json does NOT support `$schema` or root-level `description` — use `metadata.description`
 - **Codex and ChatGPT now share a plugin system**, and we document only half of it: «Plugins are available with ChatGPT Work on the web and with ChatGPT Work or Codex in the ChatGPT desktop app. Codex CLI also has a plugin browser» (learn.chatgpt.com/docs/plugins, 28.07.2026). ChatGPT Work users install from the **Work** switcher → **Plugins** — an audience our docs never addressed. The CLI also has a NON-interactive install we never documented: `codex plugin add <PLUGIN>@<MARKETPLACE>`, verified against the live 0.144.0 binary
