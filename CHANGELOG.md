@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.7] - 2026-10-09
+
+### Internal
+
+- The boundary gate's selftest plants only the identifiers its patterns match, without the shell commands that used to surround them; the directory scan still read the 2.10.6 fixtures as the plugin using the user's machine access. All eleven cases still go red on their fixture.
+
 ## [2.10.6] - 2026-10-09
 
 ### Changed
