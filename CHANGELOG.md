@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.4] - 2026-10-09
+
+### Fixed
+
+- The always-on table in `SKILL.md`, `/ru-text:ru-check` and the Notion template stated R37 without its scope. The glued `100%` is for general and web text; a GOST technical document may use a non-breaking space (`typography.md`, R37).
+- The 2.9.4 entry said the corpus search is the fallback «on other hosts»; it is also the fallback in Claude Code when the direct path does not resolve. Corrected in place.
+- The stars badge in both READMEs linked to the stargazers page, which needs a GitHub login; it now links to the repository.
+
 ## [2.10.3] - 2026-10-09
 
 ### Added
@@ -54,7 +62,7 @@ The changes that matter most, collected from 2.4.0–2.9.4:
 
 ### Fixed
 
-- `/ru-text:ru-check` and `/ru-text:ru-score` in Claude Code read the corpus from `${CLAUDE_SKILL_DIR}/../ru-text/references/` directly instead of searching for it; the search stays as the fallback on other hosts.
+- `/ru-text:ru-check` and `/ru-text:ru-score` in Claude Code read the corpus from `${CLAUDE_SKILL_DIR}/../ru-text/references/` directly instead of searching for it; the search stays as the fallback when that path does not resolve — in Claude Code and on other hosts.
 
 ## [2.9.3] - 2026-10-04
 
