@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.1] - 2026-10-09
+
+### Fixed
+
+- The Codex manifest (`.codex-plugin/plugin.json`) carries the listing fields the OpenAI plugin directory now requires: `interface.longDescription`, `interface.capabilities`, a `shortDescription` within 30 characters, `termsOfServiceURL`, `supportURL` and the three starter prompts. They used to be typed into the submission form by hand; the 2.10.0 upload was rejected without them.
+
 ## [2.10.0] - 2026-10-09
 
 ### Key changes since 2.3.0
