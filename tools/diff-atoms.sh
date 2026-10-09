@@ -111,7 +111,7 @@ awk -F'\t' -v mapfile="$MAP" -v root="$ROOT" '
       d = disp[h]; t = target[h]
       if (d == "DOC") {
         # A DOC target may not be an atom snapshot. Column three of a snapshot IS the
-        # normalised atom text, so pointing a DOC row at tools/baseline/atoms-v1.10.1.tsv
+        # normalised atom text, so pointing a DOC row at tools/baseline/atoms-v1.10.1.part{1,2}.tsv
         # satisfied the containment test for EVERY atom in the corpus — the input file of
         # this very gate was a universal escape hatch. Refusing snapshots by shape rather than
         # by name, so a copy under another path does not slip through.
