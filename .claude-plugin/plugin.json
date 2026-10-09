@@ -1,7 +1,7 @@
 {
   "name": "ru-text",
   "displayName": "ru-text",
-  "version": "2.10.5",
+  "version": "2.10.6",
   "description": "Russian text quality for AI agents — neuroslop cleanup, typography, information style, editorial standards, UX writing, business correspondence. Scores text 0–10. 2,000+ linguistic atoms.",
   "author": {
     "name": "Arseniy Kamyshev",
@@ -11,10 +11,6 @@
   "homepage": "https://ru-text.org",
   "repository": "https://github.com/talkstream/ru-text",
   "icon": "./assets/icon.png",
-  "documentationUrl": "https://github.com/talkstream/ru-text/blob/main/INSTALL.en.md",
-  "supportUrl": "https://github.com/talkstream/ru-text/issues",
-  "privacyPolicyUrl": "https://github.com/talkstream/ru-text/blob/main/PRIVACY_POLICY.md",
-  "termsOfServiceUrl": "https://github.com/talkstream/ru-text/blob/main/TERMS.md",
   "license": "MIT",
   "keywords": [
     "russian",

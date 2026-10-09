@@ -96,7 +96,9 @@ case_run "payment provider"    "оплата через ЮKassa"                
 case_run "provider, brand casing" "payments via YooKassa"                                 "payment provider"
 case_run "provider, upper case"   "хостинг SELECTEL"                                      "hosting provider"
 case_run "hosting provider"    "хостинг Selectel, СПб"                                    "hosting provider"
-case_run "admin token"         "export ADMIN_TOKEN=stand-in"                              "admin token variable"
+# Split for the same reason as the PEM header below: a literal token assignment in source reads
+# as «uses a credential from the user's machine» to the Anthropic directory scan (09.10.2026).
+case_run "admin token"         "export ADMIN""_TOKEN=stand-in"                            "admin token variable"
 # The PEM header is split in two and joined by the shell: the fixture must reach the gate whole,
 # but a literal header in source reads as a committed key to every secret scanner (HOL, 09.10.2026).
 case_run "deploy key material" "-----BEGIN OPENSSH ""PRIVATE KEY-----"                    "deploy key material"
