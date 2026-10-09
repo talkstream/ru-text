@@ -80,6 +80,7 @@ def walk(node, path):
 BASE_IS_PLUGIN_ROOT = {
     '.codex-plugin/plugin.json': 'developers.openai.com/plugins/build/plugins.md, 30.07.2026',
     '.cursor-plugin/plugin.json': 'cursor.com/docs/reference/plugins.md:388-391, 09.10.2026',
+    '.claude-plugin/plugin.json': 'code.claude.com/docs/en/plugins-reference.md:198 (icon, «inside the plugin, such as ./logo.png»), 09.10.2026',
 }
 
 manifests = []

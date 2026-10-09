@@ -12,3 +12,7 @@ scratchpad/
 ru-text-landing-*.png
 warn-callout.png
 dist/
+
+# Python bytecode: compiled code the directory scan cannot read (09.10.2026, v2.10.3)
+__pycache__/
+*.pyc
