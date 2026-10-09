@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2026-10-09
+
+### Key changes since 2.3.0
+
+The changes that matter most, collected from 2.4.0–2.9.4:
+
+- **In general and web text the percent sign is glued to the number** — `100%`, not `100 %` (R37). An ordinary space is a line-break point, so the sign can end up alone at the start of the next line. The rule is in the always-on table, and the typography of instructions themselves is not a style request (2.9.2, 2.9.3).
+- **The ellipsis inside a sentence takes no space before and a space after** (R49); an omission in a quotation is set the same way as a pause. The conflict between R49 and R50 is gone (ordered in 2.7.0, removed in 2.9.1).
+- **Digit groups and the decimal comma no longer collide**: two or more commas in a number are group separators and become spaces; a single comma is left alone (R53, 2.6.0).
+- **The dot after a unit stays when it ends the sentence** (R74, 2.5.0).
+- **A non-breaking space follows all eight single-letter words** — в, к, с, о, у, и, а, я (R30); the summaries that dropped «я» are fixed and a gate compares the lists (2.4.0).
+- **A pleonasm table entry is a finding, not an automatic fix** (`editorial-grammar.md` §E.1, 2.8.0).
+- **`/ru-text:ru-check` in Claude Code sets `model: sonnet` and `effort: medium`** in its `SKILL.md`, and its instructions read the corpus by a direct path first, with the search as the fallback (2.9.4).
+
+### Changed
+
+- `README.md` and `README.en.md` refreshed: «What's new» now collects the key changes of 2.4–2.9 instead of describing 2.3.0; the command paragraph names the model of `/ru-text:ru-check` and the fallback; the update paragraph says it is a copy command, not any install command, that nests the new version inside the old one; the English gloss of the install prompt now matches the Russian; the `addenda.md` line names the uppercase rule (AD-18) beside the seventeen tells. The English page is rebuilt from the proofread Russian one.
+- The social image carries 2.10.
+
 ## [2.9.4] - 2026-10-09
 
 ### Changed
