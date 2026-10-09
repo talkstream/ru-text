@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.6] - 2026-10-09
+
+### Changed
+
+- `.claude-plugin/plugin.json` no longer carries `documentationUrl`, `supportUrl`, `privacyPolicyUrl` and `termsOfServiceUrl` (added in 2.10.3). The Claude Code plugins reference documents them, but the directory's policy check reports each as an unrecognized field. `icon`, which the directory does read, stays.
+
+### Internal
+
+- The boundary gate's selftest builds its admin-token fixture at run time, as it already did for the PEM header: a literal assignment in source reads to the directory scan as a credential taken from the user's machine. The gate still catches it.
+
 ## [2.10.5] - 2026-10-09
 
 ### Internal
