@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.9] - 2026-10-09
+
+### Changed
+
+- `.claude-plugin/plugin.json` carries `documentationUrl`, `supportUrl`, `privacyPolicyUrl` and `termsOfServiceUrl` again (removed in 2.10.6). Anthropic's directory fills the listing's Documentation, Support, Privacy policy and Terms of service from these fields (Claude Code plugins reference, «Directory listing fields»); its policy check still reports them as unrecognized and says they can stay.
+
 ## [2.10.8] - 2026-10-09
 
 ### Internal
