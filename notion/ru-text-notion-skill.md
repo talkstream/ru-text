@@ -22,7 +22,7 @@ Apply to ALL Russian text without exception.
 | Numero sign | No. 5, #5 | № 5 |
 | Abbreviations with non-breaking space | т.д., т.е. | т. д., т. е. |
 | Ruble symbol after number | 1500 руб | 1 500 ₽ |
-| Percent sign glued to number | 100 % | 100% |
+| Percent sign glued to number (non-GOST) | 100 % | 100% |
 
 ## Stop-Word Catalog
 

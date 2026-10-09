@@ -85,7 +85,8 @@ exists to prevent. No search tool on this host → no triage: run the full check
    - Quotes: «» primary, „“ nested
    - Dashes: — (em) in text, – (en) in ranges, - (hyphen) in compounds only
    - Spaces: NBSP after single-letter words, in digit groups, before units — but `%` is glued to
-     the number (R37: `100%`, not `100 %`). Report it with the reason the rule gives: an ordinary
+     the number in general and web text (R37: `100%`, not `100 %`; a GOST technical document may use
+     `100<NBSP>%`). Report it with the reason the rule gives: an ordinary
      space is a line break point and leaves `%` alone on the next line
    - Ellipsis, abbreviations, special characters
 
