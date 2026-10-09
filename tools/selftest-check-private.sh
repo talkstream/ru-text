@@ -97,7 +97,9 @@ case_run "provider, brand casing" "payments via YooKassa"                       
 case_run "provider, upper case"   "хостинг SELECTEL"                                      "hosting provider"
 case_run "hosting provider"    "хостинг Selectel, СПб"                                    "hosting provider"
 case_run "admin token"         "export ADMIN_TOKEN=stand-in"                              "admin token variable"
-case_run "deploy key material" "-----BEGIN OPENSSH PRIVATE KEY-----"                      "deploy key material"
+# The PEM header is split in two and joined by the shell: the fixture must reach the gate whole,
+# but a literal header in source reads as a committed key to every secret scanner (HOL, 09.10.2026).
+case_run "deploy key material" "-----BEGIN OPENSSH ""PRIVATE KEY-----"                    "deploy key material"
 
 echo
 echo "passed $pass, failed $fail"
