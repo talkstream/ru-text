@@ -80,8 +80,11 @@ when the omitted word has the same form in both places: «летом — 156 Г�
 153» is fine. Neighbours that do not cover it: D.2 checks agreement only when the noun is
 written; I.2 is the same mechanism — one shared word needing two forms — but for verbs.
 Mechanical trigger, closed: two numeral + noun groups in parallel conjuncts, the second numeral
-bare (followed by punctuation or the end of the clause), and the two numerals fall into
-different D.2 rows. The open form — any gap that changes case — stays out for the same reason
+bare (followed by punctuation or the end of the clause), the two numerals fall into D.2
+rows that prescribe different noun forms, and the noun inflects. The last condition is what makes the legal case
+legal: 156 and 153 sit in D.2 rows with different forms too, but «ГБ» is an invariable abbreviation with
+one form after any numeral, so the restored word is identical in both places; without that
+condition the trigger would fire on its own counter-case. The open form — any gap that changes case — stays out for the same reason
 as participial commas. Evidence of the hole: found by a reader in a published page on
 09.10.2026 after two full `ru-check` runs; the second run reproduced the sentence unchanged
 in its own «corrected text». Before shipping: a golden pair (the sentence above and the legal
