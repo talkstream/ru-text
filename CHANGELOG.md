@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.8] - 2026-10-09
+
+### Internal
+
+- `docs/roadmap-v3-grammar.md` gains a backlog entry, not yet ranked: gapping across numerals that govern different forms — «на 44 года; в худшем темпе — на 18» needs «на 18 лет». The corpus has no rule for it yet; D.2 checks agreement only where the noun is written, and I.2 covers the same mechanism for verbs. The entry's closed trigger requires the omitted noun to inflect, so an invariable unit such as «ГБ» («156 ГБ … 153») does not fire it.
+
 ## [2.10.7] - 2026-10-09
 
 ### Internal
