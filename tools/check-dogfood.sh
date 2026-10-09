@@ -462,6 +462,9 @@ CLAIMS = [
     ('README.en.md', '{EN} tells of machine-written text'),
     ('README.en.md', 'There are {EN} such tells in all'),
     ('README.en.md', '{EN} tells of machine writing'),
+    # The Codex manifest's listing text (2.10.1): the OpenAI directory shows it as the long
+    # description, so it states the count to users like a README does.
+    ('.codex-plugin/plugin.json', '{EN} tells of machine-written Russian'),
     # The roadmaps describe the corpus in the present tense — «Those are v2.0 and they are
     # finished» — so they are consumers, not history, and the wholesale `docs/` exemption
     # was hiding three of them at the previous count.
