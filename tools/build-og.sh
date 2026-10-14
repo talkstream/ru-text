@@ -77,6 +77,8 @@ done
   echo "  Install one, or run: npx playwright install chromium-headless-shell" >&2
   exit 1
 }
+# Name the choice: a fallback to desktop Chrome went unnoticed for weeks because nothing said it.
+echo "build-og: renderer $CHROME" >&2
 
 WORK=$(mktemp -d)
 PROBE="$OUT/.probe.html"
