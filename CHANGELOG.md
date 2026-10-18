@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.10] - 2026-10-18
+
+### Fixed
+
+- `editorial-punctuation.md`, «When comma before "что" is NOT needed»: the stacked-conjunctions row said «without "то"» while its explanation said «when "то" follows», so a literal reading dropped the required comma in «Я знаю, что, если он придёт, всё решится». The row is now two: no comma between «что» and «если» when «то» follows, a comma when it does not. Contributed by @MaxRyabov (#31).
+- `editorial-punctuation.md`, introductory words: «по крайней мере» was «yes (usually)» in both meanings. It is set off only when it means «во всяком случае» («Он, по крайней мере, пытался»); meaning «не меньше чем» it is a member of the sentence («Пришли по крайней мере десять человек»). Split into two rows, like «прежде всего». Contributed by @MaxRyabov (#31).
+
 ## [2.10.9] - 2026-10-09
 
 ### Changed
