@@ -26,10 +26,12 @@
 # resolve a relative path from different places. Codex documents the PLUGIN ROOT as the base
 # (developers.openai.com/plugins/build/plugins.md, read 30.07.2026 — «Keep skills/, hooks/,
 # assets/ … at the plugin root»), which is why its manifest writes `./assets/icon.png` while
-# sitting one directory down. Cursor's writes `../logo-round.png`, which only reaches the
-# repository root if the base is the manifest's own directory. Both land on the same file;
-# they spell it differently, and a checker that assumes one convention reports the other's
-# images as missing. Resolving from both bases and accepting either was rejected — that turns
+# sitting one directory down. Cursor's used to write `../logo-round.png` on the assumption
+# that its base is the manifest's own directory; its reference says otherwise
+# (cursor.com/docs/reference/plugins.md:388-391, read 09.10.2026: `assets/logo.svg` in plugin
+# `my-plugin/` resolves to `my-plugin/assets/logo.svg`), and its checklist forbids `..`
+# (:518). Since 2.10.2 both manifests resolve from the plugin root. A checker that assumes one
+# convention for every manifest reports the other's images as missing. Resolving from both bases and accepting either was rejected — that turns
 # a genuinely missing file into a pass. The base is stated per manifest, with its source.
 
 set -eu
@@ -77,6 +79,8 @@ def walk(node, path):
 # which is plain filesystem behaviour. Present = the vendor documents something else.
 BASE_IS_PLUGIN_ROOT = {
     '.codex-plugin/plugin.json': 'developers.openai.com/plugins/build/plugins.md, 30.07.2026',
+    '.cursor-plugin/plugin.json': 'cursor.com/docs/reference/plugins.md:388-391, 09.10.2026',
+    '.claude-plugin/plugin.json': 'code.claude.com/docs/en/plugins-reference.md:198 (icon, «inside the plugin, such as ./logo.png»), 09.10.2026',
 }
 
 manifests = []

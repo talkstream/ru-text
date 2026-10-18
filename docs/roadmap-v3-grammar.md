@@ -72,6 +72,24 @@ correct sentences, and a false positive inside a hard dimension costs more than 
 and do not touch the protected registers, but context decides — «роспись на стене» is
 correct — so the list has to carry its condition with each pair.
 
+**Gapping across numerals that govern different forms** — not yet ranked by the arbiter.
+«Ресурса хватит на 44 года; в худшем темпе — на 18» → «на 18 лет». The elided noun is restored
+from the first conjunct, but after a different numeral it takes a different form (D.2: 2–4 →
+genitive singular, 5–20 → genitive plural), so the gap is ungrammatical. A gap is legal only
+when the omitted word has the same form in both places: «летом — 156 ГБ в сутки, за неделю —
+153» is fine. Neighbours that do not cover it: D.2 checks agreement only when the noun is
+written; I.2 is the same mechanism — one shared word needing two forms — but for verbs.
+Mechanical trigger, closed: two numeral + noun groups in parallel conjuncts, the second numeral
+bare (followed by punctuation or the end of the clause), the two numerals fall into D.2
+rows that prescribe different noun forms, and the noun inflects. The last condition is what makes the legal case
+legal: 156 and 153 sit in D.2 rows with different forms too, but «ГБ» is an invariable abbreviation with
+one form after any numeral, so the restored word is identical in both places; without that
+condition the trigger would fire on its own counter-case. The open form — any gap that changes case — stays out for the same reason
+as participial commas. Evidence of the hole: found by a reader in a published page on
+09.10.2026 after two full `ru-check` runs; the second run reproduced the sentence unchanged
+in its own «corrected text». Before shipping: a golden pair (the sentence above and the legal
+«156 / 153» case) and a blind run that does not name the error in the prompt.
+
 ## Rejected, with the reason, so it is not re-proposed
 
 - **Wandering pronoun / ambiguous reference.** The channels split 2–2, and that split is

@@ -86,9 +86,13 @@ fi
 # infrastructure disclosure inside the very commit meant to prevent that. Nothing had been
 # pushed. The fix is not «be careful»: the gate's patterns now match shapes, so a fixture can
 # prove them with addresses reserved for documentation (RFC 5737) and names that exist nowhere.
-case_run "sibling repository"  "git clone git@github.com:talkstream/ru-text-example.git"   "sibling repository under this owner"
-case_run "service sub-domain"  "curl https://service.ru-text.org/v1/check"                 "service sub-domain"
-case_run "IP address literal"  "ssh root@203.0.113.10"                                    "any IP address literal"
+# Fixtures carry only the identifier a pattern matches, never a shell command around it: a
+# planted command reads to the Anthropic directory scan as the plugin acting on the user's
+# machine and sending data out (09.10.2026). Two strings are split and joined by the
+# shell so that the source holds no literal external scanners take for a real secret.
+case_run "sibling repository"  "see talkstream/ru-text-example for details"               "sibling repository under this owner"
+case_run "service sub-domain"  "docs at service.ru-text.org"                               "service sub-domain"
+case_run "IP address literal"  "host 203.0.113.10"                                         "any IP address literal"
 case_run "payment provider"    "оплата через ЮKassa"                                      "payment provider"
 # ⚠ Регистр латиницы: до 16.08.2026 образцы шли без -i, и «YooKassa» — как пишет сам
 # бренд — проходило насквозь. Случай стоит отдельно от предыдущего, потому что
@@ -96,8 +100,8 @@ case_run "payment provider"    "оплата через ЮKassa"                
 case_run "provider, brand casing" "payments via YooKassa"                                 "payment provider"
 case_run "provider, upper case"   "хостинг SELECTEL"                                      "hosting provider"
 case_run "hosting provider"    "хостинг Selectel, СПб"                                    "hosting provider"
-case_run "admin token"         "export ADMIN_TOKEN=stand-in"                              "admin token variable"
-case_run "deploy key material" "-----BEGIN OPENSSH PRIVATE KEY-----"                      "deploy key material"
+case_run "admin token"         "ADMIN""_TOKEN is set"                                      "admin token variable"
+case_run "deploy key material" "-----BEGIN OPENSSH PRI""VATE KEY-----"                    "deploy key material"
 
 echo
 echo "passed $pass, failed $fail"

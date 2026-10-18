@@ -1,6 +1,6 @@
 # ru-text
 
-[![Version](https://img.shields.io/github/v/release/talkstream/ru-text?label=version&color=2ea44f)](https://github.com/talkstream/ru-text/releases/latest) [![License](https://img.shields.io/github/license/talkstream/ru-text?label=license&color=blue)](LICENSE) [![GitHub stars](https://img.shields.io/github/stars/talkstream/ru-text?style=flat&label=stars)](https://github.com/talkstream/ru-text/stargazers)
+[![Version](https://img.shields.io/github/v/release/talkstream/ru-text?label=version&color=2ea44f)](https://github.com/talkstream/ru-text/releases/latest) [![License](https://img.shields.io/github/license/talkstream/ru-text?label=license&color=blue)](LICENSE) [![GitHub stars](https://img.shields.io/github/stars/talkstream/ru-text?style=flat&label=stars)](https://github.com/talkstream/ru-text)
 
 [Русский](README.md) · [Install](INSTALL.en.md) · [What changed](CHANGELOG.md) · [Sources](skills/ru-text/references/sources.md)
 
@@ -16,7 +16,7 @@ Hand this sentence to your AI agent:
 
 > Установи навык https://github.com/talkstream/ru-text глобально и вызывай его, когда работа идёт над качеством русского текста: вычитка, типографика, очистка от нейрослопа, редактура, UX-тексты, деловая переписка — или по прямому упоминанию ru-text.
 
-*In English: install the ru-text skill globally and invoke it for any Russian-text task — proofreading, typography, neuroslop cleanup, editing, UX copy, business correspondence.* Hand your agent the Russian, not the translation.
+*In English: install the ru-text skill globally and invoke it when the work is about the quality of Russian text — proofreading, typography, neuroslop cleanup, editing, UX copy, business correspondence — or when ru-text is named directly.* Hand your agent the Russian, not the translation.
 
 That is usually enough: the agent knows where its platform keeps skills better than a year-old instruction does. It works in Claude Code, Codex and ChatGPT, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity, Windsurf, Continue.dev, Cline, JetBrains Junie, OpenClaw and Notion.
 
@@ -44,7 +44,7 @@ Along with the score, the rubric prints what it did not measure: factual accurac
 
 The two top labels, "Эталонный" ("Benchmark") and "Хороший" ("Good"), do not go to a document that stayed a chat transcript or was written for a search engine: such a text can be clean in every phrase and useless as a whole.
 
-In Claude Code these moves have commands: `/ru-text:ru-check` for the analysis with a rule behind each finding, `/ru-text:ru-score` for the number. On the other platforms, words are enough.
+In Claude Code these moves have commands: `/ru-text:ru-check` for the analysis with a rule behind each finding, `/ru-text:ru-score` for the number. On the other platforms, words are enough. The `/ru-text:ru-check` command runs on the latest Sonnet; if Sonnet is not available to you, switch to the latest Opus (`/model opus`) — details in [INSTALL.en.md](INSTALL.en.md#claude-code).
 
 ## What it catches
 
@@ -110,7 +110,7 @@ Over 2,000 linguistic atoms: rules, wrong → right pairs, dictionary entries an
 tools/extract-atoms.sh skills/ru-text | wc -l
 ```
 
-I used to type that number in by hand. It drifted across the files, I fixed it in nine of them at once — and in the note recording that fix I got even the number of files wrong. Now a script prints it.
+I used to type that number in by hand. It drifted apart across nine files, and in the note recording the fix I got even the number of files wrong. Now a script prints it.
 
 The corpus sits in 10 reference files, and they load on demand. Open any of them and count the rules yourself.
 
@@ -121,21 +121,27 @@ The corpus sits in 10 reference files, and they load on demand. Open any of them
 - [`ux-writing.md`](skills/ru-text/references/ux-writing.md) — buttons, errors, empty states, forms, notifications, confirmation dialogs
 - [`business-writing.md`](skills/ru-text/references/business-writing.md) — emails, messengers, tone, meeting notes
 - [`anti-patterns.md`](skills/ru-text/references/anti-patterns.md) — wrong-to-right pairs, grouped by severity
-- [`addenda.md`](skills/ru-text/references/addenda.md) — seventeen tells of machine writing, with their carve-outs
+- [`addenda.md`](skills/ru-text/references/addenda.md) — seventeen tells of machine writing, with their carve-outs and the uppercase rule
 - [`scoring.md`](skills/ru-text/references/scoring.md) — the scoring rubric: dimensions, weights, lower bounds
 - [`sources.md`](skills/ru-text/references/sources.md) — sources and attribution
 
-## What's new in 2.3.0
+## What's new in 2.10
 
-The stop-word catalogue no longer commands the deletion of «ну», «кстати» and «как-то» unconditionally: in the conversational register (social media, a personal blog, a support chat, a message to a colleague) those three entries no longer apply. In the other registers they apply as before.
+This release refreshes the README and gathers in one place the main points of versions 2.4–2.9.
 
-The unit is the segment, not the file: one document carries registers side by side. And machine text cannot hide behind a conversational coat — three or more distinct neuroslop tells in a segment cancel the carve-out.
+- **The analysis in Claude Code runs on Sonnet.** The `SKILL.md` of `/ru-text:ru-check` sets `model: sonnet` and `effort: medium`, and tells it to read the references by a direct path; the search stays as the fallback.
+- **In general and web text a percent sign is written flush against the number:** `100%`, not `100 %`. An ordinary space allows a line break, and the sign can end up at the start of the next line. The rule sits in the always-on table. The typography of the instructions themselves (a template with `100 %`, say) is a habit, not a request about style.
+- **An ellipsis inside a sentence takes no space before it and a space after it.** At the start and at the end of a sentence the ellipsis sits flush against the word. An omission in a quotation is set the same way as a pause. The contradiction between the two ellipsis rules is resolved.
+- **Digit grouping and the decimal comma no longer quarrel.** `1,500,000` has two commas: they go, and spaces take their place. The rule forbids removing a single comma: it may be a decimal fraction.
+- **The full stop after a unit of measurement stays when it ends the sentence:** "Вес 5 кг." ("Weight 5 kg.") does not run into the next sentence.
+- **A non-breaking space follows all eight one-letter words:** в, к, с, о, у, и, а, я. Short retellings of the rule kept dropping "я"; now the repository's check compares them with the rule.
+- **An entry in the pleonasm table is a finding, not an automatic fix.** The extra word may carry a contrast, and then deleting it changes the meaning.
 
-⚠ What this release does not claim: that text is now livelier, or that these words survive more often. A controlled measurement did not show that. What changed is the letter of the instruction, and that is visible in a diff. [What changed](CHANGELOG.md) · [Release](https://github.com/talkstream/ru-text/releases/tag/v2.3.0)
+The full list is in the [CHANGELOG](CHANGELOG.md).
 
 ## Updating
 
-A one-shot install has no update mechanism: the agent installed the skill and forgot about it. There is one signal — the repository's releases: Watch → Custom → Releases. When a release notification arrives, ask your agent to update the skill. Re-running the install command is no use: where the skill is installed by copying, it does not update but places the new version inside the old one. The commands for each platform are in [INSTALL.en.md](INSTALL.en.md#updating).
+A one-shot install has no update mechanism: the agent installed the skill and forgot about it. There is one signal — the repository's releases: Watch → Custom → Releases. When a release notification arrives, ask your agent to update the skill. Re-running the copy command from the install is no use: it does not update but places the new version inside the old one. The commands for each platform are in [INSTALL.en.md](INSTALL.en.md#updating).
 
 In the Claude Code community marketplace, ru-text trails the current version by months. `claude plugins list` will show the version installed; if it is old, install the skill by copying: three commands in [INSTALL.en.md](INSTALL.en.md#the-shared-directory).
 
@@ -161,7 +167,7 @@ The authors and publishers of the sources listed have not endorsed or reviewed t
 
 Arseniy Kamyshev — [nafigator@gmail.com](mailto:nafigator@gmail.com) · [Telegram](https://t.me/nafigator) · [GitHub](https://github.com/talkstream)
 
-Next I want a Telegram bot and a browser extension. Ideas and remarks go to [issues](https://github.com/talkstream/ru-text/issues) or [discussions](https://github.com/talkstream/ru-text/discussions). Found a wrong rule? Open an issue: the corpus grows on findings like that too. In the CHANGELOG I credit the person who found it.
+Next I want a Telegram bot and a browser extension. Ideas and remarks go to [issues](https://github.com/talkstream/ru-text/issues) or [discussions](https://github.com/talkstream/ru-text/discussions). Found a wrong rule? Write to me: the corpus grows on findings like that too. In the CHANGELOG I credit the person who found it.
 
 If ru-text saved you time on proofreading — [GitHub Sponsors](https://github.com/sponsors/talkstream).
 

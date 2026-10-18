@@ -59,7 +59,13 @@ done
 # no Playwright. The `break` is the whole point — without it the last match wins and this
 # comment describes the opposite of what happens.
 CHROME=""
-for c in "$HOME"/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-*/headless_shell \
+# Newer Playwright builds name the binary chrome-headless-shell (chrome-headless-shell-mac-arm64/
+# chrome-headless-shell); the old headless_shell pattern alone missed it, every run fell
+# through to desktop Chrome, and each launch left a 1.4 GB code-sign clone behind
+# (49 of them, 14.10.2026).
+for c in "$HOME"/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-*/chrome-headless-shell \
+         "$HOME"/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-*/headless_shell \
+         "$HOME"/.cache/ms-playwright/chromium_headless_shell-*/chrome-*/chrome-headless-shell \
          "$HOME"/.cache/ms-playwright/chromium_headless_shell-*/chrome-*/headless_shell \
          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
          "/Applications/Chromium.app/Contents/MacOS/Chromium" \
@@ -71,6 +77,8 @@ done
   echo "  Install one, or run: npx playwright install chromium-headless-shell" >&2
   exit 1
 }
+# Name the choice: a fallback to desktop Chrome went unnoticed for weeks because nothing said it.
+echo "build-og: renderer $CHROME" >&2
 
 WORK=$(mktemp -d)
 PROBE="$OUT/.probe.html"

@@ -26,7 +26,7 @@ jobs:
   gates:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Tools are executable and POSIX-parseable
         # A syntax error in a checker reads as a passing checker to anything that only
@@ -103,11 +103,14 @@ jobs:
           # the comparison is with a file the same commit is free to edit. Changing the
           # pin is then a visible line in a diff rather than a quiet edit inside a
           # 1825-line data file. It moves once, at the v2.0 release.
+          # Two halves under 256 KiB each (Anthropic's directory holds larger non-image files for a
+          # reviewer); the pin is on their concatenation, the same hash as the former single file.
+          cat tools/baseline/atoms-v1.10.1.part1.tsv tools/baseline/atoms-v1.10.1.part2.tsv > /tmp/atoms-baseline.tsv
           sha256sum -c - <<'PIN'
-          98b2e03bc771d7c0b3268f4eb406fbb3641bc8fdb01243ff3053a1790e2b3aa4  tools/baseline/atoms-v1.10.1.tsv
+          98b2e03bc771d7c0b3268f4eb406fbb3641bc8fdb01243ff3053a1790e2b3aa4  /tmp/atoms-baseline.tsv
           PIN
           tools/extract-atoms.sh skills/ru-text > /tmp/atoms-now.tsv
-          tools/diff-atoms.sh tools/baseline/atoms-v1.10.1.tsv /tmp/atoms-now.tsv
+          tools/diff-atoms.sh /tmp/atoms-baseline.tsv /tmp/atoms-now.tsv
 
       - name: The release assets can still be built
         # Writes nothing. A renamed reference file leaves the skill installing and

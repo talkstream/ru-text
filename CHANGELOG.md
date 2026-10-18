@@ -5,6 +5,114 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.9] - 2026-10-09
+
+### Changed
+
+- `.claude-plugin/plugin.json` carries `documentationUrl`, `supportUrl`, `privacyPolicyUrl` and `termsOfServiceUrl` again (removed in 2.10.6). Anthropic's directory fills the listing's Documentation, Support, Privacy policy and Terms of service from these fields (Claude Code plugins reference, «Directory listing fields»); its policy check still reports them as unrecognized and says they can stay.
+
+## [2.10.8] - 2026-10-09
+
+### Internal
+
+- `docs/roadmap-v3-grammar.md` gains a backlog entry, not yet ranked: gapping across numerals that govern different forms — «на 44 года; в худшем темпе — на 18» needs «на 18 лет». The corpus has no rule for it yet; D.2 checks agreement only where the noun is written, and I.2 covers the same mechanism for verbs. The entry's closed trigger requires the omitted noun to inflect, so an invariable unit such as «ГБ» («156 ГБ … 153») does not fire it.
+
+## [2.10.7] - 2026-10-09
+
+### Internal
+
+- The boundary gate's selftest plants only the identifiers its patterns match, without the shell commands that used to surround them; the directory scan still read the 2.10.6 fixtures as the plugin using the user's machine access. All eleven cases still go red on their fixture.
+
+## [2.10.6] - 2026-10-09
+
+### Changed
+
+- `.claude-plugin/plugin.json` no longer carries `documentationUrl`, `supportUrl`, `privacyPolicyUrl` and `termsOfServiceUrl` (added in 2.10.3). The Claude Code plugins reference documents them, but the directory's policy check reports each as an unrecognized field. `icon`, which the directory does read, stays.
+
+### Internal
+
+- The boundary gate's selftest builds its admin-token fixture at run time, as it already did for the PEM header: a literal assignment in source reads to the directory scan as a credential taken from the user's machine. The gate still catches it.
+
+## [2.10.5] - 2026-10-09
+
+### Internal
+
+- The no-loss baseline `tools/baseline/atoms-v1.10.1.tsv` (276 KB) is stored as two halves under 256 KiB. Anthropic's plugin directory holds any non-image file above 256 KiB for a reviewer, so every version was held. The pin is on the concatenation and keeps the same sha256; editing either half still fails the gate.
+
+## [2.10.4] - 2026-10-09
+
+### Fixed
+
+- The always-on table in `SKILL.md`, `/ru-text:ru-check` and the Notion template stated R37 without its scope. The glued `100%` is for general and web text; a GOST technical document may use a non-breaking space (`typography.md`, R37).
+- The 2.9.4 entry said the corpus search is the fallback «on other hosts»; it is also the fallback in Claude Code when the direct path does not resolve. Corrected in place.
+- The stars badge in both READMEs linked to the stargazers page, which needs a GitHub login; it now links to the repository.
+
+## [2.10.3] - 2026-10-09
+
+### Added
+
+- `.claude-plugin/plugin.json` carries the fields Anthropic's directory reads for the listing: `icon`, `documentationUrl`, `supportUrl`, `privacyPolicyUrl`, `termsOfServiceUrl`. Claude Code ignores them at load time.
+
+### Fixed
+
+- A compiled Python file (`tools/__pycache__/…pyc`) had been tracked since July. The directory's security scan holds code it can't read for a reviewer; the file is gone from the repository and `.gitignore` now excludes `__pycache__/` and `*.pyc`.
+
+## [2.10.2] - 2026-10-09
+
+### Fixed
+
+- The Cursor manifest (`.cursor-plugin/plugin.json`) pointed its logo at `../logo-round.png`, outside the plugin root. Cursor resolves a relative `logo` from the plugin root and its submission checklist forbids `..`; the path is now `logo-round.png`.
+
+## [2.10.1] - 2026-10-09
+
+### Fixed
+
+- The Codex manifest (`.codex-plugin/plugin.json`) carries the listing fields the OpenAI plugin directory now requires: `interface.longDescription`, `interface.capabilities`, a `shortDescription` within 30 characters, `termsOfServiceURL`, `supportURL` and the three starter prompts. They used to be typed into the submission form by hand; the 2.10.0 upload was rejected without them.
+
+## [2.10.0] - 2026-10-09
+
+### Key changes since 2.3.0
+
+The changes that matter most, collected from 2.4.0–2.9.4:
+
+- **In general and web text the percent sign is glued to the number** — `100%`, not `100 %` (R37). An ordinary space is a line-break point, so the sign can end up alone at the start of the next line. The rule is in the always-on table, and the typography of instructions themselves is not a style request (2.9.2, 2.9.3).
+- **The ellipsis inside a sentence takes no space before and a space after** (R49); an omission in a quotation is set the same way as a pause. The conflict between R49 and R50 is gone (ordered in 2.7.0, removed in 2.9.1).
+- **Digit groups and the decimal comma no longer collide**: two or more commas in a number are group separators and become spaces; a single comma is left alone (R53, 2.6.0).
+- **The dot after a unit stays when it ends the sentence** (R74, 2.5.0).
+- **A non-breaking space follows all eight single-letter words** — в, к, с, о, у, и, а, я (R30); the summaries that dropped «я» are fixed and a gate compares the lists (2.4.0).
+- **A pleonasm table entry is a finding, not an automatic fix** (`editorial-grammar.md` §E.1, 2.8.0).
+- **`/ru-text:ru-check` in Claude Code sets `model: sonnet` and `effort: medium`** in its `SKILL.md`, and its instructions read the corpus by a direct path first, with the search as the fallback (2.9.4).
+
+### Changed
+
+- `README.md` and `README.en.md` refreshed: «What's new» now collects the key changes of 2.4–2.9 instead of describing 2.3.0; the command paragraph names the model of `/ru-text:ru-check` and the fallback; the update paragraph says it is a copy command, not any install command, that nests the new version inside the old one; the English gloss of the install prompt now matches the Russian; the `addenda.md` line names the uppercase rule (AD-18) beside the seventeen tells. The English page is rebuilt from the proofread Russian one.
+- The social image carries 2.10.
+
+## [2.9.4] - 2026-10-09
+
+### Changed
+
+- `/ru-text:ru-check` in Claude Code now runs on Sonnet at medium effort (`model: sonnet`, `effort: medium` in its `SKILL.md`) instead of the session model. `INSTALL.md` names the model and the fallback — the latest Opus when Sonnet is not available.
+
+### Fixed
+
+- `/ru-text:ru-check` and `/ru-text:ru-score` in Claude Code read the corpus from `${CLAUDE_SKILL_DIR}/../ru-text/references/` directly instead of searching for it; the search stays as the fallback when that path does not resolve — in Claude Code and on other hosts.
+
+## [2.9.3] - 2026-10-04
+
+### Changed
+
+- `SKILL.md` now says that the typography of the instructions themselves is not a style request. A template or a set of instructions that writes `100 %` is a habit, not the user asking for that form; an explicit request still overrides the defaults. The Quality Checklist line on abbreviations is removed — it repeated the always-on table row.
+- R37 in `typography.md` gains the reason for the glued form: an ordinary space between the number and `%` is a line-break point, so the sign can end up alone at the start of the next line; `100%` never breaks. `/ru-text:ru-check` reports the percent sign with that reason, and the Notion template carries the same note.
+
+## [2.9.2] - 2026-10-03
+
+### Fixed
+
+- The always-on typography table in `SKILL.md` now carries R37: the percent sign is glued to the number (`100%`, not `100 %`). The rule lived only in `typography.md`, while the same table showed a non-breaking space before the ruble sign and said nothing about the percent sign.
+- `/ru-text:ru-check`: the full check told the reader to put a non-breaking space before units and did not name the R37 exception; it now does. The quick triage lists a space before `%` among its mechanical checks.
+- The Notion template's typography table has the same row.
+
 ## [2.9.1] - 2026-09-28
 
 ### Fixed

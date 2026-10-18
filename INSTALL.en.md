@@ -105,6 +105,11 @@ interface: the **+** button next to the prompt box → **Plugins** → **Add plu
 marketplace can be added as well. One install serves the CLI, the app (local and SSH
 sessions), VS Code and JetBrains.
 
+**Model.** In Claude Code the full check `/ru-text:ru-check` runs on the latest Sonnet
+(currently 5.5) at `effort` level `medium`: the command's `SKILL.md` says so (the `model` and
+`effort` fields), so there is no model to pick by hand. If Sonnet is not available to you,
+switch to the latest Opus: `/model opus`.
+
 ### Codex and ChatGPT
 
 They share plugins: "Plugins are available with ChatGPT Work on the web and with ChatGPT Work

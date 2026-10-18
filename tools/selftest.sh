@@ -1262,9 +1262,11 @@ python3 - "$d/notion/README.md" <<'PYEOF'
 import io, sys
 p = sys.argv[1]
 s = io.open(p, encoding='utf-8').read()
-old = '- 12 правил типографики'
-assert s.count(old) == 1, 'anchor moved; fix the fixture'
-io.open(p, 'w', encoding='utf-8').write(s.replace(old, '- 13 правил типографики'))
+import re
+m = re.findall(r'^- (\d+) правил типографики', s, re.M)
+assert len(m) == 1, 'anchor moved; fix the fixture'
+old = '- %s правил типографики' % m[0]
+io.open(p, 'w', encoding='utf-8').write(s.replace(old, '- %d правил типографики' % (int(m[0]) + 1)))
 PYEOF
 expect_dogfood "a Notion count left behind in the Russian half is caught" "does not say" "$d"
 
@@ -1292,10 +1294,12 @@ python3 - "$d/notion/README.md" <<'PYEOF'
 import io, sys
 p = sys.argv[1]
 s = io.open(p, encoding='utf-8').read()
-old = '- 12 typography rules (always applied)'
-assert s.count(old) == 1, 'anchor moved; fix the fixture'
+import re
+m = re.findall(r'^- (\d+) typography rules \(always applied\)', s, re.M)
+assert len(m) == 1, 'anchor moved; fix the fixture'
+old = '- %s typography rules (always applied)' % m[0]
 io.open(p, 'w', encoding='utf-8').write(
-    s.replace(old, '- 12\n\ntypography rules (always applied)'))
+    s.replace(old, '- %s\n\ntypography rules (always applied)' % m[0]))
 PYEOF
 expect_dogfood "a Notion claim reassembled across a paragraph break is not counted as present" \
   "does not say" "$d"

@@ -30,7 +30,15 @@ export LC_ALL=C
 
 cd "$(dirname "$0")/.."
 
-BASELINE=tools/baseline/atoms-v1.10.1.tsv
+# The baseline is stored as two halves under 256 KiB each: Anthropic's plugin directory holds
+# for a reviewer any non-image file above 256 KiB (pre-submission-checklist.md:130), and the
+# single 276 KB file held every version (09.10.2026). The pin below is on the CONCATENATION,
+# so splitting moved no byte and no hash; editing either half still breaks the pin.
+BASELINE_PARTS='tools/baseline/atoms-v1.10.1.part1.tsv tools/baseline/atoms-v1.10.1.part2.tsv'
+BASELINE=$(mktemp)
+trap 'rm -f "$BASELINE"' EXIT INT TERM
+for part in $BASELINE_PARTS; do [ -f "$part" ] || { printf 'gates: FAIL — baseline part missing: %s\n' "$part" >&2; exit 1; }; done
+cat $BASELINE_PARTS > "$BASELINE"
 # The baseline is pinned by content, not by policy: without this, deleting a rule from the
 # corpus AND its line from the baseline passes every gate green, because the comparison is
 # with a file the same commit is free to edit. This moves once, at the v2.0 release.
@@ -128,10 +136,10 @@ tools/check-assets.sh || fail "check-assets"
 # on the Linux runner.
 if command -v sha256sum >/dev/null 2>&1; then
   printf '%s  %s\n' "$BASELINE_SHA" "$BASELINE" | sha256sum -c - >/dev/null \
-    || fail "baseline pin moved: $BASELINE"
+    || fail "baseline pin moved: $BASELINE_PARTS"
 elif command -v shasum >/dev/null 2>&1; then
   printf '%s  %s\n' "$BASELINE_SHA" "$BASELINE" | shasum -a 256 -c - >/dev/null \
-    || fail "baseline pin moved: $BASELINE"
+    || fail "baseline pin moved: $BASELINE_PARTS"
 else
   fail "no sha256 tool (sha256sum, shasum) — the baseline pin cannot be verified"
 fi
@@ -140,7 +148,7 @@ echo "gates: ok    baseline pinned by content"
 NOW=$(mktemp)
 # INT and TERM as well as EXIT: dash does not run an EXIT trap when the shell dies on a
 # signal, so on the Linux runner a Ctrl-C left the snapshot behind. Measured, not assumed.
-trap 'rm -f "$NOW"' EXIT INT TERM
+trap 'rm -f "$NOW" "$BASELINE"' EXIT INT TERM
 tools/extract-atoms.sh skills/ru-text > "$NOW" || fail "extract-atoms"
 # Invoked exactly as CI invokes it. The map argument is the same file diff-atoms.sh falls
 # back to, so passing it changed nothing — except to put a difference between the two
