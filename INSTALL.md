@@ -115,7 +115,9 @@ Sonnet (сейчас это 5.5) с `effort` на уровне `medium`: так
 Work or Codex in the ChatGPT desktop app. Codex CLI also has a plugin browser»
 ([learn.chatgpt.com/docs/plugins](https://learn.chatgpt.com/docs/plugins)). В вебе
 и в десктопном приложении ChatGPT плагины ставятся из интерфейса: переключатель **Work** →
-**Plugins**. Ниже — про Codex CLI.
+**Plugins**. Быстрее — по ссылке на
+[карточку ru-text в каталоге](https://chatgpt.com/plugins/plugins_6a6b66a0142c81918659256b4a12adba):
+откройте её и нажмите «плюс». Ниже — про Codex CLI.
 
 Сначала подключите маркетплейс, потом ставьте. Обе команды неинтерактивные:
 

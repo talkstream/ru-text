@@ -116,7 +116,9 @@ They share plugins: "Plugins are available with ChatGPT Work on the web and with
 or Codex in the ChatGPT desktop app. Codex CLI also has a plugin browser"
 ([learn.chatgpt.com/docs/plugins](https://learn.chatgpt.com/docs/plugins)). On ChatGPT web and
 in the ChatGPT desktop app, plugins install from the interface: the **Work** switcher →
-**Plugins**. What follows is about Codex CLI.
+**Plugins**. The shortcut is the
+[ru-text card in the directory](https://chatgpt.com/plugins/plugins_6a6b66a0142c81918659256b4a12adba):
+open it and press the plus button. What follows is about Codex CLI.
 
 Add the marketplace first, then install. Both commands are non-interactive:
 
